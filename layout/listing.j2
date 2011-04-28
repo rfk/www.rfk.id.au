@@ -1,5 +1,10 @@
 {% extends "base.j2" %}
 
+{% block page_meta %}
+<link rel="alternate" title="RFK | Blog | Atom Feed" href="http://www.rfk.id.au/blog/feeds/atom.xml" type="application/atom+xml" />
+{% endblock %}
+
+
 {% from "macros.j2" import render_excerpt with context  %}
 {% block page_content %}
 

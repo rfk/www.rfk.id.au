@@ -35,14 +35,12 @@
 {% if menu -%}
     <ul id="nav-menu">
         {% for item in menu -%}
-        {% set active = False -%}
-        {% if item.type == 'page' -%}
+        {% if item.name.lower() == "home" %}
             {% set active = (resource.url ==
-                site.content.resource_from_relative_path(item.url).url) -%}
-        {% else -%}
-            {% set active = (node ==
-                site.content.node_from_relative_path(item.url)) -%}
-        {%- endif %}
+                site.content.resource_from_relative_path(item.url).url) %}
+        {% else %}
+          {% set active = resource.url.startswith(item.name.lower()) %}
+        {% endif %}
         <li {% if active %} class="selected" {% endif %}>
             <a title="{{ item.description }}"
                 href="{{ content_url(item.url) }}">

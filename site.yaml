@@ -28,7 +28,7 @@ context:
                 name: About
                 description: About
                 type: page
-                url: about/index.html
+                url: about/
             -
                 name: Software
                 description: Software
