@@ -1,0 +1,72 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module enchant.checker.CmdLineChecker</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="enchant.html"><font color="#ffffff">enchant</font></a>.<a href="enchant.checker.html"><font color="#ffffff">checker</font></a>.CmdLineChecker</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/storage/software/pyenchant/enchant/checker/CmdLineChecker.py">/storage/software/pyenchant/enchant/checker/CmdLineChecker.py</a></font></td></tr></table>
+    <p><tt>enchant.checker.<a href="#CmdLineChecker">CmdLineChecker</a>:&nbsp;&nbsp;Command-Line&nbsp;spell&nbsp;checker<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;provides&nbsp;the&nbsp;class&nbsp;<a href="#CmdLineChecker">CmdLineChecker</a>,&nbsp;which&nbsp;interactively<br>
+spellchecks&nbsp;a&nbsp;piece&nbsp;of&nbsp;text&nbsp;by&nbsp;interacting&nbsp;with&nbsp;the&nbsp;user&nbsp;on&nbsp;the<br>
+command&nbsp;line.&nbsp;&nbsp;It&nbsp;can&nbsp;also&nbsp;be&nbsp;run&nbsp;as&nbsp;a&nbsp;script&nbsp;to&nbsp;spellcheck&nbsp;a&nbsp;file.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="enchant.checker.CmdLineChecker.html#CmdLineChecker">CmdLineChecker</a>
+</font></dt></dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CmdLineChecker">class <strong>CmdLineChecker</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;simple&nbsp;command-line&nbsp;spell&nbsp;checker.<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;implements&nbsp;a&nbsp;simple&nbsp;command-line&nbsp;spell&nbsp;checker.&nbsp;&nbsp;It&nbsp;must<br>
+be&nbsp;given&nbsp;a&nbsp;SpellChecker&nbsp;instance&nbsp;to&nbsp;operate&nbsp;on,&nbsp;and&nbsp;interacts&nbsp;with<br>
+the&nbsp;user&nbsp;by&nbsp;printing&nbsp;instructions&nbsp;on&nbsp;stdout&nbsp;and&nbsp;reading&nbsp;commands&nbsp;from<br>
+stdin.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="CmdLineChecker-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="CmdLineChecker-get_checker"><strong>get_checker</strong></a>(self, chkr)</dt></dl>
+
+<dl><dt><a name="CmdLineChecker-print_help"><strong>print_help</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="CmdLineChecker-read_command"><strong>read_command</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="CmdLineChecker-run"><strong>run</strong></a>(self)</dt><dd><tt>Run&nbsp;the&nbsp;spellchecking&nbsp;loop.</tt></dd></dl>
+
+<dl><dt><a name="CmdLineChecker-run_on_file"><strong>run_on_file</strong></a>(self, infile, outfile<font color="#909090">=None</font>, enc<font color="#909090">=None</font>)</dt><dd><tt>Run&nbsp;spellchecking&nbsp;on&nbsp;the&nbsp;named&nbsp;file.<br>
+This&nbsp;method&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;run&nbsp;the&nbsp;spellchecker&nbsp;over&nbsp;the&nbsp;named&nbsp;file.<br>
+If&nbsp;&lt;outfile&gt;&nbsp;is&nbsp;not&nbsp;given,&nbsp;the&nbsp;corrected&nbsp;contents&nbsp;replace&nbsp;the&nbsp;contents<br>
+of&nbsp;&lt;infile&gt;.&nbsp;&nbsp;If&nbsp;&lt;outfile&gt;&nbsp;is&nbsp;given,&nbsp;the&nbsp;corrected&nbsp;contents&nbsp;will&nbsp;be<br>
+written&nbsp;to&nbsp;that&nbsp;file.&nbsp;&nbsp;Use&nbsp;"-"&nbsp;to&nbsp;have&nbsp;the&nbsp;contents&nbsp;written&nbsp;to&nbsp;stdout.<br>
+If&nbsp;&lt;enc&gt;&nbsp;is&nbsp;given,&nbsp;it&nbsp;specifies&nbsp;the&nbsp;encoding&nbsp;used&nbsp;to&nbsp;read&nbsp;the<br>
+file's&nbsp;contents&nbsp;into&nbsp;a&nbsp;unicode&nbsp;string.&nbsp;&nbsp;The&nbsp;output&nbsp;will&nbsp;be&nbsp;written<br>
+in&nbsp;the&nbsp;same&nbsp;encoding.</tt></dd></dl>
+
+<dl><dt><a name="CmdLineChecker-set_checker"><strong>set_checker</strong></a>(self, chkr)</dt></dl>
+
+</td></tr></table></td></tr></table>
+</body></html>

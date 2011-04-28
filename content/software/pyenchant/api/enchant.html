@@ -1,0 +1,517 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: package enchant</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>enchant</strong></big></big> (version 1.6.3)</font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/storage/software/pyenchant/enchant/__init__.py">/storage/software/pyenchant/enchant/__init__.py</a></font></td></tr></table>
+    <p><tt>enchant:&nbsp;&nbsp;Access&nbsp;to&nbsp;the&nbsp;enchant&nbsp;spellchecking&nbsp;library<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;provides&nbsp;several&nbsp;classes&nbsp;for&nbsp;performing&nbsp;spell&nbsp;checking<br>
+via&nbsp;the&nbsp;Enchant&nbsp;spellchecking&nbsp;library.&nbsp;&nbsp;For&nbsp;more&nbsp;details&nbsp;on&nbsp;Enchant,<br>
+visit&nbsp;the&nbsp;project&nbsp;website:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.abisource.com/enchant/">http://www.abisource.com/enchant/</a><br>
+&nbsp;<br>
+Spellchecking&nbsp;is&nbsp;performed&nbsp;using&nbsp;'<a href="#Dict">Dict</a>'&nbsp;objects,&nbsp;which&nbsp;represent<br>
+a&nbsp;language&nbsp;dictionary.&nbsp;&nbsp;Their&nbsp;use&nbsp;is&nbsp;best&nbsp;demonstrated&nbsp;by&nbsp;a&nbsp;quick<br>
+example:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;import&nbsp;enchant<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;d&nbsp;=&nbsp;enchant.<a href="#Dict">Dict</a>("en_US")&nbsp;&nbsp;&nbsp;#&nbsp;create&nbsp;dictionary&nbsp;for&nbsp;US&nbsp;English<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;d.check("enchant")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;True<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;d.check("enchnt")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;False<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;d.suggest("enchnt")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;['enchant',&nbsp;'enchants',&nbsp;'enchanter',&nbsp;'penchant',&nbsp;'incant',&nbsp;'enchain',&nbsp;'enchanted']<br>
+&nbsp;<br>
+Languages&nbsp;are&nbsp;identified&nbsp;by&nbsp;standard&nbsp;string&nbsp;tags&nbsp;such&nbsp;as&nbsp;"en"&nbsp;(English)<br>
+and&nbsp;"fr"&nbsp;(French).&nbsp;&nbsp;Specific&nbsp;language&nbsp;dialects&nbsp;can&nbsp;be&nbsp;specified&nbsp;by<br>
+including&nbsp;an&nbsp;additional&nbsp;code&nbsp;-&nbsp;for&nbsp;example,&nbsp;"en_AU"&nbsp;refers&nbsp;to&nbsp;Australian<br>
+English.&nbsp;&nbsp;The&nbsp;later&nbsp;form&nbsp;is&nbsp;preferred&nbsp;as&nbsp;it&nbsp;is&nbsp;more&nbsp;widely&nbsp;supported.<br>
+&nbsp;<br>
+To&nbsp;check&nbsp;whether&nbsp;a&nbsp;dictionary&nbsp;exists&nbsp;for&nbsp;a&nbsp;given&nbsp;language,&nbsp;the&nbsp;function<br>
+'dict_exists'&nbsp;is&nbsp;available.&nbsp;&nbsp;Dictionaries&nbsp;may&nbsp;also&nbsp;be&nbsp;created&nbsp;using&nbsp;the<br>
+function&nbsp;'request_dict'.<br>
+&nbsp;<br>
+A&nbsp;finer&nbsp;degree&nbsp;of&nbsp;control&nbsp;over&nbsp;the&nbsp;dictionaries&nbsp;and&nbsp;how&nbsp;they&nbsp;are&nbsp;created<br>
+can&nbsp;be&nbsp;obtained&nbsp;using&nbsp;one&nbsp;or&nbsp;more&nbsp;'<a href="#Broker">Broker</a>'&nbsp;objects.&nbsp;&nbsp;These&nbsp;objects&nbsp;are<br>
+responsible&nbsp;for&nbsp;locating&nbsp;dictionaries&nbsp;for&nbsp;a&nbsp;specific&nbsp;language.<br>
+&nbsp;<br>
+In&nbsp;Python&nbsp;2.x,&nbsp;unicode&nbsp;strings&nbsp;are&nbsp;supported&nbsp;transparently&nbsp;in&nbsp;the<br>
+standard&nbsp;manner&nbsp;-&nbsp;if&nbsp;a&nbsp;unicode&nbsp;string&nbsp;is&nbsp;given&nbsp;as&nbsp;an&nbsp;argument,&nbsp;the<br>
+result&nbsp;will&nbsp;be&nbsp;a&nbsp;unicode&nbsp;string.&nbsp;Note&nbsp;that&nbsp;Enchant&nbsp;works&nbsp;in&nbsp;UTF-8&nbsp;<br>
+internally,&nbsp;so&nbsp;passing&nbsp;an&nbsp;ASCII&nbsp;string&nbsp;to&nbsp;a&nbsp;dictionary&nbsp;for&nbsp;a&nbsp;language<br>
+requiring&nbsp;Unicode&nbsp;may&nbsp;result&nbsp;in&nbsp;UTF-8&nbsp;strings&nbsp;being&nbsp;returned.<br>
+&nbsp;<br>
+In&nbsp;Python&nbsp;3.x&nbsp;unicode&nbsp;strings&nbsp;are&nbsp;expected&nbsp;throughout.&nbsp;&nbsp;Bytestrings<br>
+should&nbsp;not&nbsp;be&nbsp;passed&nbsp;into&nbsp;any&nbsp;functions.<br>
+&nbsp;<br>
+Errors&nbsp;that&nbsp;occur&nbsp;in&nbsp;this&nbsp;module&nbsp;are&nbsp;reported&nbsp;by&nbsp;raising&nbsp;subclasses<br>
+of&nbsp;'Error'.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Package Contents</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="enchant._enchant.html">_enchant</a><br>
+<a href="enchant.checker.html"><strong>checker</strong>&nbsp;(package)</a><br>
+</td><td width="25%" valign=top><a href="enchant.errors.html">errors</a><br>
+<a href="enchant.pypwl.html">pypwl</a><br>
+</td><td width="25%" valign=top><a href="enchant.tests.html">tests</a><br>
+<a href="enchant.tokenize.html"><strong>tokenize</strong>&nbsp;(package)</a><br>
+</td><td width="25%" valign=top><a href="enchant.utils.html">utils</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="enchant.html#ProviderDesc">ProviderDesc</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="enchant.html#_EnchantObject">_EnchantObject</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="enchant.html#Broker">Broker</a>
+</font></dt><dt><font face="helvetica, arial"><a href="enchant.html#Dict">Dict</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="enchant.html#DictWithPWL">DictWithPWL</a>
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Broker">class <strong>Broker</strong></a>(<a href="enchant.html#_EnchantObject">_EnchantObject</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#Broker">Broker</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;for&nbsp;the&nbsp;Enchant&nbsp;spellchecker.<br>
+&nbsp;<br>
+<a href="#Broker">Broker</a>&nbsp;objects&nbsp;are&nbsp;responsible&nbsp;for&nbsp;locating&nbsp;and&nbsp;managing&nbsp;dictionaries.<br>
+Unless&nbsp;custom&nbsp;functionality&nbsp;is&nbsp;required,&nbsp;there&nbsp;is&nbsp;no&nbsp;need&nbsp;to&nbsp;use&nbsp;<a href="#Broker">Broker</a><br>
+objects&nbsp;directly.&nbsp;The&nbsp;'enchant'&nbsp;module&nbsp;provides&nbsp;a&nbsp;default&nbsp;broker&nbsp;<a href="__builtin__.html#object">object</a><br>
+so&nbsp;that&nbsp;'<a href="#Dict">Dict</a>'&nbsp;objects&nbsp;can&nbsp;be&nbsp;created&nbsp;directly.<br>
+&nbsp;<br>
+The&nbsp;most&nbsp;important&nbsp;methods&nbsp;of&nbsp;this&nbsp;class&nbsp;include:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;dict_exists:&nbsp;&nbsp;&nbsp;check&nbsp;existence&nbsp;of&nbsp;a&nbsp;specific&nbsp;language&nbsp;dictionary<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;request_dict:&nbsp;&nbsp;obtain&nbsp;a&nbsp;dictionary&nbsp;for&nbsp;specific&nbsp;language<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;set_ordering:&nbsp;&nbsp;specify&nbsp;which&nbsp;dictionaries&nbsp;to&nbsp;try&nbsp;for&nbsp;for&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;given&nbsp;language.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="enchant.html#Broker">Broker</a></dd>
+<dd><a href="enchant.html#_EnchantObject">_EnchantObject</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Broker-__del__"><strong>__del__</strong></a>(self)</dt><dd><tt><a href="#Broker">Broker</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;destructor.</tt></dd></dl>
+
+<dl><dt><a name="Broker-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt><a href="#Broker">Broker</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;constructor.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;is&nbsp;the&nbsp;constructor&nbsp;for&nbsp;the&nbsp;'<a href="#Broker">Broker</a>'&nbsp;<a href="__builtin__.html#object">object</a>.&nbsp;&nbsp;No<br>
+arguments&nbsp;are&nbsp;required.</tt></dd></dl>
+
+<dl><dt><a name="Broker-describe"><strong>describe</strong></a>(self)</dt><dd><tt>Return&nbsp;list&nbsp;of&nbsp;provider&nbsp;descriptions.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;returns&nbsp;a&nbsp;list&nbsp;of&nbsp;descriptions&nbsp;of&nbsp;each&nbsp;of&nbsp;the<br>
+dictionary&nbsp;providers&nbsp;available.&nbsp;&nbsp;Each&nbsp;entry&nbsp;in&nbsp;the&nbsp;list&nbsp;is&nbsp;a&nbsp;<br>
+<a href="#ProviderDesc">ProviderDesc</a>&nbsp;<a href="__builtin__.html#object">object</a>.</tt></dd></dl>
+
+<dl><dt><a name="Broker-dict_exists"><strong>dict_exists</strong></a>(self, tag)</dt><dd><tt>Check&nbsp;availability&nbsp;of&nbsp;a&nbsp;dictionary.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;checks&nbsp;whether&nbsp;there&nbsp;is&nbsp;a&nbsp;dictionary&nbsp;available&nbsp;for<br>
+the&nbsp;language&nbsp;specified&nbsp;by&nbsp;'tag'.&nbsp;&nbsp;It&nbsp;returns&nbsp;True&nbsp;if&nbsp;a&nbsp;dictionary<br>
+is&nbsp;available,&nbsp;and&nbsp;False&nbsp;otherwise.</tt></dd></dl>
+
+<dl><dt><a name="Broker-get_param"><strong>get_param</strong></a>(self, name)</dt><dd><tt>Get&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;named&nbsp;parameter&nbsp;on&nbsp;this&nbsp;broker.<br>
+&nbsp;<br>
+Parameters&nbsp;are&nbsp;used&nbsp;to&nbsp;provide&nbsp;runtime&nbsp;information&nbsp;to&nbsp;individual<br>
+provider&nbsp;backends.&nbsp;&nbsp;See&nbsp;the&nbsp;method&nbsp;'set_param'&nbsp;for&nbsp;more&nbsp;details.</tt></dd></dl>
+
+<dl><dt><a name="Broker-list_dicts"><strong>list_dicts</strong></a>(self)</dt><dd><tt>Return&nbsp;list&nbsp;of&nbsp;available&nbsp;dictionaries.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;returns&nbsp;a&nbsp;list&nbsp;of&nbsp;dictionaries&nbsp;available&nbsp;to&nbsp;the<br>
+broker.&nbsp;&nbsp;Each&nbsp;entry&nbsp;in&nbsp;the&nbsp;list&nbsp;is&nbsp;a&nbsp;two-tuple&nbsp;of&nbsp;the&nbsp;form:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(tag,provider)<br>
+&nbsp;<br>
+where&nbsp;&lt;tag&gt;&nbsp;is&nbsp;the&nbsp;language&nbsp;lag&nbsp;for&nbsp;the&nbsp;dictionary&nbsp;and<br>
+&lt;provider&gt;&nbsp;is&nbsp;a&nbsp;<a href="#ProviderDesc">ProviderDesc</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;describing&nbsp;the&nbsp;provider<br>
+through&nbsp;which&nbsp;that&nbsp;dictionary&nbsp;can&nbsp;be&nbsp;obtained.</tt></dd></dl>
+
+<dl><dt><a name="Broker-list_languages"><strong>list_languages</strong></a>(self)</dt><dd><tt>List&nbsp;languages&nbsp;for&nbsp;which&nbsp;dictionaries&nbsp;are&nbsp;available.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;returns&nbsp;a&nbsp;list&nbsp;of&nbsp;language&nbsp;tags&nbsp;for&nbsp;which&nbsp;a<br>
+dictionary&nbsp;is&nbsp;available.</tt></dd></dl>
+
+<dl><dt><a name="Broker-request_dict"><strong>request_dict</strong></a>(self, tag<font color="#909090">=None</font>)</dt><dd><tt>Request&nbsp;a&nbsp;<a href="#Dict">Dict</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;for&nbsp;the&nbsp;language&nbsp;specified&nbsp;by&nbsp;&lt;tag&gt;.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;constructs&nbsp;and&nbsp;returns&nbsp;a&nbsp;<a href="#Dict">Dict</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;for&nbsp;the<br>
+requested&nbsp;language.&nbsp;&nbsp;'tag'&nbsp;should&nbsp;be&nbsp;a&nbsp;string&nbsp;of&nbsp;the&nbsp;appropriate<br>
+form&nbsp;for&nbsp;specifying&nbsp;a&nbsp;language,&nbsp;such&nbsp;as&nbsp;"fr"&nbsp;(French)&nbsp;or&nbsp;"en_AU"<br>
+(Australian&nbsp;English).&nbsp;&nbsp;The&nbsp;existence&nbsp;of&nbsp;a&nbsp;specific&nbsp;language&nbsp;can<br>
+be&nbsp;tested&nbsp;using&nbsp;the&nbsp;'dict_exists'&nbsp;method.<br>
+&nbsp;<br>
+If&nbsp;&lt;tag&gt;&nbsp;is&nbsp;not&nbsp;given&nbsp;or&nbsp;is&nbsp;None,&nbsp;an&nbsp;attempt&nbsp;is&nbsp;made&nbsp;to&nbsp;determine<br>
+the&nbsp;current&nbsp;language&nbsp;in&nbsp;use.&nbsp;&nbsp;If&nbsp;this&nbsp;cannot&nbsp;be&nbsp;determined,&nbsp;Error<br>
+is&nbsp;raised.<br>
+&nbsp;<br>
+NOTE:&nbsp;&nbsp;this&nbsp;method&nbsp;is&nbsp;functionally&nbsp;equivalent&nbsp;to&nbsp;calling&nbsp;the&nbsp;<a href="#Dict">Dict</a>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructor&nbsp;and&nbsp;passing&nbsp;in&nbsp;the&nbsp;&lt;broker&gt;&nbsp;argument.</tt></dd></dl>
+
+<dl><dt><a name="Broker-request_pwl_dict"><strong>request_pwl_dict</strong></a>(self, pwl)</dt><dd><tt>Request&nbsp;a&nbsp;<a href="#Dict">Dict</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;for&nbsp;a&nbsp;personal&nbsp;word&nbsp;list.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;behaves&nbsp;as&nbsp;'request_dict'&nbsp;but&nbsp;rather&nbsp;than&nbsp;returning<br>
+a&nbsp;dictionary&nbsp;for&nbsp;a&nbsp;specific&nbsp;language,&nbsp;it&nbsp;returns&nbsp;a&nbsp;dictionary<br>
+referencing&nbsp;a&nbsp;personal&nbsp;word&nbsp;list.&nbsp;&nbsp;A&nbsp;personal&nbsp;word&nbsp;list&nbsp;is&nbsp;a&nbsp;file<br>
+of&nbsp;custom&nbsp;dictionary&nbsp;entries,&nbsp;one&nbsp;word&nbsp;per&nbsp;line.</tt></dd></dl>
+
+<dl><dt><a name="Broker-set_ordering"><strong>set_ordering</strong></a>(self, tag, ordering)</dt><dd><tt>Set&nbsp;dictionary&nbsp;preferences&nbsp;for&nbsp;a&nbsp;language.<br>
+&nbsp;<br>
+The&nbsp;Enchant&nbsp;library&nbsp;supports&nbsp;the&nbsp;use&nbsp;of&nbsp;multiple&nbsp;dictionary&nbsp;programs<br>
+and&nbsp;multiple&nbsp;languages.&nbsp;&nbsp;This&nbsp;method&nbsp;specifies&nbsp;which&nbsp;dictionaries<br>
+the&nbsp;broker&nbsp;should&nbsp;prefer&nbsp;when&nbsp;dealing&nbsp;with&nbsp;a&nbsp;given&nbsp;language.&nbsp;&nbsp;'tag'<br>
+must&nbsp;be&nbsp;an&nbsp;appropriate&nbsp;language&nbsp;specification&nbsp;and&nbsp;'ordering'&nbsp;is&nbsp;a<br>
+string&nbsp;listing&nbsp;the&nbsp;dictionaries&nbsp;in&nbsp;order&nbsp;of&nbsp;preference.&nbsp;&nbsp;For&nbsp;example<br>
+a&nbsp;valid&nbsp;ordering&nbsp;might&nbsp;be&nbsp;"aspell,myspell,ispell".<br>
+The&nbsp;value&nbsp;of&nbsp;'tag'&nbsp;can&nbsp;also&nbsp;be&nbsp;set&nbsp;to&nbsp;"*"&nbsp;to&nbsp;set&nbsp;a&nbsp;default&nbsp;ordering<br>
+for&nbsp;all&nbsp;languages&nbsp;for&nbsp;which&nbsp;one&nbsp;has&nbsp;not&nbsp;been&nbsp;set&nbsp;explicitly.</tt></dd></dl>
+
+<dl><dt><a name="Broker-set_param"><strong>set_param</strong></a>(self, name, value)</dt><dd><tt>Set&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;named&nbsp;parameter&nbsp;on&nbsp;this&nbsp;broker.<br>
+&nbsp;<br>
+Parameters&nbsp;are&nbsp;used&nbsp;to&nbsp;provide&nbsp;runtime&nbsp;information&nbsp;to&nbsp;individual<br>
+provider&nbsp;backends.&nbsp;&nbsp;For&nbsp;example,&nbsp;the&nbsp;myspell&nbsp;provider&nbsp;will&nbsp;search<br>
+any&nbsp;directories&nbsp;given&nbsp;in&nbsp;the&nbsp;"enchant.myspell.dictionary.path"<br>
+parameter&nbsp;when&nbsp;looking&nbsp;for&nbsp;its&nbsp;dictionary&nbsp;files.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="enchant.html#_EnchantObject">_EnchantObject</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Dict">class <strong>Dict</strong></a>(<a href="enchant.html#_EnchantObject">_EnchantObject</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Dictionary&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;for&nbsp;the&nbsp;Enchant&nbsp;spellchecker.<br>
+&nbsp;<br>
+Dictionary&nbsp;objects&nbsp;are&nbsp;responsible&nbsp;for&nbsp;checking&nbsp;the&nbsp;spelling&nbsp;of&nbsp;words<br>
+and&nbsp;suggesting&nbsp;possible&nbsp;corrections.&nbsp;&nbsp;Each&nbsp;dictionary&nbsp;is&nbsp;owned&nbsp;by&nbsp;a<br>
+<a href="#Broker">Broker</a>&nbsp;<a href="__builtin__.html#object">object</a>,&nbsp;but&nbsp;unless&nbsp;a&nbsp;new&nbsp;<a href="#Broker">Broker</a>&nbsp;has&nbsp;explicitly&nbsp;been&nbsp;created<br>
+then&nbsp;this&nbsp;will&nbsp;be&nbsp;the&nbsp;'enchant'&nbsp;module&nbsp;default&nbsp;<a href="#Broker">Broker</a>&nbsp;and&nbsp;is&nbsp;of&nbsp;little<br>
+interest.<br>
+&nbsp;<br>
+The&nbsp;important&nbsp;methods&nbsp;of&nbsp;this&nbsp;class&nbsp;include:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;<a href="#Dict-check">check</a>():&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;check&nbsp;whether&nbsp;a&nbsp;word&nbsp;id&nbsp;spelled&nbsp;correctly<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;<a href="#Dict-suggest">suggest</a>():&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;suggest&nbsp;correct&nbsp;spellings&nbsp;for&nbsp;a&nbsp;word<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;<a href="#Dict-add">add</a>():&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add&nbsp;a&nbsp;word&nbsp;to&nbsp;the&nbsp;user's&nbsp;personal&nbsp;dictionary<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;<a href="#Dict-remove">remove</a>():&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add&nbsp;a&nbsp;word&nbsp;to&nbsp;the&nbsp;user's&nbsp;personal&nbsp;exclude&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;<a href="#Dict-add_to_session">add_to_session</a>():&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add&nbsp;a&nbsp;word&nbsp;to&nbsp;the&nbsp;current&nbsp;spellcheck&nbsp;session<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;<a href="#Dict-store_replacement">store_replacement</a>():&nbsp;&nbsp;indicate&nbsp;a&nbsp;replacement&nbsp;for&nbsp;a&nbsp;given&nbsp;word<br>
+&nbsp;<br>
+Information&nbsp;about&nbsp;the&nbsp;dictionary&nbsp;is&nbsp;available&nbsp;using&nbsp;the&nbsp;following<br>
+attributes:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;language&nbsp;tag&nbsp;of&nbsp;the&nbsp;dictionary<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;provider:&nbsp;&nbsp;&nbsp;a&nbsp;<a href="#ProviderDesc">ProviderDesc</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;for&nbsp;the&nbsp;dictionary&nbsp;provider<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="enchant.html#Dict">Dict</a></dd>
+<dd><a href="enchant.html#_EnchantObject">_EnchantObject</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Dict-__del__"><strong>__del__</strong></a>(self)</dt><dd><tt><a href="#Dict">Dict</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;destructor.</tt></dd></dl>
+
+<dl><dt><a name="Dict-__init__"><strong>__init__</strong></a>(self, tag<font color="#909090">=None</font>, broker<font color="#909090">=None</font>)</dt><dd><tt><a href="#Dict">Dict</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;constructor.<br>
+&nbsp;<br>
+A&nbsp;dictionary&nbsp;belongs&nbsp;to&nbsp;a&nbsp;specific&nbsp;language,&nbsp;identified&nbsp;by&nbsp;the<br>
+string&nbsp;&lt;tag&gt;.&nbsp;&nbsp;If&nbsp;the&nbsp;tag&nbsp;is&nbsp;not&nbsp;given&nbsp;or&nbsp;is&nbsp;None,&nbsp;an&nbsp;attempt&nbsp;to<br>
+determine&nbsp;the&nbsp;language&nbsp;currently&nbsp;in&nbsp;use&nbsp;is&nbsp;made&nbsp;using&nbsp;the&nbsp;'locale'<br>
+module.&nbsp;&nbsp;If&nbsp;the&nbsp;current&nbsp;language&nbsp;cannot&nbsp;be&nbsp;determined,&nbsp;Error&nbsp;is&nbsp;raised.<br>
+&nbsp;<br>
+If&nbsp;&lt;tag&gt;&nbsp;is&nbsp;instead&nbsp;given&nbsp;the&nbsp;value&nbsp;of&nbsp;False,&nbsp;a&nbsp;'dead'&nbsp;<a href="#Dict">Dict</a>&nbsp;<a href="__builtin__.html#object">object</a><br>
+is&nbsp;created&nbsp;without&nbsp;any&nbsp;reference&nbsp;to&nbsp;a&nbsp;language.&nbsp;&nbsp;This&nbsp;is&nbsp;typically<br>
+only&nbsp;useful&nbsp;within&nbsp;PyEnchant&nbsp;itself.&nbsp;&nbsp;Any&nbsp;other&nbsp;non-string&nbsp;value<br>
+for&nbsp;&lt;tag&gt;&nbsp;raises&nbsp;Error.<br>
+&nbsp;<br>
+Each&nbsp;dictionary&nbsp;must&nbsp;also&nbsp;have&nbsp;an&nbsp;associated&nbsp;<a href="#Broker">Broker</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;which<br>
+obtains&nbsp;the&nbsp;dictionary&nbsp;information&nbsp;from&nbsp;the&nbsp;underlying&nbsp;system.&nbsp;This<br>
+may&nbsp;be&nbsp;specified&nbsp;using&nbsp;&lt;broker&gt;.&nbsp;&nbsp;If&nbsp;not&nbsp;given,&nbsp;the&nbsp;default&nbsp;broker<br>
+is&nbsp;used.</tt></dd></dl>
+
+<dl><dt><a name="Dict-add"><strong>add</strong></a>(self, word)</dt><dd><tt>Add&nbsp;a&nbsp;word&nbsp;to&nbsp;the&nbsp;user's&nbsp;personal&nbsp;word&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="Dict-add_to_pwl"><strong>add_to_pwl</strong></a>(self, word)</dt><dd><tt>Add&nbsp;a&nbsp;word&nbsp;to&nbsp;the&nbsp;user's&nbsp;personal&nbsp;word&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="Dict-add_to_session"><strong>add_to_session</strong></a>(self, word)</dt><dd><tt>Add&nbsp;a&nbsp;word&nbsp;to&nbsp;the&nbsp;session&nbsp;personal&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="Dict-check"><strong>check</strong></a>(self, word)</dt><dd><tt>Check&nbsp;spelling&nbsp;of&nbsp;a&nbsp;word.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;takes&nbsp;a&nbsp;word&nbsp;in&nbsp;the&nbsp;dictionary&nbsp;language&nbsp;and&nbsp;returns<br>
+True&nbsp;if&nbsp;it&nbsp;is&nbsp;correctly&nbsp;spelled,&nbsp;and&nbsp;false&nbsp;otherwise.</tt></dd></dl>
+
+<dl><dt><a name="Dict-is_added"><strong>is_added</strong></a>(self, word)</dt><dd><tt>Check&nbsp;whether&nbsp;a&nbsp;word&nbsp;is&nbsp;in&nbsp;the&nbsp;personal&nbsp;word&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="Dict-is_in_session"><strong>is_in_session</strong></a>(self, word)</dt><dd><tt>Check&nbsp;whether&nbsp;a&nbsp;word&nbsp;is&nbsp;in&nbsp;the&nbsp;session&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="Dict-is_removed"><strong>is_removed</strong></a>(self, word)</dt><dd><tt>Check&nbsp;whether&nbsp;a&nbsp;word&nbsp;is&nbsp;in&nbsp;the&nbsp;personal&nbsp;exclude&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="Dict-remove"><strong>remove</strong></a>(self, word)</dt><dd><tt>Add&nbsp;a&nbsp;word&nbsp;to&nbsp;the&nbsp;user's&nbsp;personal&nbsp;exclude&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="Dict-remove_from_session"><strong>remove_from_session</strong></a>(self, word)</dt><dd><tt>Add&nbsp;a&nbsp;word&nbsp;to&nbsp;the&nbsp;session&nbsp;exclude&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="Dict-store_replacement"><strong>store_replacement</strong></a>(self, mis, cor)</dt><dd><tt>Store&nbsp;a&nbsp;replacement&nbsp;spelling&nbsp;for&nbsp;a&nbsp;miss-spelled&nbsp;word.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;makes&nbsp;a&nbsp;suggestion&nbsp;to&nbsp;the&nbsp;spellchecking&nbsp;engine&nbsp;that&nbsp;the&nbsp;<br>
+miss-spelled&nbsp;word&nbsp;&lt;mis&gt;&nbsp;is&nbsp;in&nbsp;fact&nbsp;correctly&nbsp;spelled&nbsp;as&nbsp;&lt;cor&gt;.&nbsp;&nbsp;Such<br>
+a&nbsp;suggestion&nbsp;will&nbsp;typically&nbsp;mean&nbsp;that&nbsp;&lt;cor&gt;&nbsp;appears&nbsp;early&nbsp;in&nbsp;the<br>
+list&nbsp;of&nbsp;suggested&nbsp;spellings&nbsp;offered&nbsp;for&nbsp;later&nbsp;instances&nbsp;of&nbsp;&lt;mis&gt;.</tt></dd></dl>
+
+<dl><dt><a name="Dict-suggest"><strong>suggest</strong></a>(self, word)</dt><dd><tt>Suggest&nbsp;possible&nbsp;spellings&nbsp;for&nbsp;a&nbsp;word.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;tries&nbsp;to&nbsp;guess&nbsp;the&nbsp;correct&nbsp;spelling&nbsp;for&nbsp;a&nbsp;given<br>
+word,&nbsp;returning&nbsp;the&nbsp;possibilities&nbsp;in&nbsp;a&nbsp;list.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="enchant.html#_EnchantObject">_EnchantObject</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="DictWithPWL">class <strong>DictWithPWL</strong></a>(<a href="enchant.html#Dict">Dict</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Dictionary&nbsp;with&nbsp;separately-managed&nbsp;personal&nbsp;word&nbsp;list.<br>
+&nbsp;<br>
+NOTE:&nbsp;&nbsp;As&nbsp;of&nbsp;version&nbsp;1.4.0,&nbsp;enchant&nbsp;manages&nbsp;a&nbsp;per-user&nbsp;pwl&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exclude&nbsp;list.&nbsp;&nbsp;This&nbsp;class&nbsp;is&nbsp;now&nbsp;only&nbsp;needed&nbsp;if&nbsp;you&nbsp;want<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;explicitly&nbsp;maintain&nbsp;a&nbsp;separate&nbsp;word&nbsp;list&nbsp;in&nbsp;addition&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;default&nbsp;one.<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;behaves&nbsp;as&nbsp;the&nbsp;standard&nbsp;<a href="#Dict">Dict</a>&nbsp;class,&nbsp;but&nbsp;also&nbsp;manages&nbsp;a<br>
+personal&nbsp;word&nbsp;list&nbsp;stored&nbsp;in&nbsp;a&nbsp;separate&nbsp;file.&nbsp;&nbsp;The&nbsp;file&nbsp;must&nbsp;be<br>
+specified&nbsp;at&nbsp;creation&nbsp;time&nbsp;by&nbsp;the&nbsp;'pwl'&nbsp;argument&nbsp;to&nbsp;the&nbsp;constructor.<br>
+Words&nbsp;added&nbsp;to&nbsp;the&nbsp;dictionary&nbsp;are&nbsp;automatically&nbsp;appended&nbsp;to&nbsp;the&nbsp;pwl&nbsp;file.<br>
+&nbsp;<br>
+A&nbsp;personal&nbsp;exclude&nbsp;list&nbsp;can&nbsp;also&nbsp;be&nbsp;managed,&nbsp;by&nbsp;passing&nbsp;another&nbsp;filename<br>
+to&nbsp;the&nbsp;constructor&nbsp;in&nbsp;the&nbsp;optional&nbsp;'pel'&nbsp;argument.&nbsp;&nbsp;If&nbsp;this&nbsp;is&nbsp;not&nbsp;given,<br>
+requests&nbsp;to&nbsp;exclude&nbsp;words&nbsp;are&nbsp;ignored.<br>
+&nbsp;<br>
+If&nbsp;either&nbsp;'pwl'&nbsp;or&nbsp;'pel'&nbsp;are&nbsp;None,&nbsp;an&nbsp;in-memory&nbsp;word&nbsp;list&nbsp;is&nbsp;used.<br>
+This&nbsp;will&nbsp;prevent&nbsp;calls&nbsp;to&nbsp;<a href="#DictWithPWL-add">add</a>()&nbsp;and&nbsp;<a href="#DictWithPWL-remove">remove</a>()&nbsp;from&nbsp;affecting&nbsp;the&nbsp;user's<br>
+default&nbsp;word&nbsp;lists.<br>
+&nbsp;<br>
+The&nbsp;<a href="#Dict">Dict</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;managing&nbsp;the&nbsp;PWL&nbsp;is&nbsp;available&nbsp;as&nbsp;the&nbsp;'pwl'&nbsp;attribute.<br>
+The&nbsp;<a href="#Dict">Dict</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;managing&nbsp;the&nbsp;PEL&nbsp;is&nbsp;available&nbsp;as&nbsp;the&nbsp;'pel'&nbsp;attribute.<br>
+&nbsp;<br>
+To&nbsp;create&nbsp;a&nbsp;<a href="#DictWithPWL">DictWithPWL</a>&nbsp;from&nbsp;the&nbsp;user's&nbsp;default&nbsp;language,&nbsp;use&nbsp;None<br>
+as&nbsp;the&nbsp;'tag'&nbsp;argument.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="enchant.html#DictWithPWL">DictWithPWL</a></dd>
+<dd><a href="enchant.html#Dict">Dict</a></dd>
+<dd><a href="enchant.html#_EnchantObject">_EnchantObject</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="DictWithPWL-__init__"><strong>__init__</strong></a>(self, tag, pwl<font color="#909090">=None</font>, pel<font color="#909090">=None</font>, broker<font color="#909090">=None</font>)</dt><dd><tt><a href="#DictWithPWL">DictWithPWL</a>&nbsp;constructor.<br>
+&nbsp;<br>
+The&nbsp;argument&nbsp;'pwl',&nbsp;if&nbsp;not&nbsp;None,&nbsp;names&nbsp;a&nbsp;file&nbsp;containing&nbsp;the<br>
+personal&nbsp;word&nbsp;list.&nbsp;&nbsp;If&nbsp;this&nbsp;file&nbsp;does&nbsp;not&nbsp;exist,&nbsp;it&nbsp;is&nbsp;created<br>
+with&nbsp;default&nbsp;permissions.<br>
+&nbsp;<br>
+The&nbsp;argument&nbsp;'pel',&nbsp;if&nbsp;not&nbsp;None,&nbsp;names&nbsp;a&nbsp;file&nbsp;containing&nbsp;the&nbsp;personal<br>
+exclude&nbsp;list.&nbsp;&nbsp;If&nbsp;this&nbsp;file&nbsp;does&nbsp;not&nbsp;exist,&nbsp;it&nbsp;is&nbsp;created&nbsp;with<br>
+default&nbsp;permissions.</tt></dd></dl>
+
+<dl><dt><a name="DictWithPWL-add"><strong>add</strong></a>(self, word)</dt><dd><tt>Add&nbsp;a&nbsp;word&nbsp;to&nbsp;the&nbsp;associated&nbsp;personal&nbsp;word&nbsp;list.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;adds&nbsp;the&nbsp;given&nbsp;word&nbsp;to&nbsp;the&nbsp;personal&nbsp;word&nbsp;list,&nbsp;and<br>
+automatically&nbsp;saves&nbsp;the&nbsp;list&nbsp;to&nbsp;disk.</tt></dd></dl>
+
+<dl><dt><a name="DictWithPWL-add_to_pwl"><strong>add_to_pwl</strong></a>(self, word)</dt><dd><tt>Add&nbsp;a&nbsp;word&nbsp;to&nbsp;the&nbsp;associated&nbsp;personal&nbsp;word&nbsp;list.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;adds&nbsp;the&nbsp;given&nbsp;word&nbsp;to&nbsp;the&nbsp;personal&nbsp;word&nbsp;list,&nbsp;and<br>
+automatically&nbsp;saves&nbsp;the&nbsp;list&nbsp;to&nbsp;disk.</tt></dd></dl>
+
+<dl><dt><a name="DictWithPWL-check"><strong>check</strong></a>(self, word)</dt><dd><tt>Check&nbsp;spelling&nbsp;of&nbsp;a&nbsp;word.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;takes&nbsp;a&nbsp;word&nbsp;in&nbsp;the&nbsp;dictionary&nbsp;language&nbsp;and&nbsp;returns<br>
+True&nbsp;if&nbsp;it&nbsp;is&nbsp;correctly&nbsp;spelled,&nbsp;and&nbsp;false&nbsp;otherwise.&nbsp;&nbsp;It&nbsp;checks<br>
+both&nbsp;the&nbsp;dictionary&nbsp;and&nbsp;the&nbsp;personal&nbsp;word&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="DictWithPWL-is_added"><strong>is_added</strong></a>(self, word)</dt><dd><tt>Check&nbsp;whether&nbsp;a&nbsp;word&nbsp;is&nbsp;in&nbsp;the&nbsp;personal&nbsp;word&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="DictWithPWL-is_removed"><strong>is_removed</strong></a>(self, word)</dt><dd><tt>Check&nbsp;whether&nbsp;a&nbsp;word&nbsp;is&nbsp;in&nbsp;the&nbsp;personal&nbsp;exclude&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="DictWithPWL-remove"><strong>remove</strong></a>(self, word)</dt><dd><tt>Add&nbsp;a&nbsp;word&nbsp;to&nbsp;the&nbsp;associated&nbsp;exclude&nbsp;list.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="enchant.html#Dict">Dict</a>:<br>
+<dl><dt><a name="DictWithPWL-__del__"><strong>__del__</strong></a>(self)</dt><dd><tt><a href="#Dict">Dict</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;destructor.</tt></dd></dl>
+
+<dl><dt><a name="DictWithPWL-add_to_session"><strong>add_to_session</strong></a>(self, word)</dt><dd><tt>Add&nbsp;a&nbsp;word&nbsp;to&nbsp;the&nbsp;session&nbsp;personal&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="DictWithPWL-is_in_session"><strong>is_in_session</strong></a>(self, word)</dt><dd><tt>Check&nbsp;whether&nbsp;a&nbsp;word&nbsp;is&nbsp;in&nbsp;the&nbsp;session&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="DictWithPWL-remove_from_session"><strong>remove_from_session</strong></a>(self, word)</dt><dd><tt>Add&nbsp;a&nbsp;word&nbsp;to&nbsp;the&nbsp;session&nbsp;exclude&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="DictWithPWL-store_replacement"><strong>store_replacement</strong></a>(self, mis, cor)</dt><dd><tt>Store&nbsp;a&nbsp;replacement&nbsp;spelling&nbsp;for&nbsp;a&nbsp;miss-spelled&nbsp;word.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;makes&nbsp;a&nbsp;suggestion&nbsp;to&nbsp;the&nbsp;spellchecking&nbsp;engine&nbsp;that&nbsp;the&nbsp;<br>
+miss-spelled&nbsp;word&nbsp;&lt;mis&gt;&nbsp;is&nbsp;in&nbsp;fact&nbsp;correctly&nbsp;spelled&nbsp;as&nbsp;&lt;cor&gt;.&nbsp;&nbsp;Such<br>
+a&nbsp;suggestion&nbsp;will&nbsp;typically&nbsp;mean&nbsp;that&nbsp;&lt;cor&gt;&nbsp;appears&nbsp;early&nbsp;in&nbsp;the<br>
+list&nbsp;of&nbsp;suggested&nbsp;spellings&nbsp;offered&nbsp;for&nbsp;later&nbsp;instances&nbsp;of&nbsp;&lt;mis&gt;.</tt></dd></dl>
+
+<dl><dt><a name="DictWithPWL-suggest"><strong>suggest</strong></a>(self, word)</dt><dd><tt>Suggest&nbsp;possible&nbsp;spellings&nbsp;for&nbsp;a&nbsp;word.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;tries&nbsp;to&nbsp;guess&nbsp;the&nbsp;correct&nbsp;spelling&nbsp;for&nbsp;a&nbsp;given<br>
+word,&nbsp;returning&nbsp;the&nbsp;possibilities&nbsp;in&nbsp;a&nbsp;list.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="enchant.html#_EnchantObject">_EnchantObject</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ProviderDesc">class <strong>ProviderDesc</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Simple&nbsp;class&nbsp;describing&nbsp;an&nbsp;Enchant&nbsp;provider.<br>
+&nbsp;<br>
+Each&nbsp;provider&nbsp;has&nbsp;the&nbsp;following&nbsp;information&nbsp;associated&nbsp;with&nbsp;it:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Internal&nbsp;provider&nbsp;name&nbsp;(e.g.&nbsp;"aspell")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;desc:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Human-readable&nbsp;description&nbsp;(e.g.&nbsp;"Aspell&nbsp;Provider")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;file:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Location&nbsp;of&nbsp;the&nbsp;library&nbsp;containing&nbsp;the&nbsp;provider<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="ProviderDesc-__eq__"><strong>__eq__</strong></a>(self, pd)</dt><dd><tt>Equality&nbsp;operator&nbsp;on&nbsp;<a href="#ProviderDesc">ProviderDesc</a>&nbsp;objects.</tt></dd></dl>
+
+<dl><dt><a name="ProviderDesc-__hash__"><strong>__hash__</strong></a>(self)</dt><dd><tt>Hash&nbsp;operator&nbsp;on&nbsp;<a href="#ProviderDesc">ProviderDesc</a>&nbsp;objects.</tt></dd></dl>
+
+<dl><dt><a name="ProviderDesc-__init__"><strong>__init__</strong></a>(self, name, desc, file)</dt></dl>
+
+<dl><dt><a name="ProviderDesc-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="ProviderDesc-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-dict_exists"><strong>dict_exists</strong></a>(self, tag)<font color="#909090"><font face="helvetica, arial"> method of <a href="enchant.html#Broker">Broker</a> instance</font></font></dt><dd><tt>Check&nbsp;availability&nbsp;of&nbsp;a&nbsp;dictionary.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;checks&nbsp;whether&nbsp;there&nbsp;is&nbsp;a&nbsp;dictionary&nbsp;available&nbsp;for<br>
+the&nbsp;language&nbsp;specified&nbsp;by&nbsp;'tag'.&nbsp;&nbsp;It&nbsp;returns&nbsp;True&nbsp;if&nbsp;a&nbsp;dictionary<br>
+is&nbsp;available,&nbsp;and&nbsp;False&nbsp;otherwise.</tt></dd></dl>
+ <dl><dt><a name="-get_enchant_version"><strong>get_enchant_version</strong></a>()</dt><dd><tt>Get&nbsp;the&nbsp;version&nbsp;string&nbsp;for&nbsp;the&nbsp;underlying&nbsp;enchant&nbsp;library.</tt></dd></dl>
+ <dl><dt><a name="-get_param"><strong>get_param</strong></a>(self, name)<font color="#909090"><font face="helvetica, arial"> method of <a href="enchant.html#Broker">Broker</a> instance</font></font></dt><dd><tt>Get&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;named&nbsp;parameter&nbsp;on&nbsp;this&nbsp;broker.<br>
+&nbsp;<br>
+Parameters&nbsp;are&nbsp;used&nbsp;to&nbsp;provide&nbsp;runtime&nbsp;information&nbsp;to&nbsp;individual<br>
+provider&nbsp;backends.&nbsp;&nbsp;See&nbsp;the&nbsp;method&nbsp;'set_param'&nbsp;for&nbsp;more&nbsp;details.</tt></dd></dl>
+ <dl><dt><a name="-list_dicts"><strong>list_dicts</strong></a>(self)<font color="#909090"><font face="helvetica, arial"> method of <a href="enchant.html#Broker">Broker</a> instance</font></font></dt><dd><tt>Return&nbsp;list&nbsp;of&nbsp;available&nbsp;dictionaries.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;returns&nbsp;a&nbsp;list&nbsp;of&nbsp;dictionaries&nbsp;available&nbsp;to&nbsp;the<br>
+broker.&nbsp;&nbsp;Each&nbsp;entry&nbsp;in&nbsp;the&nbsp;list&nbsp;is&nbsp;a&nbsp;two-tuple&nbsp;of&nbsp;the&nbsp;form:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(tag,provider)<br>
+&nbsp;<br>
+where&nbsp;&lt;tag&gt;&nbsp;is&nbsp;the&nbsp;language&nbsp;lag&nbsp;for&nbsp;the&nbsp;dictionary&nbsp;and<br>
+&lt;provider&gt;&nbsp;is&nbsp;a&nbsp;<a href="#ProviderDesc">ProviderDesc</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;describing&nbsp;the&nbsp;provider<br>
+through&nbsp;which&nbsp;that&nbsp;dictionary&nbsp;can&nbsp;be&nbsp;obtained.</tt></dd></dl>
+ <dl><dt><a name="-list_languages"><strong>list_languages</strong></a>(self)<font color="#909090"><font face="helvetica, arial"> method of <a href="enchant.html#Broker">Broker</a> instance</font></font></dt><dd><tt>List&nbsp;languages&nbsp;for&nbsp;which&nbsp;dictionaries&nbsp;are&nbsp;available.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;returns&nbsp;a&nbsp;list&nbsp;of&nbsp;language&nbsp;tags&nbsp;for&nbsp;which&nbsp;a<br>
+dictionary&nbsp;is&nbsp;available.</tt></dd></dl>
+ <dl><dt><a name="-request_dict"><strong>request_dict</strong></a>(self, tag<font color="#909090">=None</font>)<font color="#909090"><font face="helvetica, arial"> method of <a href="enchant.html#Broker">Broker</a> instance</font></font></dt><dd><tt>Request&nbsp;a&nbsp;<a href="#Dict">Dict</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;for&nbsp;the&nbsp;language&nbsp;specified&nbsp;by&nbsp;&lt;tag&gt;.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;constructs&nbsp;and&nbsp;returns&nbsp;a&nbsp;<a href="#Dict">Dict</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;for&nbsp;the<br>
+requested&nbsp;language.&nbsp;&nbsp;'tag'&nbsp;should&nbsp;be&nbsp;a&nbsp;string&nbsp;of&nbsp;the&nbsp;appropriate<br>
+form&nbsp;for&nbsp;specifying&nbsp;a&nbsp;language,&nbsp;such&nbsp;as&nbsp;"fr"&nbsp;(French)&nbsp;or&nbsp;"en_AU"<br>
+(Australian&nbsp;English).&nbsp;&nbsp;The&nbsp;existence&nbsp;of&nbsp;a&nbsp;specific&nbsp;language&nbsp;can<br>
+be&nbsp;tested&nbsp;using&nbsp;the&nbsp;'dict_exists'&nbsp;method.<br>
+&nbsp;<br>
+If&nbsp;&lt;tag&gt;&nbsp;is&nbsp;not&nbsp;given&nbsp;or&nbsp;is&nbsp;None,&nbsp;an&nbsp;attempt&nbsp;is&nbsp;made&nbsp;to&nbsp;determine<br>
+the&nbsp;current&nbsp;language&nbsp;in&nbsp;use.&nbsp;&nbsp;If&nbsp;this&nbsp;cannot&nbsp;be&nbsp;determined,&nbsp;Error<br>
+is&nbsp;raised.<br>
+&nbsp;<br>
+NOTE:&nbsp;&nbsp;this&nbsp;method&nbsp;is&nbsp;functionally&nbsp;equivalent&nbsp;to&nbsp;calling&nbsp;the&nbsp;<a href="#Dict">Dict</a>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructor&nbsp;and&nbsp;passing&nbsp;in&nbsp;the&nbsp;&lt;broker&gt;&nbsp;argument.</tt></dd></dl>
+ <dl><dt><a name="-request_pwl_dict"><strong>request_pwl_dict</strong></a>(self, pwl)<font color="#909090"><font face="helvetica, arial"> method of <a href="enchant.html#Broker">Broker</a> instance</font></font></dt><dd><tt>Request&nbsp;a&nbsp;<a href="#Dict">Dict</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;for&nbsp;a&nbsp;personal&nbsp;word&nbsp;list.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;behaves&nbsp;as&nbsp;'request_dict'&nbsp;but&nbsp;rather&nbsp;than&nbsp;returning<br>
+a&nbsp;dictionary&nbsp;for&nbsp;a&nbsp;specific&nbsp;language,&nbsp;it&nbsp;returns&nbsp;a&nbsp;dictionary<br>
+referencing&nbsp;a&nbsp;personal&nbsp;word&nbsp;list.&nbsp;&nbsp;A&nbsp;personal&nbsp;word&nbsp;list&nbsp;is&nbsp;a&nbsp;file<br>
+of&nbsp;custom&nbsp;dictionary&nbsp;entries,&nbsp;one&nbsp;word&nbsp;per&nbsp;line.</tt></dd></dl>
+ <dl><dt><a name="-set_param"><strong>set_param</strong></a>(self, name, value)<font color="#909090"><font face="helvetica, arial"> method of <a href="enchant.html#Broker">Broker</a> instance</font></font></dt><dd><tt>Set&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;named&nbsp;parameter&nbsp;on&nbsp;this&nbsp;broker.<br>
+&nbsp;<br>
+Parameters&nbsp;are&nbsp;used&nbsp;to&nbsp;provide&nbsp;runtime&nbsp;information&nbsp;to&nbsp;individual<br>
+provider&nbsp;backends.&nbsp;&nbsp;For&nbsp;example,&nbsp;the&nbsp;myspell&nbsp;provider&nbsp;will&nbsp;search<br>
+any&nbsp;directories&nbsp;given&nbsp;in&nbsp;the&nbsp;"enchant.myspell.dictionary.path"<br>
+parameter&nbsp;when&nbsp;looking&nbsp;for&nbsp;its&nbsp;dictionary&nbsp;files.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__ver_major__</strong> = 1<br>
+<strong>__ver_minor__</strong> = 6<br>
+<strong>__ver_patch__</strong> = 3<br>
+<strong>__ver_sub__</strong> = ''<br>
+<strong>__version__</strong> = '1.6.3'</td></tr></table>
+</body></html>

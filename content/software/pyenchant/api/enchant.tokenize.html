@@ -1,0 +1,375 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: package enchant.tokenize</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="enchant.html"><font color="#ffffff">enchant</font></a>.tokenize</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/storage/software/pyenchant/enchant/tokenize/__init__.py">/storage/software/pyenchant/enchant/tokenize/__init__.py</a></font></td></tr></table>
+    <p><tt>enchant.<a href="#tokenize">tokenize</a>:&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;tokenization&nbsp;functions&nbsp;for&nbsp;PyEnchant<br>
+&nbsp;<br>
+An&nbsp;important&nbsp;task&nbsp;in&nbsp;spellchecking&nbsp;is&nbsp;breaking&nbsp;up&nbsp;large&nbsp;bodies&nbsp;of<br>
+text&nbsp;into&nbsp;their&nbsp;constituent&nbsp;words,&nbsp;each&nbsp;of&nbsp;which&nbsp;is&nbsp;then&nbsp;checked<br>
+for&nbsp;correctness.&nbsp;&nbsp;This&nbsp;package&nbsp;provides&nbsp;Python&nbsp;functions&nbsp;to&nbsp;split<br>
+strings&nbsp;into&nbsp;words&nbsp;according&nbsp;to&nbsp;the&nbsp;rules&nbsp;of&nbsp;a&nbsp;particular&nbsp;language.<br>
+&nbsp;<br>
+Each&nbsp;tokenization&nbsp;function&nbsp;accepts&nbsp;a&nbsp;string&nbsp;as&nbsp;its&nbsp;only&nbsp;positional<br>
+argument,&nbsp;and&nbsp;returns&nbsp;an&nbsp;iterator&nbsp;that&nbsp;yields&nbsp;tuples&nbsp;of&nbsp;the&nbsp;following<br>
+form,&nbsp;one&nbsp;for&nbsp;each&nbsp;word&nbsp;found:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(&lt;word&gt;,&lt;pos&gt;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+The&nbsp;meanings&nbsp;of&nbsp;these&nbsp;fields&nbsp;should&nbsp;be&nbsp;clear:&nbsp;&lt;word&gt;&nbsp;is&nbsp;the&nbsp;word<br>
+that&nbsp;was&nbsp;found&nbsp;and&nbsp;&lt;pos&gt;&nbsp;is&nbsp;the&nbsp;position&nbsp;within&nbsp;the&nbsp;text&nbsp;at&nbsp;which<br>
+the&nbsp;word&nbsp;began&nbsp;(zero&nbsp;indexed,&nbsp;of&nbsp;course).&nbsp;&nbsp;The&nbsp;function&nbsp;will&nbsp;work<br>
+on&nbsp;any&nbsp;string-like&nbsp;object&nbsp;that&nbsp;supports&nbsp;array-slicing;&nbsp;in&nbsp;particular<br>
+character-array&nbsp;objects&nbsp;from&nbsp;the&nbsp;'array'&nbsp;module&nbsp;may&nbsp;be&nbsp;used.<br>
+&nbsp;<br>
+The&nbsp;iterator&nbsp;also&nbsp;provides&nbsp;the&nbsp;attribute&nbsp;'offset'&nbsp;which&nbsp;may&nbsp;be&nbsp;used<br>
+to&nbsp;get/set&nbsp;the&nbsp;current&nbsp;position&nbsp;of&nbsp;the&nbsp;tokenizer&nbsp;inside&nbsp;the&nbsp;string<br>
+being&nbsp;split.&nbsp;&nbsp;This&nbsp;can&nbsp;be&nbsp;used&nbsp;for&nbsp;example&nbsp;if&nbsp;the&nbsp;string's&nbsp;contents<br>
+have&nbsp;changed&nbsp;during&nbsp;the&nbsp;tokenization&nbsp;process.<br>
+&nbsp;<br>
+To&nbsp;obtain&nbsp;an&nbsp;appropriate&nbsp;tokenization&nbsp;function&nbsp;for&nbsp;the&nbsp;language<br>
+identified&nbsp;by&nbsp;&lt;tag&gt;,&nbsp;use&nbsp;the&nbsp;function&nbsp;'<a href="#-get_tokenizer">get_tokenizer</a>(tag)':<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tknzr&nbsp;=&nbsp;<a href="#-get_tokenizer">get_tokenizer</a>("en_US")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(word,pos)&nbsp;in&nbsp;tknzr("text&nbsp;to&nbsp;be&nbsp;tokenized&nbsp;goes&nbsp;here")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_something(word)<br>
+&nbsp;<br>
+This&nbsp;library&nbsp;is&nbsp;designed&nbsp;to&nbsp;be&nbsp;easily&nbsp;extendible&nbsp;by&nbsp;third-party<br>
+authors.&nbsp;&nbsp;To&nbsp;register&nbsp;a&nbsp;tokenization&nbsp;function&nbsp;for&nbsp;the&nbsp;language<br>
+&lt;tag&gt;,&nbsp;implement&nbsp;it&nbsp;as&nbsp;the&nbsp;function&nbsp;'<a href="#tokenize">tokenize</a>'&nbsp;within&nbsp;the<br>
+module&nbsp;enchant.<a href="#tokenize">tokenize</a>.&lt;tag&gt;.&nbsp;&nbsp;The&nbsp;'get_tokenizer'&nbsp;function<br>
+will&nbsp;automatically&nbsp;detect&nbsp;it.&nbsp;&nbsp;Note&nbsp;that&nbsp;the&nbsp;underscore&nbsp;must&nbsp;be<br>
+used&nbsp;as&nbsp;the&nbsp;tag&nbsp;component&nbsp;separator&nbsp;in&nbsp;this&nbsp;case,&nbsp;in&nbsp;order&nbsp;to<br>
+form&nbsp;a&nbsp;valid&nbsp;python&nbsp;module&nbsp;name.&nbsp;(e.g.&nbsp;"en_US"&nbsp;rather&nbsp;than&nbsp;"en-US")<br>
+&nbsp;<br>
+Currently,&nbsp;a&nbsp;tokenizer&nbsp;has&nbsp;only&nbsp;been&nbsp;implemented&nbsp;for&nbsp;the&nbsp;English<br>
+language.&nbsp;&nbsp;Based&nbsp;on&nbsp;the&nbsp;author's&nbsp;limited&nbsp;experience,&nbsp;this&nbsp;should<br>
+be&nbsp;at&nbsp;least&nbsp;partially&nbsp;suitable&nbsp;for&nbsp;other&nbsp;languages.<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;also&nbsp;provides&nbsp;various&nbsp;implementations&nbsp;of&nbsp;"Chunkers"&nbsp;and<br>
+"Filters".&nbsp;&nbsp;These&nbsp;classes&nbsp;are&nbsp;designed&nbsp;to&nbsp;make&nbsp;it&nbsp;easy&nbsp;to&nbsp;work&nbsp;with<br>
+text&nbsp;in&nbsp;a&nbsp;vareity&nbsp;of&nbsp;common&nbsp;formats,&nbsp;by&nbsp;detecting&nbsp;and&nbsp;excluding&nbsp;parts<br>
+of&nbsp;the&nbsp;text&nbsp;that&nbsp;don't&nbsp;need&nbsp;to&nbsp;be&nbsp;checked.<br>
+&nbsp;<br>
+A&nbsp;<a href="#Chunker">Chunker</a>&nbsp;is&nbsp;a&nbsp;class&nbsp;designed&nbsp;to&nbsp;break&nbsp;a&nbsp;body&nbsp;of&nbsp;text&nbsp;into&nbsp;large&nbsp;chunks<br>
+of&nbsp;checkable&nbsp;content;&nbsp;for&nbsp;example&nbsp;the&nbsp;<a href="#HTMLChunker">HTMLChunker</a>&nbsp;class&nbsp;extracts&nbsp;the&nbsp;<br>
+text&nbsp;content&nbsp;from&nbsp;all&nbsp;HTML&nbsp;tags&nbsp;but&nbsp;excludes&nbsp;the&nbsp;tags&nbsp;themselves.<br>
+A&nbsp;<a href="#Filter">Filter</a>&nbsp;is&nbsp;a&nbsp;class&nbsp;designed&nbsp;to&nbsp;skip&nbsp;individual&nbsp;words&nbsp;during&nbsp;the&nbsp;checking<br>
+process;&nbsp;for&nbsp;example&nbsp;the&nbsp;<a href="#URLFilter">URLFilter</a>&nbsp;class&nbsp;skips&nbsp;over&nbsp;any&nbsp;words&nbsp;that<br>
+have&nbsp;the&nbsp;format&nbsp;of&nbsp;a&nbsp;URL.<br>
+&nbsp;<br>
+For&nbsp;exmaple,&nbsp;to&nbsp;spellcheck&nbsp;an&nbsp;HTML&nbsp;document&nbsp;it&nbsp;is&nbsp;necessary&nbsp;to&nbsp;split&nbsp;the<br>
+text&nbsp;into&nbsp;chunks&nbsp;based&nbsp;on&nbsp;HTML&nbsp;tags,&nbsp;and&nbsp;to&nbsp;filter&nbsp;out&nbsp;common&nbsp;word&nbsp;forms<br>
+such&nbsp;as&nbsp;URLs&nbsp;and&nbsp;WikiWords.&nbsp;&nbsp;This&nbsp;would&nbsp;look&nbsp;something&nbsp;like&nbsp;the&nbsp;following:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tknzr&nbsp;=&nbsp;get_tokenier("en_US",(<a href="#HTMLChunker">HTMLChunker</a>,),(<a href="#URLFilter">URLFilter</a>,<a href="#WikiWordFilter">WikiWordFilter</a>)))<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;text&nbsp;=&nbsp;"&lt;html&gt;&lt;body&gt;the&nbsp;url&nbsp;is&nbsp;<a href="http://example.com&lt;/body&gt;&lt;/html">http://example.com&lt;/body&gt;&lt;/html</a>&gt;"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(word,pos)&nbsp;in&nbsp;tknzer(text):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...check&nbsp;each&nbsp;word&nbsp;and&nbsp;react&nbsp;accordingly...</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Package Contents</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="enchant.tokenize.en.html">en</a><br>
+</td><td width="25%" valign=top><a href="enchant.tokenize.tests.html">tests</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="enchant.tokenize.html#Filter">Filter</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="enchant.tokenize.html#EmailFilter">EmailFilter</a>
+</font></dt><dt><font face="helvetica, arial"><a href="enchant.tokenize.html#URLFilter">URLFilter</a>
+</font></dt><dt><font face="helvetica, arial"><a href="enchant.tokenize.html#WikiWordFilter">WikiWordFilter</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="enchant.tokenize.html#tokenize">tokenize</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="enchant.tokenize.html#Chunker">Chunker</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="enchant.tokenize.html#HTMLChunker">HTMLChunker</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="enchant.tokenize.html#basic_tokenize">basic_tokenize</a>
+</font></dt><dt><font face="helvetica, arial"><a href="enchant.tokenize.html#empty_tokenize">empty_tokenize</a>
+</font></dt><dt><font face="helvetica, arial"><a href="enchant.tokenize.html#unit_tokenize">unit_tokenize</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Chunker">class <strong>Chunker</strong></a>(<a href="enchant.tokenize.html#tokenize">tokenize</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Base&nbsp;class&nbsp;for&nbsp;text&nbsp;chunking&nbsp;functions.<br>
+&nbsp;<br>
+A&nbsp;chunker&nbsp;is&nbsp;designed&nbsp;to&nbsp;chunk&nbsp;text&nbsp;into&nbsp;large&nbsp;blocks&nbsp;of&nbsp;tokens.&nbsp;&nbsp;It<br>
+has&nbsp;the&nbsp;same&nbsp;interface&nbsp;as&nbsp;a&nbsp;tokenizer&nbsp;but&nbsp;is&nbsp;for&nbsp;a&nbsp;different&nbsp;purpose.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods inherited from <a href="enchant.tokenize.html#tokenize">tokenize</a>:<br>
+<dl><dt><a name="Chunker-__init__"><strong>__init__</strong></a>(self, text)</dt></dl>
+
+<dl><dt><a name="Chunker-__iter__"><strong>__iter__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Chunker-__next__"><strong>__next__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Chunker-next"><strong>next</strong></a>(self)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="EmailFilter">class <strong>EmailFilter</strong></a>(<a href="enchant.tokenize.html#Filter">Filter</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#Filter">Filter</a>&nbsp;skipping&nbsp;over&nbsp;email&nbsp;addresses.<br>
+This&nbsp;filter&nbsp;skips&nbsp;any&nbsp;words&nbsp;matching&nbsp;the&nbsp;following&nbsp;regular&nbsp;expression:<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^.+@[^\.].*\.[a-z]{2,}$<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+That&nbsp;is,&nbsp;any&nbsp;words&nbsp;that&nbsp;resemble&nbsp;email&nbsp;addresses.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods inherited from <a href="enchant.tokenize.html#Filter">Filter</a>:<br>
+<dl><dt><a name="EmailFilter-__call__"><strong>__call__</strong></a>(self, *args, **kwds)</dt></dl>
+
+<dl><dt><a name="EmailFilter-__init__"><strong>__init__</strong></a>(self, tokenizer)</dt><dd><tt><a href="#Filter">Filter</a>&nbsp;class&nbsp;constructor.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Filter">class <strong>Filter</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Base&nbsp;class&nbsp;for&nbsp;token&nbsp;filtering&nbsp;functions.<br>
+&nbsp;<br>
+A&nbsp;filter&nbsp;is&nbsp;designed&nbsp;to&nbsp;wrap&nbsp;a&nbsp;tokenizer&nbsp;(or&nbsp;another&nbsp;filter)&nbsp;and&nbsp;do<br>
+two&nbsp;things:<br>
+&nbsp;<br>
+&nbsp;&nbsp;*&nbsp;skip&nbsp;over&nbsp;tokens<br>
+&nbsp;&nbsp;*&nbsp;split&nbsp;tokens&nbsp;into&nbsp;sub-tokens<br>
+&nbsp;<br>
+Subclasses&nbsp;have&nbsp;two&nbsp;basic&nbsp;options&nbsp;for&nbsp;customising&nbsp;their&nbsp;behaviour.&nbsp;&nbsp;The<br>
+method&nbsp;_skip(word)&nbsp;may&nbsp;be&nbsp;overridden&nbsp;to&nbsp;return&nbsp;True&nbsp;for&nbsp;words&nbsp;that<br>
+should&nbsp;be&nbsp;skipped,&nbsp;and&nbsp;false&nbsp;otherwise.&nbsp;&nbsp;The&nbsp;method&nbsp;_split(word)&nbsp;may<br>
+be&nbsp;overridden&nbsp;as&nbsp;tokenization&nbsp;function&nbsp;that&nbsp;will&nbsp;be&nbsp;applied&nbsp;to&nbsp;further<br>
+<a href="#tokenize">tokenize</a>&nbsp;any&nbsp;words&nbsp;that&nbsp;aren't&nbsp;skipped.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Filter-__call__"><strong>__call__</strong></a>(self, *args, **kwds)</dt></dl>
+
+<dl><dt><a name="Filter-__init__"><strong>__init__</strong></a>(self, tokenizer)</dt><dd><tt><a href="#Filter">Filter</a>&nbsp;class&nbsp;constructor.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="HTMLChunker">class <strong>HTMLChunker</strong></a>(<a href="enchant.tokenize.html#Chunker">Chunker</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#Chunker">Chunker</a>&nbsp;for&nbsp;breaking&nbsp;up&nbsp;HTML&nbsp;documents&nbsp;into&nbsp;chunks&nbsp;of&nbsp;checkable&nbsp;text.<br>
+&nbsp;<br>
+The&nbsp;operation&nbsp;of&nbsp;this&nbsp;chunker&nbsp;is&nbsp;very&nbsp;simple&nbsp;-&nbsp;anything&nbsp;between&nbsp;a&nbsp;"&lt;"<br>
+and&nbsp;a&nbsp;"&gt;"&nbsp;will&nbsp;be&nbsp;ignored.&nbsp;&nbsp;Later&nbsp;versions&nbsp;may&nbsp;improve&nbsp;the&nbsp;algorithm<br>
+slightly.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="enchant.tokenize.html#HTMLChunker">HTMLChunker</a></dd>
+<dd><a href="enchant.tokenize.html#Chunker">Chunker</a></dd>
+<dd><a href="enchant.tokenize.html#tokenize">tokenize</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="HTMLChunker-next"><strong>next</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="enchant.tokenize.html#tokenize">tokenize</a>:<br>
+<dl><dt><a name="HTMLChunker-__init__"><strong>__init__</strong></a>(self, text)</dt></dl>
+
+<dl><dt><a name="HTMLChunker-__iter__"><strong>__iter__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="HTMLChunker-__next__"><strong>__next__</strong></a>(self)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="URLFilter">class <strong>URLFilter</strong></a>(<a href="enchant.tokenize.html#Filter">Filter</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#Filter">Filter</a>&nbsp;skipping&nbsp;over&nbsp;URLs.<br>
+This&nbsp;filter&nbsp;skips&nbsp;any&nbsp;words&nbsp;matching&nbsp;the&nbsp;following&nbsp;regular&nbsp;expression:<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^[a-zA-z]+:\/\/[^\s].*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+That&nbsp;is,&nbsp;any&nbsp;words&nbsp;that&nbsp;are&nbsp;URLs.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods inherited from <a href="enchant.tokenize.html#Filter">Filter</a>:<br>
+<dl><dt><a name="URLFilter-__call__"><strong>__call__</strong></a>(self, *args, **kwds)</dt></dl>
+
+<dl><dt><a name="URLFilter-__init__"><strong>__init__</strong></a>(self, tokenizer)</dt><dd><tt><a href="#Filter">Filter</a>&nbsp;class&nbsp;constructor.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="WikiWordFilter">class <strong>WikiWordFilter</strong></a>(<a href="enchant.tokenize.html#Filter">Filter</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#Filter">Filter</a>&nbsp;skipping&nbsp;over&nbsp;WikiWords.<br>
+This&nbsp;filter&nbsp;skips&nbsp;any&nbsp;words&nbsp;matching&nbsp;the&nbsp;following&nbsp;regular&nbsp;expression:<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^([A-Z]\w+[A-Z]+\w+)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+That&nbsp;is,&nbsp;any&nbsp;words&nbsp;that&nbsp;are&nbsp;WikiWords.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods inherited from <a href="enchant.tokenize.html#Filter">Filter</a>:<br>
+<dl><dt><a name="WikiWordFilter-__call__"><strong>__call__</strong></a>(self, *args, **kwds)</dt></dl>
+
+<dl><dt><a name="WikiWordFilter-__init__"><strong>__init__</strong></a>(self, tokenizer)</dt><dd><tt><a href="#Filter">Filter</a>&nbsp;class&nbsp;constructor.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="basic_tokenize">class <strong>basic_tokenize</strong></a>(<a href="enchant.tokenize.html#tokenize">tokenize</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Tokenizer&nbsp;class&nbsp;that&nbsp;performs&nbsp;very&nbsp;basic&nbsp;word-finding.<br>
+&nbsp;<br>
+This&nbsp;tokenizer&nbsp;does&nbsp;the&nbsp;most&nbsp;basic&nbsp;thing&nbsp;that&nbsp;could&nbsp;work&nbsp;-&nbsp;it&nbsp;splits<br>
+text&nbsp;into&nbsp;words&nbsp;based&nbsp;on&nbsp;whitespace&nbsp;boundaries,&nbsp;and&nbsp;removes&nbsp;basic<br>
+punctuation&nbsp;symbols&nbsp;from&nbsp;the&nbsp;start&nbsp;and&nbsp;end&nbsp;of&nbsp;each&nbsp;word.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="basic_tokenize-next"><strong>next</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>strip_from_end</strong> = '"<font color="#c040c0">\'</font>`]).!,?;:'</dl>
+
+<dl><dt><strong>strip_from_start</strong> = '"<font color="#c040c0">\'</font>`(['</dl>
+
+<hr>
+Methods inherited from <a href="enchant.tokenize.html#tokenize">tokenize</a>:<br>
+<dl><dt><a name="basic_tokenize-__init__"><strong>__init__</strong></a>(self, text)</dt></dl>
+
+<dl><dt><a name="basic_tokenize-__iter__"><strong>__iter__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="basic_tokenize-__next__"><strong>__next__</strong></a>(self)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="empty_tokenize">class <strong>empty_tokenize</strong></a>(<a href="enchant.tokenize.html#tokenize">tokenize</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Tokenizer&nbsp;class&nbsp;that&nbsp;yields&nbsp;no&nbsp;elements.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="empty_tokenize-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="empty_tokenize-next"><strong>next</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="enchant.tokenize.html#tokenize">tokenize</a>:<br>
+<dl><dt><a name="empty_tokenize-__iter__"><strong>__iter__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="empty_tokenize-__next__"><strong>__next__</strong></a>(self)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="tokenize">class <strong>tokenize</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Base&nbsp;class&nbsp;for&nbsp;all&nbsp;tokenizer&nbsp;objects.<br>
+&nbsp;<br>
+Each&nbsp;tokenizer&nbsp;must&nbsp;be&nbsp;an&nbsp;iterator&nbsp;and&nbsp;provide&nbsp;the&nbsp;'offset'<br>
+attribute&nbsp;as&nbsp;described&nbsp;in&nbsp;the&nbsp;documentation&nbsp;for&nbsp;this&nbsp;module.<br>
+&nbsp;<br>
+While&nbsp;tokenizers&nbsp;are&nbsp;in&nbsp;fact&nbsp;classes,&nbsp;they&nbsp;should&nbsp;be&nbsp;treated<br>
+like&nbsp;functions,&nbsp;and&nbsp;so&nbsp;are&nbsp;named&nbsp;using&nbsp;lower_case&nbsp;rather&nbsp;than<br>
+the&nbsp;CamelCase&nbsp;more&nbsp;traditional&nbsp;of&nbsp;class&nbsp;names.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="tokenize-__init__"><strong>__init__</strong></a>(self, text)</dt></dl>
+
+<dl><dt><a name="tokenize-__iter__"><strong>__iter__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="tokenize-__next__"><strong>__next__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="tokenize-next"><strong>next</strong></a>(self)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="unit_tokenize">class <strong>unit_tokenize</strong></a>(<a href="enchant.tokenize.html#tokenize">tokenize</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Tokenizer&nbsp;class&nbsp;that&nbsp;yields&nbsp;the&nbsp;text&nbsp;as&nbsp;a&nbsp;single&nbsp;token.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="unit_tokenize-__init__"><strong>__init__</strong></a>(self, text)</dt></dl>
+
+<dl><dt><a name="unit_tokenize-next"><strong>next</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="enchant.tokenize.html#tokenize">tokenize</a>:<br>
+<dl><dt><a name="unit_tokenize-__iter__"><strong>__iter__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="unit_tokenize-__next__"><strong>__next__</strong></a>(self)</dt></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-get_tokenizer"><strong>get_tokenizer</strong></a>(tag, chunkers<font color="#909090">=None</font>, filters<font color="#909090">=None</font>)</dt><dd><tt>Locate&nbsp;an&nbsp;appropriate&nbsp;tokenizer&nbsp;by&nbsp;language&nbsp;tag.<br>
+&nbsp;<br>
+This&nbsp;requires&nbsp;importing&nbsp;the&nbsp;function&nbsp;'<a href="#tokenize">tokenize</a>'&nbsp;from&nbsp;an<br>
+appropriate&nbsp;module.&nbsp;&nbsp;Modules&nbsp;tried&nbsp;are&nbsp;named&nbsp;after&nbsp;the<br>
+language&nbsp;tag,&nbsp;tried&nbsp;in&nbsp;the&nbsp;following&nbsp;order:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;the&nbsp;entire&nbsp;tag&nbsp;(e.g.&nbsp;"en_AU.py")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;the&nbsp;base&nbsp;country&nbsp;code&nbsp;of&nbsp;the&nbsp;tag&nbsp;(e.g.&nbsp;"en.py")<br>
+&nbsp;<br>
+If&nbsp;a&nbsp;suitable&nbsp;function&nbsp;cannot&nbsp;be&nbsp;found,&nbsp;raises&nbsp;TokenizerNotFoundError.<br>
+&nbsp;<br>
+If&nbsp;given&nbsp;and&nbsp;not&nbsp;None,&nbsp;'chunkers'&nbsp;and&nbsp;'filters'&nbsp;must&nbsp;be&nbsp;lists&nbsp;of&nbsp;chunker<br>
+classes&nbsp;and&nbsp;filter&nbsp;classes&nbsp;resectively.&nbsp;&nbsp;These&nbsp;will&nbsp;be&nbsp;applied&nbsp;to&nbsp;the<br>
+tokenizer&nbsp;during&nbsp;creation.</tt></dd></dl>
+ <dl><dt><a name="-next"><strong>next</strong></a>(...)</dt><dd><tt><a href="#-next">next</a>(iterator[,&nbsp;default])<br>
+&nbsp;<br>
+Return&nbsp;the&nbsp;next&nbsp;item&nbsp;from&nbsp;the&nbsp;iterator.&nbsp;If&nbsp;default&nbsp;is&nbsp;given&nbsp;and&nbsp;the&nbsp;iterator<br>
+is&nbsp;exhausted,&nbsp;it&nbsp;is&nbsp;returned&nbsp;instead&nbsp;of&nbsp;raising&nbsp;StopIteration.</tt></dd></dl>
+ <dl><dt><a name="-wrap_tokenizer"><strong>wrap_tokenizer</strong></a>(tk1, tk2)</dt><dd><tt>Wrap&nbsp;one&nbsp;tokenizer&nbsp;inside&nbsp;another.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;takes&nbsp;two&nbsp;tokenizer&nbsp;functions&nbsp;'tk1'&nbsp;and&nbsp;'tk2',<br>
+and&nbsp;returns&nbsp;a&nbsp;new&nbsp;tokenizer&nbsp;function&nbsp;that&nbsp;passes&nbsp;the&nbsp;output<br>
+of&nbsp;tk1&nbsp;through&nbsp;tk2&nbsp;before&nbsp;yielding&nbsp;it&nbsp;to&nbsp;the&nbsp;calling&nbsp;code.</tt></dd></dl>
+</td></tr></table>
+</body></html>

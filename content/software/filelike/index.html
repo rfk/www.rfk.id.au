@@ -1,0 +1,184 @@
+---
+title: RFK | Software | Filelike
+---
+
+<h2>filelike</h2>
+
+<p><b>filelike</b> is a Python module for building and manipulating file-like
+objects. Source is available from the <a href="http://github.com/rfk/filelike/">filelike github page</a>.  Downloads are available from the <a href="http://pypi.python.org/pypi/filelike/">Python Package Index</a>.
+</p>
+
+<h3>Rationale</h3>
+
+<p>File-like objects are near-ubiquitous in Python.  They provide a clear
+and easy-to-use interface for reading from or writing to any number of
+different types of data store.  At the basic level, they are beautifully simple
+ - for an object to be considered 'file-like' it only requires a
+read() method for reading data, and/or a write() method for writing data.</p>
+
+<p>However, the full file-like interface is considerably more complex.
+On top of read(), there are methods to read a full line and to iterate
+over the lines in the file. The write() method can be accompanied by
+ writelines().  It's nothing a little buffering and boilerplate wont solve,
+but who wants to do all that just to be considered "file-like"?  And we haven't
+ even started to consider support for seek() and tell()...</p>
+
+<p>That's where filelike comes in.</p>
+
+<p>filelike is designed to make it easy to support the entire rich file-like interface
+while writing as little code as possible.  It provides convenient facilities
+for checking whether objects support the file-like interface, and for
+wrapping a variety of common objects in such an interface.  And it provides
+a bunch of nifty classes for manipulating file-like objects: concatenating
+them together, accessing slices of them, encrypting, compressing and
+transforming them.
+
+<h3>Current Release</h3>
+
+<p>The current release is <a href="http://cheeseshop.python.org/pypi/filelike/0.3.3/">filelike-0.3.3</a>. To send feedback, bugs reports etc, please refer to my <a href="http://www.rfk.id.au/about/">contact details</a>.</p>
+
+<p>This software is licensed under the GNU Lesser General Public License (LGPL) version 2.1 or later.
+See the file LICENSE.txt in the source distribution for details.  If the LGPL is
+a showstopper for you, please let me know and I'm sure we can work something out.</p>
+
+<h3>Quick Tutorial</h3>
+
+<p>The following is a quick run-through of the current features of the
+filelike module.  For a more complete overview, the pydoc-generated
+<a href="./api/filelike.html">API documentation</a>
+is also available.</p>
+
+<p>The main class in the filelike module is <a class="api-ref" href="./api/filelike.html#FileLikeBase">FileLikeBase</a>.  This
+is an abstract base class that implements the entire rich file-like interface
+on top of four primitive methods: <a class="api-ref">_read()</a>, <a class="api-ref">_write()</a>, <a class="api-ref">_seek()</a> and <a class="api-ref">_tell()</a>.  Subclasses can implement any or all of these methods to
+immediately obtain the related higher-level file behaviors.  For more details, see the section on <a href="#writing-subclasses">writing subclasses</a> below.</p>
+
+<p>The module also provides two handy functions when expecting file-like objects.
+<a class="api-ref" href="./api/filelike.html#-is_filelike">is_filelike()</a> checks whether a given object implements the rich
+file-like interface, while <a class="api-ref" href="./api/filelike.html#-to_filelike">to_filelike()</a> attempts to wrap an
+object in an appropriate file-like interface.</p>
+
+<p>Using these building blocks, it is straightforward to create a
+variety of useful classes for manipulating file-like objects.  The base
+filelike module provides two such functions: <a class="api-ref" href="./api/filelike.html#-join">join</a> concatenates several file-like objects together, while <a class="api-ref" href="./api/filelike.html#-slice">slice</a> accesses a fixed portion of a file-like object:</p>
+
+<p class="code">&gt;&gt;&gt; from StringIO import StringIO as SIO
+&gt;&gt;&gt; f = filelike.join([SIO("hello"),SIO(" "),SIO("world")])
+&gt;&gt;&gt; f.read()
+'hello world'
+&gt;&gt;&gt; f = filelike.slice(SIO("hello there world"),6,11)
+&gt;&gt;&gt; f.read()
+'there'
+&gt;&gt;&gt;
+</p>
+
+<p>As long as the underlying file objects support it, these joins and slices
+can be read from, written to, seeked around and generally treated as if
+they were a standard file object.</p>
+
+<p>
+Several more sophisticated "wrapper" classes have
+been implemented in the <a class="api-ref" href="./api/filelike.wrappers.html">filelike.wrappers</a> module, including:
+</p>
+<ul>
+<li><a class="api-ref" href="./api/filelike.wrappers.html#Translate">Translate</a>:  pass file contents through a translation function (think:
+compression, encryption, ...)</li>
+<li><a class="api-ref" href="./api/filelike.wrappers.html#Decrypt">Decrypt</a>:  on-the-fly reading and writing of an encrypted file
+(using the PEP 272 cipher API)</li>
+</ul>
+
+
+<p>Here's a short example using the <a class="api-ref" href="./api/filelike.wrappers.html#Decrypt">Decrypt</a> class:</p>
+
+<p class="code">&gt;&gt;&gt; # Create the decryption key
+&gt;&gt;&gt; from Crypto.Cipher import DES
+&gt;&gt;&gt; cipher = DES.new('abcdefgh',DES.MODE_ECB)
+&gt;&gt;&gt; # Open the encrypted file
+&gt;&gt;&gt; from filelike.wrappers import DecryptFile
+&gt;&gt;&gt; f = DecryptFile(file("some_encrypted_file.bin","r"),cipher)
+</p>
+
+<p>The object in <i>f</i> now behaves as a file-like object, transparently
+decrypting the file on-the-fly as it is read.</p>
+
+<p>The module <a class="api-ref" href="./api/filelike.pipeline.html">filelike.pipeline</a> uses a bit of operator abuse to
+allow these wrappers to be composed in the style of a unix pipeline.
+Suppose that one wants to read only the first five lines of a decrypted
+file.  The object <i>f</i> constructed below will do so:</p>
+
+<p class="code">&gt;&gt;&gt; # Create the decryption key 
+&gt;&gt;&gt; from Crypto.Cipher import DES
+&gt;&gt;&gt; cipher = DES.new('abcdefgh',DES.MODE_ECB)
+&gt;&gt;&gt; # Open the encrypted file
+&gt;&gt;&gt; from filelike.pipeline import DecryptFile, Head
+&gt;&gt;&gt; f = file("some_encrypted_file.bin","r") &gt; DecryptFile(cipher) | Head(lines=5)
+</p>
+
+<p>Finally, the function <i>filelike.open()</i> acts much the same as the
+standard <i>open()</i> function, but does some clever things such as fetching
+URLs and decompressing on the fly.  It's trivial to read from a remote,
+compressed file like so:</p>
+
+<p class="code">&gt;&gt;&gt; f = filelike.open("http://www.rfk.id.au/static/test.txt.bz2")</p>
+
+
+<h3><a name="writing-subclasses">Writing FileLikeBase Subclasses</a></h3>
+
+<p>As usual, the best way to demonstrate is by example.  Here is a cheap
+imitation of StringIO using the facilities provided by FileLikeBase:</p>
+
+<p class="code">import filelike
+
+class MyStringIO(filelike.FileLikeBase):
+
+    def __init__(self,string):
+        super(MyStringIO,self).__init__()
+        self._string = string
+        self._pos = 0
+
+    def _read(self,sizehint=-1):
+        if self._pos &gt;= len(self._string):
+            return None
+        if sizehint &lt; 0:
+            newPos = len(self._string)
+        else:
+            newPos = min(self._pos + sizehint,len(self._string))
+        data = self._string[self._pos:newPos]
+        self._pos  = newPos
+        return data
+
+    def _write(self,data,flushing=False):
+        newPos = self._pos + len(data)
+        newString = self._string[:self._pos]
+        newString = newString + data
+        newString = newString + self._string[newPos:]
+        self._string = newString
+        self._pos = newPos 
+
+    _seek(self,offset,whence):
+        if whence &gt; 0:
+          raise NotImplementedError
+        self._pos = offset
+        return None
+
+    def _tell(self):
+        return self._pos
+</p>
+
+<p>The <a class="api-ref">_read()</a> method behaves like the normal <a class="api-ref">read()</a> method of
+the file object, but is not required to make any guarantees about the number of bytes it will
+return.  The calling code may request a certain number of bytes, but this
+is only a hint - more or less bytes may actually be returned, and FileLikeBase
+takes care of the necessary buffering to ensure that the correct number
+of bytes is passed back to the calling code.  To properly support this buffering it must return None instead of "" to indicate EOF.</p>
+
+<p>The <a class="api-ref">_write()</a> method is similarly flexible in that it need not write all the data straight away.  Any data that cannot be written should be returned, and it will be buffered by FileLikeBase for later writing. Since it must be possible to flush the write buffers, <a class="api-ref">_write()</a> must accept a keyword argument 'flushing' to indicate when this is occurring.  If 'flushing' is set to True, all of the given data must be written.</p> 
+
+<p>The <a class="api-ref">_seek()</a> method should set the internal position of the file to <i>approximately</i> the specified position.  If it cannot be set
+to exactly the position specified, it can be set to some smaller position. In this case <a class="api-ref">_seek()</a> must return the current data in the file
+between the requested and final position, which will be used at the next read or
+write to account for this discrepency.  FileLikeBase knows how to simulate other seek modes (whence &gt; 0) in terms of an absolute seek, and will do so if <a class="api-ref">NotImplementedError</a> is raised.</p>
+
+<p>Finally, the <a class="api-ref">_tell()</a> method should return the current position of the internal file pointer.</p>
+
+

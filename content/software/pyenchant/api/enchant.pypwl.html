@@ -1,0 +1,134 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module enchant.pypwl</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="enchant.html"><font color="#ffffff">enchant</font></a>.pypwl</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/storage/software/pyenchant/enchant/pypwl.py">/storage/software/pyenchant/enchant/pypwl.py</a></font></td></tr></table>
+    <p><tt>&nbsp;&nbsp;pypwl:&nbsp;&nbsp;pure-python&nbsp;personal&nbsp;word&nbsp;list&nbsp;in&nbsp;the&nbsp;style&nbsp;of&nbsp;Enchant<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;provides&nbsp;a&nbsp;pure-python&nbsp;version&nbsp;of&nbsp;the&nbsp;personal&nbsp;word&nbsp;list<br>
+functionality&nbsp;found&nbsp;in&nbsp;the&nbsp;spellchecking&nbsp;package&nbsp;Enchant.&nbsp;&nbsp;While&nbsp;the<br>
+same&nbsp;effect&nbsp;can&nbsp;be&nbsp;achieved&nbsp;(with&nbsp;better&nbsp;performance)&nbsp;using&nbsp;the&nbsp;python<br>
+bindings&nbsp;for&nbsp;Enchant,&nbsp;it&nbsp;requires&nbsp;a&nbsp;C&nbsp;extension.<br>
+&nbsp;<br>
+This&nbsp;pure-python&nbsp;implementation&nbsp;uses&nbsp;the&nbsp;same&nbsp;algorithm&nbsp;but&nbsp;without&nbsp;any<br>
+external&nbsp;dependencies&nbsp;or&nbsp;C&nbsp;code&nbsp;(in&nbsp;fact,&nbsp;it&nbsp;was&nbsp;the&nbsp;author's&nbsp;original<br>
+prototype&nbsp;for&nbsp;the&nbsp;C&nbsp;version&nbsp;found&nbsp;in&nbsp;Enchant).</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="os.html">os</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="enchant.pypwl.html#PyPWL">PyPWL</a>
+</font></dt><dt><font face="helvetica, arial"><a href="enchant.pypwl.html#Trie">Trie</a>
+</font></dt></dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PyPWL">class <strong>PyPWL</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Pure-python&nbsp;implementation&nbsp;of&nbsp;Personal&nbsp;Word&nbsp;List&nbsp;dictionary.<br>
+This&nbsp;class&nbsp;emulates&nbsp;the&nbsp;PWL&nbsp;objects&nbsp;provided&nbsp;by&nbsp;PyEnchant,&nbsp;but<br>
+implemented&nbsp;purely&nbsp;in&nbsp;python.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="PyPWL-__init__"><strong>__init__</strong></a>(self, pwl<font color="#909090">=None</font>)</dt><dd><tt><a href="#PyPWL">PyPWL</a>&nbsp;constructor.<br>
+This&nbsp;method&nbsp;takes&nbsp;as&nbsp;its&nbsp;only&nbsp;argument&nbsp;the&nbsp;name&nbsp;of&nbsp;a&nbsp;file<br>
+containing&nbsp;the&nbsp;personal&nbsp;word&nbsp;list,&nbsp;one&nbsp;word&nbsp;per&nbsp;line.&nbsp;&nbsp;Entries<br>
+will&nbsp;be&nbsp;read&nbsp;from&nbsp;this&nbsp;file,&nbsp;and&nbsp;new&nbsp;entries&nbsp;will&nbsp;be&nbsp;written&nbsp;to<br>
+it&nbsp;automatically.<br>
+&nbsp;<br>
+If&nbsp;&lt;pwl&gt;&nbsp;is&nbsp;not&nbsp;specified&nbsp;or&nbsp;None,&nbsp;the&nbsp;list&nbsp;is&nbsp;maintained&nbsp;in<br>
+memory&nbsp;only.</tt></dd></dl>
+
+<dl><dt><a name="PyPWL-add"><strong>add</strong></a>(self, word)</dt><dd><tt>Add&nbsp;a&nbsp;word&nbsp;to&nbsp;the&nbsp;user's&nbsp;personal&nbsp;dictionary.<br>
+For&nbsp;a&nbsp;PWL,&nbsp;this&nbsp;means&nbsp;appending&nbsp;it&nbsp;to&nbsp;the&nbsp;file.</tt></dd></dl>
+
+<dl><dt><a name="PyPWL-add_to_pwl"><strong>add_to_pwl</strong></a>(self, word)</dt><dd><tt>Add&nbsp;a&nbsp;word&nbsp;to&nbsp;the&nbsp;user's&nbsp;personal&nbsp;dictionary.<br>
+For&nbsp;a&nbsp;PWL,&nbsp;this&nbsp;means&nbsp;appending&nbsp;it&nbsp;to&nbsp;the&nbsp;file.</tt></dd></dl>
+
+<dl><dt><a name="PyPWL-add_to_session"><strong>add_to_session</strong></a>(self, word)</dt><dd><tt>Add&nbsp;a&nbsp;word&nbsp;to&nbsp;the&nbsp;session&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="PyPWL-check"><strong>check</strong></a>(self, word)</dt><dd><tt>Check&nbsp;spelling&nbsp;of&nbsp;a&nbsp;word.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;takes&nbsp;a&nbsp;word&nbsp;in&nbsp;the&nbsp;dictionary&nbsp;language&nbsp;and&nbsp;returns<br>
+True&nbsp;if&nbsp;it&nbsp;is&nbsp;correctly&nbsp;spelled,&nbsp;and&nbsp;false&nbsp;otherwise.</tt></dd></dl>
+
+<dl><dt><a name="PyPWL-is_added"><strong>is_added</strong></a>(self, word)</dt><dd><tt>Check&nbsp;whether&nbsp;a&nbsp;word&nbsp;is&nbsp;in&nbsp;the&nbsp;personal&nbsp;word&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="PyPWL-is_in_session"><strong>is_in_session</strong></a>(self, word)</dt><dd><tt>Check&nbsp;whether&nbsp;a&nbsp;word&nbsp;is&nbsp;in&nbsp;the&nbsp;session&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="PyPWL-is_removed"><strong>is_removed</strong></a>(self, word)</dt><dd><tt>Check&nbsp;whether&nbsp;a&nbsp;word&nbsp;is&nbsp;in&nbsp;the&nbsp;personal&nbsp;exclude&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="PyPWL-remove"><strong>remove</strong></a>(self, word)</dt><dd><tt>Add&nbsp;a&nbsp;word&nbsp;to&nbsp;the&nbsp;user's&nbsp;personal&nbsp;exclude&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="PyPWL-store_replacement"><strong>store_replacement</strong></a>(self, mis, cor)</dt><dd><tt>Store&nbsp;a&nbsp;replacement&nbsp;spelling&nbsp;for&nbsp;a&nbsp;miss-spelled&nbsp;word.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;makes&nbsp;a&nbsp;suggestion&nbsp;to&nbsp;the&nbsp;spellchecking&nbsp;engine&nbsp;that&nbsp;the&nbsp;<br>
+miss-spelled&nbsp;word&nbsp;&lt;mis&gt;&nbsp;is&nbsp;in&nbsp;fact&nbsp;correctly&nbsp;spelled&nbsp;as&nbsp;&lt;cor&gt;.&nbsp;&nbsp;Such<br>
+a&nbsp;suggestion&nbsp;will&nbsp;typically&nbsp;mean&nbsp;that&nbsp;&lt;cor&gt;&nbsp;appears&nbsp;early&nbsp;in&nbsp;the<br>
+list&nbsp;of&nbsp;suggested&nbsp;spellings&nbsp;offered&nbsp;for&nbsp;later&nbsp;instances&nbsp;of&nbsp;&lt;mis&gt;.</tt></dd></dl>
+
+<dl><dt><a name="PyPWL-suggest"><strong>suggest</strong></a>(self, word)</dt><dd><tt>Suggest&nbsp;possible&nbsp;spellings&nbsp;for&nbsp;a&nbsp;word.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;tries&nbsp;to&nbsp;guess&nbsp;the&nbsp;correct&nbsp;spelling&nbsp;for&nbsp;a&nbsp;given<br>
+word,&nbsp;returning&nbsp;the&nbsp;possibilities&nbsp;in&nbsp;a&nbsp;list.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Trie">class <strong>Trie</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;implementing&nbsp;a&nbsp;trie-based&nbsp;dictionary&nbsp;of&nbsp;words.<br>
+&nbsp;<br>
+A&nbsp;<a href="#Trie">Trie</a>&nbsp;is&nbsp;a&nbsp;recursive&nbsp;data&nbsp;structure&nbsp;storing&nbsp;words&nbsp;by&nbsp;their&nbsp;prefix.<br>
+"Fuzzy&nbsp;matching"&nbsp;can&nbsp;be&nbsp;done&nbsp;by&nbsp;allowing&nbsp;a&nbsp;certain&nbsp;number&nbsp;of&nbsp;missteps<br>
+when&nbsp;traversing&nbsp;the&nbsp;<a href="#Trie">Trie</a>.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Trie-__getitem__"><strong>__getitem__</strong></a>(self, key)</dt></dl>
+
+<dl><dt><a name="Trie-__init__"><strong>__init__</strong></a>(self, words<font color="#909090">=()</font>)</dt></dl>
+
+<dl><dt><a name="Trie-__iter__"><strong>__iter__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Trie-__setitem__"><strong>__setitem__</strong></a>(self, key, val)</dt></dl>
+
+<dl><dt><a name="Trie-insert"><strong>insert</strong></a>(self, word)</dt></dl>
+
+<dl><dt><a name="Trie-remove"><strong>remove</strong></a>(self, word)</dt></dl>
+
+<dl><dt><a name="Trie-search"><strong>search</strong></a>(self, word, nerrs<font color="#909090">=0</font>)</dt><dd><tt>Search&nbsp;for&nbsp;the&nbsp;given&nbsp;word,&nbsp;possibly&nbsp;making&nbsp;errors.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;searches&nbsp;the&nbsp;trie&nbsp;for&nbsp;the&nbsp;given&nbsp;&lt;word&gt;,&nbsp;making<br>
+precisely&nbsp;&lt;nerrs&gt;&nbsp;errors.&nbsp;&nbsp;It&nbsp;returns&nbsp;a&nbsp;list&nbsp;of&nbsp;words&nbsp;found.</tt></dd></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>generators</strong> = _Feature((2, 2, 0, 'alpha', 1), (2, 3, 0, 'final', 0), 0)</td></tr></table>
+</body></html>

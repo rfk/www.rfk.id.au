@@ -1,0 +1,358 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module filelike.pipeline</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="filelike.html"><font color="#ffffff">filelike</font></a>.pipeline</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/storage/software/filelike/filelike/pipeline.py">/storage/software/filelike/filelike/pipeline.py</a></font></td></tr></table>
+    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;filelike.pipeline:&nbsp;&nbsp;manipulate&nbsp;file-like&nbsp;objects&nbsp;in&nbsp;unix&nbsp;pipeline&nbsp;style<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+This&nbsp;module&nbsp;utilises&nbsp;python's&nbsp;operator&nbsp;overloading&nbsp;magic&nbsp;to&nbsp;allow&nbsp;file-like<br>
+wrappers&nbsp;such&nbsp;as&nbsp;those&nbsp;found&nbsp;in&nbsp;filelike.wrappers&nbsp;to&nbsp;be&nbsp;composed&nbsp;in&nbsp;the&nbsp;style<br>
+of&nbsp;a&nbsp;unix&nbsp;pipeline.<br>
+&nbsp;<br>
+Ideas&nbsp;based&nbsp;on&nbsp;the&nbsp;following&nbsp;ASPN&nbsp;Cookbook&nbsp;Recipie:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/276960">http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/276960</a><br>
+&nbsp;<br>
+The&nbsp;base&nbsp;class&nbsp;<a href="#PipelineEntry">PipelineEntry</a>&nbsp;implements&nbsp;the&nbsp;operator&nbsp;magic,&nbsp;and&nbsp;a&nbsp;mirror<br>
+class&nbsp;is&nbsp;provided&nbsp;for&nbsp;each&nbsp;wrapper&nbsp;in&nbsp;filelike.wrappers.&nbsp;To&nbsp;allow&nbsp;additional<br>
+wrappers&nbsp;to&nbsp;be&nbsp;used,&nbsp;use&nbsp;<a href="#-pipeline">pipeline</a>()&nbsp;on&nbsp;the&nbsp;class:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;MyNewWrapper(FileWrapper):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;MyNewWrapper&nbsp;=&nbsp;<a href="#-pipeline">pipeline</a>(MyNewWrapper)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+As&nbsp;an&nbsp;example,&nbsp;here's&nbsp;how&nbsp;to&nbsp;print&nbsp;the&nbsp;first&nbsp;20&nbsp;lines&nbsp;of&nbsp;an&nbsp;encrypted&nbsp;file:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;ln&nbsp;in&nbsp;file("enc_file.bin","r")&nbsp;&gt;&nbsp;<a href="#-Decrypt">Decrypt</a>(key)&nbsp;|&nbsp;<a href="#-Head">Head</a>(lines=20)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;ln<br>
+&nbsp;<br>
+Some&nbsp;folks&nbsp;would&nbsp;say&nbsp;this&nbsp;aids&nbsp;readability&nbsp;when&nbsp;using&nbsp;long&nbsp;combinations&nbsp;of<br>
+wrappers.&nbsp;&nbsp;A&nbsp;lot&nbsp;would&nbsp;probably&nbsp;call&nbsp;it&nbsp;a&nbsp;horrible&nbsp;abuse&nbsp;of&nbsp;operator&nbsp;semantics.<br>
+Mostly&nbsp;I&nbsp;consider&nbsp;it&nbsp;a&nbsp;fun&nbsp;hack.<br>
+&nbsp;<br>
+The&nbsp;following&nbsp;pipline&nbsp;operators&nbsp;are&nbsp;supported:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Read&nbsp;or&nbsp;write&nbsp;from&nbsp;a&nbsp;wrapper&nbsp;into&nbsp;a&nbsp;file-like&nbsp;object<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&nbsp;&nbsp;&nbsp;&nbsp;Write&nbsp;from&nbsp;a&nbsp;wrapper&nbsp;into&nbsp;a&nbsp;file-like&nbsp;object&nbsp;in&nbsp;append&nbsp;mode<br>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Read/write&nbsp;from&nbsp;one&nbsp;wrapper&nbsp;into&nbsp;another<br>
+&nbsp;<br>
+Because&nbsp;of&nbsp;the&nbsp;way&nbsp;python's&nbsp;operator&nbsp;lookup&nbsp;works,&nbsp;&gt;&nbsp;is&nbsp;used&nbsp;for&nbsp;both&nbsp;read<br>
+and&nbsp;write.&nbsp;&nbsp;At&nbsp;the&nbsp;beginning&nbsp;of&nbsp;a&nbsp;pipeline,&nbsp;it&nbsp;indicates&nbsp;that&nbsp;data&nbsp;is&nbsp;to<br>
+be&nbsp;read&nbsp;from&nbsp;the&nbsp;file.&nbsp;&nbsp;At&nbsp;the&nbsp;end,&nbsp;it&nbsp;indicates&nbsp;data&nbsp;should&nbsp;be&nbsp;written<br>
+to&nbsp;the&nbsp;file.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="warnings.html">warnings</a><br>
+<a href="filelike.html">filelike</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+<a href="unittest.html">unittest</a><br>
+</td><td width="25%" valign=top><a href="filelike.wrappers.html">filelike.wrappers</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="filelike.pipeline.html#PipelineEntry">PipelineEntry</a>
+</font></dt><dt><font face="helvetica, arial"><a href="filelike.pipeline.html#PipelineStack">PipelineStack</a>
+</font></dt><dt><font face="helvetica, arial"><a href="unittest.html#TestCase">unittest.TestCase</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="filelike.pipeline.html#Test_Pipeline">Test_Pipeline</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PipelineEntry">class <strong>PipelineEntry</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;implementing&nbsp;a&nbsp;step&nbsp;in&nbsp;a&nbsp;file-like&nbsp;pipeline.<br>
+&nbsp;<br>
+Objects&nbsp;of&nbsp;this&nbsp;class&nbsp;may&nbsp;form&nbsp;a&nbsp;stage&nbsp;in&nbsp;a&nbsp;file-like&nbsp;pipeline.&nbsp;&nbsp;Typically<br>
+this&nbsp;will&nbsp;be&nbsp;either&nbsp;the&nbsp;first&nbsp;entry&nbsp;in&nbsp;the&nbsp;pipeline,&nbsp;or&nbsp;an&nbsp;entry&nbsp;following<br>
+a&nbsp;readable&nbsp;file-like&nbsp;object.<br>
+&nbsp;<br>
+Each&nbsp;instance&nbsp;of&nbsp;this&nbsp;class&nbsp;must&nbsp;implement&nbsp;the&nbsp;method&nbsp;_create(fileobj),<br>
+which&nbsp;creates&nbsp;and&nbsp;returns&nbsp;an&nbsp;appropriate&nbsp;wrapper&nbsp;around&nbsp;the&nbsp;given<br>
+file-like&nbsp;object.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="PipelineEntry-__gt__"><strong>__gt__</strong></a>(self, obj)</dt><dd><tt>Implement&nbsp;write-to-file&nbsp;pipeline&nbsp;stage.<br>
+&nbsp;<br>
+'obj'&nbsp;must&nbsp;not&nbsp;be&nbsp;a&nbsp;<a href="#PipelineEntry">PipelineEntry</a>,&nbsp;and&nbsp;must&nbsp;be&nbsp;coercable<br>
+to&nbsp;a&nbsp;file-like&nbsp;object&nbsp;using&nbsp;filelike.to_filelike()&nbsp;with<br>
+mode&nbsp;"w".<br>
+&nbsp;<br>
+A&nbsp;new&nbsp;file-like&nbsp;wrapper&nbsp;will&nbsp;be&nbsp;returned&nbsp;that&nbsp;writes&nbsp;to<br>
+the&nbsp;given&nbsp;object.</tt></dd></dl>
+
+<dl><dt><a name="PipelineEntry-__init__"><strong>__init__</strong></a>(self, cls, *args, **kwds)</dt><dd><tt><a href="#PipelineEntry">PipelineEntry</a>&nbsp;constructor.<br>
+&nbsp;<br>
+'cls'&nbsp;is&nbsp;the&nbsp;class&nbsp;of&nbsp;the&nbsp;file-like&nbsp;wrapper&nbsp;to&nbsp;create.&nbsp;&nbsp;Additional<br>
+args&nbsp;may&nbsp;be&nbsp;specified&nbsp;and&nbsp;will&nbsp;be&nbsp;passed&nbsp;in&nbsp;after&nbsp;the&nbsp;requisite<br>
+'fileobj'&nbsp;first&nbsp;argument&nbsp;in&nbsp;the&nbsp;class's&nbsp;constructor.</tt></dd></dl>
+
+<dl><dt><a name="PipelineEntry-__lt__"><strong>__lt__</strong></a>(self, obj)</dt><dd><tt>Implement&nbsp;read-from-file&nbsp;pipeline&nbsp;stage.<br>
+&nbsp;<br>
+'obj'&nbsp;must&nbsp;not&nbsp;be&nbsp;a&nbsp;<a href="#PipelineEntry">PipelineEntry</a>,&nbsp;and&nbsp;must&nbsp;be&nbsp;coercable<br>
+to&nbsp;a&nbsp;file-like&nbsp;object&nbsp;using&nbsp;filelike.to_filelike()&nbsp;with<br>
+mode&nbsp;"r".<br>
+&nbsp;<br>
+A&nbsp;new&nbsp;file-like&nbsp;object&nbsp;will&nbsp;be&nbsp;returned&nbsp;that&nbsp;reads&nbsp;from&nbsp;the<br>
+opened&nbsp;file-like&nbsp;object.</tt></dd></dl>
+
+<dl><dt><a name="PipelineEntry-__or__"><strong>__or__</strong></a>(self, obj)</dt><dd><tt>Implement&nbsp;left-hand&nbsp;pipe&nbsp;segment&nbsp;in&nbsp;pipeling&nbsp;stage.<br>
+&nbsp;<br>
+'obj'&nbsp;should&nbsp;be&nbsp;the&nbsp;next&nbsp;pipeline&nbsp;stage.&nbsp;&nbsp;This&nbsp;starts&nbsp;a<br>
+<a href="#PipelineStack">PipelineStack</a>.</tt></dd></dl>
+
+<dl><dt><a name="PipelineEntry-__rshift__"><strong>__rshift__</strong></a>(self, obj)</dt><dd><tt>Implement&nbsp;append-to-file&nbsp;pipeline&nbsp;stage.<br>
+&nbsp;<br>
+This&nbsp;behaves&nbsp;as&nbsp;__gt__,&nbsp;but&nbsp;opens&nbsp;the&nbsp;file&nbsp;in&nbsp;append&nbsp;mode.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PipelineStack">class <strong>PipelineStack</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;collecting&nbsp;pipeline&nbsp;entries&nbsp;to&nbsp;be&nbsp;read/written&nbsp;to.<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;collects&nbsp;a&nbsp;stack&nbsp;of&nbsp;pipeline&nbsp;entries.&nbsp;These&nbsp;will<br>
+be&nbsp;converted&nbsp;to&nbsp;a&nbsp;filelike&nbsp;object&nbsp;in&nbsp;the&nbsp;appropriate&nbsp;order<br>
+when&nbsp;the&nbsp;write/read-to-file&nbsp;pipeline&nbsp;stage&nbsp;is&nbsp;encountered.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="PipelineStack-__gt__"><strong>__gt__</strong></a>(self, obj)</dt><dd><tt>Implement&nbsp;write-to-file&nbsp;pipeline&nbsp;stage.<br>
+&nbsp;<br>
+'obj'&nbsp;must&nbsp;not&nbsp;be&nbsp;a&nbsp;<a href="#PipelineEntry">PipelineEntry</a>,&nbsp;and&nbsp;must&nbsp;be&nbsp;coercable<br>
+to&nbsp;a&nbsp;file-like&nbsp;object&nbsp;using&nbsp;filelike.to_filelike()&nbsp;with<br>
+mode&nbsp;"w".<br>
+&nbsp;<br>
+A&nbsp;new&nbsp;file-like&nbsp;wrapper&nbsp;will&nbsp;be&nbsp;returned&nbsp;that&nbsp;writes&nbsp;to<br>
+the&nbsp;given&nbsp;object.</tt></dd></dl>
+
+<dl><dt><a name="PipelineStack-__init__"><strong>__init__</strong></a>(self, first, second)</dt><dd><tt><a href="#PipelineStack">PipelineStack</a>&nbsp;constructor.<br>
+&nbsp;<br>
+'first'&nbsp;and&nbsp;'second'&nbsp;must&nbsp;be&nbsp;the&nbsp;initial&nbsp;two&nbsp;stages&nbsp;in&nbsp;the<br>
+pipeline.</tt></dd></dl>
+
+<dl><dt><a name="PipelineStack-__lt__"><strong>__lt__</strong></a>(self, obj)</dt><dd><tt>Implement&nbsp;read-from-file&nbsp;pipeline&nbsp;stage.<br>
+&nbsp;<br>
+'obj'&nbsp;must&nbsp;not&nbsp;be&nbsp;a&nbsp;<a href="#PipelineEntry">PipelineEntry</a>,&nbsp;and&nbsp;must&nbsp;be&nbsp;coercable<br>
+to&nbsp;a&nbsp;file-like&nbsp;object&nbsp;using&nbsp;filelike.to_filelike()&nbsp;with<br>
+mode&nbsp;"w".<br>
+&nbsp;<br>
+A&nbsp;new&nbsp;file-like&nbsp;wrapper&nbsp;will&nbsp;be&nbsp;returned&nbsp;that&nbsp;writes&nbsp;to<br>
+the&nbsp;given&nbsp;object.</tt></dd></dl>
+
+<dl><dt><a name="PipelineStack-__or__"><strong>__or__</strong></a>(self, obj)</dt><dd><tt>Implement&nbsp;left-hand&nbsp;pipe&nbsp;segment&nbsp;in&nbsp;pipeling&nbsp;stage.<br>
+&nbsp;<br>
+'obj'&nbsp;should&nbsp;be&nbsp;the&nbsp;next&nbsp;pipeline&nbsp;stage,&nbsp;which&nbsp;is&nbsp;added&nbsp;to&nbsp;the&nbsp;stack.</tt></dd></dl>
+
+<dl><dt><a name="PipelineStack-__rshift__"><strong>__rshift__</strong></a>(self, obj)</dt><dd><tt>Implement&nbsp;append-to-file&nbsp;pipeline&nbsp;stage.<br>
+&nbsp;<br>
+This&nbsp;behaves&nbsp;as&nbsp;__gt__,&nbsp;but&nbsp;opens&nbsp;the&nbsp;file&nbsp;in&nbsp;append&nbsp;mode.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Test_Pipeline">class <strong>Test_Pipeline</strong></a>(<a href="unittest.html#TestCase">unittest.TestCase</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Testcases&nbsp;for&nbsp;the&nbsp;construction&nbsp;of&nbsp;pipelines.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="filelike.pipeline.html#Test_Pipeline">Test_Pipeline</a></dd>
+<dd><a href="unittest.html#TestCase">unittest.TestCase</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Test_Pipeline-setUp"><strong>setUp</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Test_Pipeline-tearDown"><strong>tearDown</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Test_Pipeline-test_ReaderLine"><strong>test_ReaderLine</strong></a>(self)</dt><dd><tt>Test&nbsp;a&nbsp;simple&nbsp;reading&nbsp;pipeline.</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-test_WriterLine"><strong>test_WriterLine</strong></a>(self)</dt><dd><tt>Test&nbsp;a&nbsp;simple&nbsp;writer&nbsp;pipeline.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="unittest.html#TestCase">unittest.TestCase</a>:<br>
+<dl><dt><a name="Test_Pipeline-__call__"><strong>__call__</strong></a>(self, *args, **kwds)</dt></dl>
+
+<dl><dt><a name="Test_Pipeline-__init__"><strong>__init__</strong></a>(self, methodName<font color="#909090">='runTest'</font>)</dt><dd><tt>Create&nbsp;an&nbsp;instance&nbsp;of&nbsp;the&nbsp;class&nbsp;that&nbsp;will&nbsp;use&nbsp;the&nbsp;named&nbsp;test<br>
+method&nbsp;when&nbsp;executed.&nbsp;Raises&nbsp;a&nbsp;ValueError&nbsp;if&nbsp;the&nbsp;instance&nbsp;does<br>
+not&nbsp;have&nbsp;a&nbsp;method&nbsp;with&nbsp;the&nbsp;specified&nbsp;name.</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Test_Pipeline-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Test_Pipeline-assertAlmostEqual"><strong>assertAlmostEqual</strong></a> = failUnlessAlmostEqual(self, first, second, places<font color="#909090">=7</font>, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;unequal&nbsp;as&nbsp;determined&nbsp;by&nbsp;their<br>
+difference&nbsp;rounded&nbsp;to&nbsp;the&nbsp;given&nbsp;number&nbsp;of&nbsp;decimal&nbsp;places<br>
+(default&nbsp;7)&nbsp;and&nbsp;comparing&nbsp;to&nbsp;zero.<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;decimal&nbsp;places&nbsp;(from&nbsp;zero)&nbsp;are&nbsp;usually&nbsp;not&nbsp;the&nbsp;same<br>
+as&nbsp;significant&nbsp;digits&nbsp;(measured&nbsp;from&nbsp;the&nbsp;most&nbsp;signficant&nbsp;digit).</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-assertAlmostEquals"><strong>assertAlmostEquals</strong></a> = failUnlessAlmostEqual(self, first, second, places<font color="#909090">=7</font>, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;unequal&nbsp;as&nbsp;determined&nbsp;by&nbsp;their<br>
+difference&nbsp;rounded&nbsp;to&nbsp;the&nbsp;given&nbsp;number&nbsp;of&nbsp;decimal&nbsp;places<br>
+(default&nbsp;7)&nbsp;and&nbsp;comparing&nbsp;to&nbsp;zero.<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;decimal&nbsp;places&nbsp;(from&nbsp;zero)&nbsp;are&nbsp;usually&nbsp;not&nbsp;the&nbsp;same<br>
+as&nbsp;significant&nbsp;digits&nbsp;(measured&nbsp;from&nbsp;the&nbsp;most&nbsp;signficant&nbsp;digit).</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-assertEqual"><strong>assertEqual</strong></a> = failUnlessEqual(self, first, second, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;unequal&nbsp;as&nbsp;determined&nbsp;by&nbsp;the&nbsp;'=='<br>
+operator.</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-assertEquals"><strong>assertEquals</strong></a> = failUnlessEqual(self, first, second, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;unequal&nbsp;as&nbsp;determined&nbsp;by&nbsp;the&nbsp;'=='<br>
+operator.</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-assertFalse"><strong>assertFalse</strong></a> = failIf(self, expr, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;the&nbsp;test&nbsp;if&nbsp;the&nbsp;expression&nbsp;is&nbsp;true.</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-assertNotAlmostEqual"><strong>assertNotAlmostEqual</strong></a> = failIfAlmostEqual(self, first, second, places<font color="#909090">=7</font>, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;equal&nbsp;as&nbsp;determined&nbsp;by&nbsp;their<br>
+difference&nbsp;rounded&nbsp;to&nbsp;the&nbsp;given&nbsp;number&nbsp;of&nbsp;decimal&nbsp;places<br>
+(default&nbsp;7)&nbsp;and&nbsp;comparing&nbsp;to&nbsp;zero.<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;decimal&nbsp;places&nbsp;(from&nbsp;zero)&nbsp;are&nbsp;usually&nbsp;not&nbsp;the&nbsp;same<br>
+as&nbsp;significant&nbsp;digits&nbsp;(measured&nbsp;from&nbsp;the&nbsp;most&nbsp;signficant&nbsp;digit).</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-assertNotAlmostEquals"><strong>assertNotAlmostEquals</strong></a> = failIfAlmostEqual(self, first, second, places<font color="#909090">=7</font>, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;equal&nbsp;as&nbsp;determined&nbsp;by&nbsp;their<br>
+difference&nbsp;rounded&nbsp;to&nbsp;the&nbsp;given&nbsp;number&nbsp;of&nbsp;decimal&nbsp;places<br>
+(default&nbsp;7)&nbsp;and&nbsp;comparing&nbsp;to&nbsp;zero.<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;decimal&nbsp;places&nbsp;(from&nbsp;zero)&nbsp;are&nbsp;usually&nbsp;not&nbsp;the&nbsp;same<br>
+as&nbsp;significant&nbsp;digits&nbsp;(measured&nbsp;from&nbsp;the&nbsp;most&nbsp;signficant&nbsp;digit).</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-assertNotEqual"><strong>assertNotEqual</strong></a> = failIfEqual(self, first, second, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;equal&nbsp;as&nbsp;determined&nbsp;by&nbsp;the&nbsp;'=='<br>
+operator.</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-assertNotEquals"><strong>assertNotEquals</strong></a> = failIfEqual(self, first, second, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;equal&nbsp;as&nbsp;determined&nbsp;by&nbsp;the&nbsp;'=='<br>
+operator.</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-assertRaises"><strong>assertRaises</strong></a> = failUnlessRaises(self, excClass, callableObj, *args, **kwargs)</dt><dd><tt>Fail&nbsp;unless&nbsp;an&nbsp;exception&nbsp;of&nbsp;class&nbsp;excClass&nbsp;is&nbsp;thrown<br>
+by&nbsp;callableObj&nbsp;when&nbsp;invoked&nbsp;with&nbsp;arguments&nbsp;args&nbsp;and&nbsp;keyword<br>
+arguments&nbsp;kwargs.&nbsp;If&nbsp;a&nbsp;different&nbsp;type&nbsp;of&nbsp;exception&nbsp;is<br>
+thrown,&nbsp;it&nbsp;will&nbsp;not&nbsp;be&nbsp;caught,&nbsp;and&nbsp;the&nbsp;test&nbsp;case&nbsp;will&nbsp;be<br>
+deemed&nbsp;to&nbsp;have&nbsp;suffered&nbsp;an&nbsp;error,&nbsp;exactly&nbsp;as&nbsp;for&nbsp;an<br>
+unexpected&nbsp;exception.</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-assertTrue"><strong>assertTrue</strong></a> = failUnless(self, expr, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;the&nbsp;test&nbsp;unless&nbsp;the&nbsp;expression&nbsp;is&nbsp;true.</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-assert_"><strong>assert_</strong></a> = failUnless(self, expr, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;the&nbsp;test&nbsp;unless&nbsp;the&nbsp;expression&nbsp;is&nbsp;true.</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-countTestCases"><strong>countTestCases</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Test_Pipeline-debug"><strong>debug</strong></a>(self)</dt><dd><tt>Run&nbsp;the&nbsp;test&nbsp;without&nbsp;collecting&nbsp;errors&nbsp;in&nbsp;a&nbsp;TestResult</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-defaultTestResult"><strong>defaultTestResult</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Test_Pipeline-fail"><strong>fail</strong></a>(self, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;immediately,&nbsp;with&nbsp;the&nbsp;given&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-failIf"><strong>failIf</strong></a>(self, expr, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;the&nbsp;test&nbsp;if&nbsp;the&nbsp;expression&nbsp;is&nbsp;true.</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-failIfAlmostEqual"><strong>failIfAlmostEqual</strong></a>(self, first, second, places<font color="#909090">=7</font>, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;equal&nbsp;as&nbsp;determined&nbsp;by&nbsp;their<br>
+difference&nbsp;rounded&nbsp;to&nbsp;the&nbsp;given&nbsp;number&nbsp;of&nbsp;decimal&nbsp;places<br>
+(default&nbsp;7)&nbsp;and&nbsp;comparing&nbsp;to&nbsp;zero.<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;decimal&nbsp;places&nbsp;(from&nbsp;zero)&nbsp;are&nbsp;usually&nbsp;not&nbsp;the&nbsp;same<br>
+as&nbsp;significant&nbsp;digits&nbsp;(measured&nbsp;from&nbsp;the&nbsp;most&nbsp;signficant&nbsp;digit).</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-failIfEqual"><strong>failIfEqual</strong></a>(self, first, second, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;equal&nbsp;as&nbsp;determined&nbsp;by&nbsp;the&nbsp;'=='<br>
+operator.</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-failUnless"><strong>failUnless</strong></a>(self, expr, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;the&nbsp;test&nbsp;unless&nbsp;the&nbsp;expression&nbsp;is&nbsp;true.</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-failUnlessAlmostEqual"><strong>failUnlessAlmostEqual</strong></a>(self, first, second, places<font color="#909090">=7</font>, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;unequal&nbsp;as&nbsp;determined&nbsp;by&nbsp;their<br>
+difference&nbsp;rounded&nbsp;to&nbsp;the&nbsp;given&nbsp;number&nbsp;of&nbsp;decimal&nbsp;places<br>
+(default&nbsp;7)&nbsp;and&nbsp;comparing&nbsp;to&nbsp;zero.<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;decimal&nbsp;places&nbsp;(from&nbsp;zero)&nbsp;are&nbsp;usually&nbsp;not&nbsp;the&nbsp;same<br>
+as&nbsp;significant&nbsp;digits&nbsp;(measured&nbsp;from&nbsp;the&nbsp;most&nbsp;signficant&nbsp;digit).</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-failUnlessEqual"><strong>failUnlessEqual</strong></a>(self, first, second, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;unequal&nbsp;as&nbsp;determined&nbsp;by&nbsp;the&nbsp;'=='<br>
+operator.</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-failUnlessRaises"><strong>failUnlessRaises</strong></a>(self, excClass, callableObj, *args, **kwargs)</dt><dd><tt>Fail&nbsp;unless&nbsp;an&nbsp;exception&nbsp;of&nbsp;class&nbsp;excClass&nbsp;is&nbsp;thrown<br>
+by&nbsp;callableObj&nbsp;when&nbsp;invoked&nbsp;with&nbsp;arguments&nbsp;args&nbsp;and&nbsp;keyword<br>
+arguments&nbsp;kwargs.&nbsp;If&nbsp;a&nbsp;different&nbsp;type&nbsp;of&nbsp;exception&nbsp;is<br>
+thrown,&nbsp;it&nbsp;will&nbsp;not&nbsp;be&nbsp;caught,&nbsp;and&nbsp;the&nbsp;test&nbsp;case&nbsp;will&nbsp;be<br>
+deemed&nbsp;to&nbsp;have&nbsp;suffered&nbsp;an&nbsp;error,&nbsp;exactly&nbsp;as&nbsp;for&nbsp;an<br>
+unexpected&nbsp;exception.</tt></dd></dl>
+
+<dl><dt><a name="Test_Pipeline-id"><strong>id</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Test_Pipeline-run"><strong>run</strong></a>(self, result<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="Test_Pipeline-shortDescription"><strong>shortDescription</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;one-line&nbsp;description&nbsp;of&nbsp;the&nbsp;test,&nbsp;or&nbsp;None&nbsp;if&nbsp;no<br>
+description&nbsp;has&nbsp;been&nbsp;provided.<br>
+&nbsp;<br>
+The&nbsp;default&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method&nbsp;returns&nbsp;the&nbsp;first&nbsp;line&nbsp;of<br>
+the&nbsp;specified&nbsp;test&nbsp;method's&nbsp;docstring.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="unittest.html#TestCase">unittest.TestCase</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="unittest.html#TestCase">unittest.TestCase</a>:<br>
+<dl><dt><strong>failureException</strong> = &lt;type 'exceptions.AssertionError'&gt;<dd><tt>Assertion&nbsp;failed.</tt></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-BytewiseTranslate"><strong>BytewiseTranslate</strong></a> = create_entry(*args, **kwds)</dt></dl>
+ <dl><dt><a name="-Decrypt"><strong>Decrypt</strong></a> = create_entry(*args, **kwds)</dt></dl>
+ <dl><dt><a name="-DecryptFile"><strong>DecryptFile</strong></a> = create_entry(*args, **kwds)</dt></dl>
+ <dl><dt><a name="-Encrypt"><strong>Encrypt</strong></a> = create_entry(*args, **kwds)</dt></dl>
+ <dl><dt><a name="-EncryptFile"><strong>EncryptFile</strong></a> = create_entry(*args, **kwds)</dt></dl>
+ <dl><dt><a name="-FixedBlockSize"><strong>FixedBlockSize</strong></a> = create_entry(*args, **kwds)</dt></dl>
+ <dl><dt><a name="-FixedBlockSizeFile"><strong>FixedBlockSizeFile</strong></a> = create_entry(*args, **kwds)</dt></dl>
+ <dl><dt><a name="-Head"><strong>Head</strong></a> = create_entry(*args, **kwds)</dt></dl>
+ <dl><dt><a name="-PadToBlockSize"><strong>PadToBlockSize</strong></a> = create_entry(*args, **kwds)</dt></dl>
+ <dl><dt><a name="-PaddedToBlockSizeFile"><strong>PaddedToBlockSizeFile</strong></a> = create_entry(*args, **kwds)</dt></dl>
+ <dl><dt><a name="-ReadStreamTranslate"><strong>ReadStreamTranslate</strong></a> = create_entry(*args, **kwds)</dt></dl>
+ <dl><dt><a name="-Slice"><strong>Slice</strong></a> = create_entry(*args, **kwds)</dt></dl>
+ <dl><dt><a name="-TransFile"><strong>TransFile</strong></a> = create_entry(*args, **kwds)</dt></dl>
+ <dl><dt><a name="-Translate"><strong>Translate</strong></a> = create_entry(*args, **kwds)</dt></dl>
+ <dl><dt><a name="-UnPadToBlockSize"><strong>UnPadToBlockSize</strong></a> = create_entry(*args, **kwds)</dt></dl>
+ <dl><dt><a name="-pipeline"><strong>pipeline</strong></a>(cls)</dt><dd><tt>Create&nbsp;a&nbsp;<a href="#PipelineEntry">PipelineEntry</a>&nbsp;factory&nbsp;function&nbsp;using&nbsp;given&nbsp;class.</tt></dd></dl>
+ <dl><dt><a name="-testsuite"><strong>testsuite</strong></a>()</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>nm</strong> = 'warnings'</td></tr></table>
+</body></html>
