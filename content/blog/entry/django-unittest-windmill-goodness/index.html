@@ -24,7 +24,7 @@ tags:
 
 <p>Second, all of the Windmill tests are run as a single Django test instance, meaning that they share the same test database and can potentially clobber one another's data.  This is understandable, since the Windmill startup process is quite time-consuming, but it is contrary to the ideals of unit testing; each test is supposed to run in a completely independent environment.  I worked around this using the following code instead of the example from the Windmill wiki:</p>
 
-<p class="code lang-python">from os import path
+<p class="code">{% syntax python %}from os import path
 from windmill.authoring import djangotest
 
 wmtests = path.join(path.dirname(path.abspath(__file__)),"windmilltests")
@@ -37,7 +37,7 @@ for nm in os.listdir(wmtests):
         WindmillTest.__name__ = testnm
         globals()[testnm] = WindmillTest
         del WindmillTest
-</p>
+{% endsyntax %}</p>
 
 <p>This creates a separate WindmillDjangoUnitTest subclass for each test*.py file found in the windmilltests directory, allowing each test to run with a fresh copy of the Django test database.  The end result is a testing environment that I can really feel comfortable with.</p>
 

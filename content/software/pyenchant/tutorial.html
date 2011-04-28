@@ -98,7 +98,7 @@ the latest version of setuptools installed.  The <a href="http://peak.telecommun
   <ol>
   <li><a href="./download.html">Download</a> and untar the source files.</li>
   <li>Enter the distribution directory, which contains the file 'setup.py'.</li> 
-  <li>Execute the command:<p class="code lang-sh">python setup.py install<p></li>
+  <li>Execute the command:<p class="code">{% syntax sh %}python setup.py install{% endsyntax %}<p></li>
   <li>Please refer to the <a href="http://docs.python.org/inst/inst.html">distutils documentation</a> and the following <a href="http://peak.telecommunity.com/DevCenter/setuptools#what-your-users-should-know">notes on setuptools</a> for help on installing Python modules in this manner.
   </ol>
 </ol>
@@ -175,14 +175,14 @@ the spelling of words and to get suggestions for misspelled words.
 The following shows how to construct a simple Dict and use it to check
 some words:</p>
 
-<p class="code lang-python">&gt;&gt;&gt; import enchant
-&gt;&gt;&gt; d = enchant.Dict("en_US")
-&gt;&gt;&gt; d.check("Hello")
+<p class="code">{% syntax python %}>>> import enchant
+>>> d = enchant.Dict("en_US")
+>>> d.check("Hello")
 True
-&gt;&gt;&gt; d.check("Helo")
+>>> d.check("Helo")
 False
-&gt;&gt;&gt;
-</p>
+>>>
+{% endsyntax %}</p>
 
 <p>Dictionaries are created using a <i>language tag</i> which
 specifies the language to be checked - in this case, &quot;en_US&quot;
@@ -193,25 +193,25 @@ not always possible, in which case an Error is raised.</p>
 <p>When the current language can be determined, it operates as follows:</p>
 
 
-<p class="code lang-python">&gt;&gt;&gt; d = enchant.Dict()
-&gt;&gt;&gt; d.tag
+<p class="code">{% syntax python %}>>> d = enchant.Dict()
+>>> d.tag
 'en_AU'
-&gt;&gt;&gt; print d.tag
+>>> print d.tag
 en_AU
-&gt;&gt;&gt;
-</p>
+>>>
+{% endsyntax %}</p>
 
 <p>Of course, this may still fail if the appropriate dictionary is not available.
 If it cannot be determined, the behavior is as follows:</p>
 
-<p class="code lang-python">&gt;&gt;&gt; d = enchant.Dict()
+<p class="code">{% syntax python %}>>> d = enchant.Dict()
 Traceback (most recent call last):
   File "<stdin>", line 1, in ?
   File "enchant/__init__.py", line 467, in __init__
     raise Error(err)
 enchant.Error: No tag specified and default language could not be determined.
-&gt;&gt;&gt;
-</p>
+>>>
+{% endsyntax %}</p>
 
 <p>There are several top-level functions in
 the enchant module which can be used to deal with dictionaries:</p>
@@ -222,28 +222,28 @@ the enchant module which can be used to deal with dictionaries:</p>
 <li><a href="./api/enchant.html#-list_languages" class="api-ref">list_languages</a>: List the languages for which Dicts are available</li>
 </ul>
 
-<p class="code lang-python">&gt;&gt;&gt; enchant.dict_exists("fake")
+<p class="code">{% syntax python %}>>> enchant.dict_exists("fake")
 False
-&gt;&gt;&gt; enchant.dict_exists("en_US")
+>>> enchant.dict_exists("en_US")
 True
-&gt;&gt;&gt; d = enchant.request_dict("en_US")
-&gt;&gt;&gt; d
-&lt;enchant.Dict object at 0x2aaaabdffa50&gt;
-&gt;&gt;&gt; enchant.list_languages()
+>>> d = enchant.request_dict("en_US")
+>>> d
+<enchant.Dict object at 0x2aaaabdffa50>
+>>> enchant.list_languages()
 ['en', 'en_CA', 'en_GB', 'en_US', 'eo', 'fr', 'fr_CH', 'fr_FR']
-&gt;&gt;&gt;
-</p>
+>>>
+{% endsyntax %}</p>
 
 <p>As shown previously, the <a href="./api/enchant.html#Dict-check" class="api-ref">check</a> method of a Dict object
 can be used to check whether a word is correctly spelled. To get suggestions
 for a misspelled word, use the <a href="./api/enchant.html#Dict-suggest" class="api-ref">suggest</a> method
 as shown below:</p>
 
-<p class="code lang-python">&gt;&gt;&gt; d.suggest("Helo")
+<p class="code">{% syntax python %}>>> d.suggest("Helo")
 ['He lo', 'He-lo', 'Hello', 'Helot', 'Help', 'Halo', 'Hell', 'Held',
 'Helm', 'Hero', "He'll"]
-&gt;&gt;&gt;
-</p>
+>>>
+{% endsyntax %}</p>
 
 <p>The suggestions are returned in a list, ordered from most likely replacement
 to least likely.</p> 
@@ -271,9 +271,9 @@ simply a file listing the words to be considered, one word per line.
 The following example creates a Dict object for the personal word list
 stored in "mywords.txt":</p>
 
-<p class="code lang-python">&gt;&gt;&gt; pwl = enchant.request_pwl_dict("mywords.txt")
-&gt;&gt;&gt;
-</p>
+<p class="code">{% syntax python %}>>> pwl = enchant.request_pwl_dict("mywords.txt")
+>>>
+{% endsyntax %}</p>
 
 <p>The personal word list Dict object can be used in the same way as
 Dict objects which reference a language dictionary.  When the object's
@@ -283,11 +283,11 @@ the bottom of the file.</p>
 <p>PyEnchant also provides the class <a href="./api/enchant.html#DictWithPWL" class="api-ref">DictWithPWL</a> which can be used
 to combine a language dictionary and a personal word list file:</p>
 
-<p class="code lang-python">&gt;&gt;&gt; d2 = enchant.DictWithPWL("en_US","mywords.txt")
-&gt;&gt;&gt; d2.check("Hello")
+<p class="code">{% syntax python %}>>> d2 = enchant.DictWithPWL("en_US","mywords.txt")
+>>> d2.check("Hello")
 True
-&gt;&gt;&gt;
-</p>
+>>>
+{% endsyntax %}</p>
 
 <a name="basics-checker"><h3>Checking entire blocks of text</h3></a>
 
@@ -303,27 +303,27 @@ the SpellChecker object can be used as an iterator over the spelling
 mistakes in the text.  This is best illustrated by a simple example.
 The following code will print out the errors encountered in a string:</p>
 
-<p class="code lang-python">&gt;&gt;&gt; from enchant.checker import SpellChecker
-&gt;&gt;&gt; chkr = SpellChecker("en_US")
-&gt;&gt;&gt; chkr.set_text("This is sme sample txt with erors.")
-&gt;&gt;&gt; for err in chkr:
+<p class="code">{% syntax python %}>>> from enchant.checker import SpellChecker
+>>> chkr = SpellChecker("en_US")
+>>> chkr.set_text("This is sme sample txt with erors.")
+>>> for err in chkr:
 ...   print "ERROR:", err.word
 ...
 ERROR: sme
 ERROR: txt
 ERROR: erors
-&gt;&gt;&gt;
-</p>
+>>>
+{% endsyntax %}</p>
 
 <p>The SpellChecker can use <a href="#Filters">filters</a>
  to ignore certain word forms, by
 passing a list of filters in as a keyword argument:</p>
 
-<p class="code lang-python">&gt;&gt;&gt; from enchant.checker import SpellChecker
-&gt;&gt;&gt; from enchant.tokenize import EmailFilter, URLFilter
-&gt;&gt;&gt; chkr = SpellChecker("en_US",filters=[EmailFilter,URLFilter])
-&gt;&gt;&gt;
-</p>
+<p class="code">{% syntax python %}>>> from enchant.checker import SpellChecker
+>>> from enchant.tokenize import EmailFilter, URLFilter
+>>> chkr = SpellChecker("en_US",filters=[EmailFilter,URLFilter])
+>>>
+{% endsyntax %}</p>
 
 <p>The iterator paradigm can be used to implement a wide variety of spellchecking
 functionality.  As examples of how this can be done, PyEnchant provides
@@ -352,18 +352,18 @@ the corrected word</li>
 <li><b>Add</b>: add the word to the user's personal dictionary</li>
 </ul>
 
-<p style="clear: both;" class="code lang-python">&gt;&gt;&gt; import wx
-&gt;&gt;&gt; from enchant.checker import SpellChecker
-&gt;&gt;&gt; from enchant.checker.wxSpellCheckerDialog import wxSpellCheckerDialog
-&gt;&gt;&gt; 
-&gt;&gt;&gt; app = wx.PySimpleApp()
-&gt;&gt;&gt; text = "This is sme text with a fw speling errors in it. Here are a fw more to tst it ut."
-&gt;&gt;&gt; dlg = wxSpellCheckerDialog(None,-1,"")
-&gt;&gt;&gt; chkr = SpellChecker("en_US",text)
-&gt;&gt;&gt; dlg.SetSpellChecker(chkr)
-&gt;&gt;&gt; dlg.Show()
-&gt;&gt;&gt; app.MainLoop()
-</p>
+<p style="clear: both;" class="code">{% syntax python %}>>> import wx
+>>> from enchant.checker import SpellChecker
+>>> from enchant.checker.wxSpellCheckerDialog import wxSpellCheckerDialog
+>>> 
+>>> app = wx.PySimpleApp()
+>>> text = "This is sme text with a fw speling errors in it. Here are a fw more to tst it ut."
+>>> dlg = wxSpellCheckerDialog(None,-1,"")
+>>> chkr = SpellChecker("en_US",text)
+>>> dlg.SetSpellChecker(chkr)
+>>> dlg.Show()
+>>> app.MainLoop()
+{% endsyntax %}</p>
 
 <a name="basics-cmdline"><h3>CmdLineChecker</h3></a>
 
@@ -374,18 +374,18 @@ to interact with the user through a command-line interface.
 The code below shows how to create and use this class from within a python
 application, along with a short sample checking session.</p>
 
-<p class="code lang-python">&gt;&gt;&gt; import enchant
-&gt;&gt;&gt; import enchant.checker
-&gt;&gt;&gt; from enchant.checker.CmdLineChecker import CmdLineChecker
-&gt;&gt;&gt; chkr = enchant.checker.SpellChecker("en_US")
-&gt;&gt;&gt; chkr.set_text("this is sme example txt")
-&gt;&gt;&gt; cmdln = CmdLineChecker()
-&gt;&gt;&gt; cmdln.set_checker(chkr)
-&gt;&gt;&gt; cmdln.run()
+<p class="code">{% syntax python %}>>> import enchant
+>>> import enchant.checker
+>>> from enchant.checker.CmdLineChecker import CmdLineChecker
+>>> chkr = enchant.checker.SpellChecker("en_US")
+>>> chkr.set_text("this is sme example txt")
+>>> cmdln = CmdLineChecker()
+>>> cmdln.set_checker(chkr)
+>>> cmdln.run()
 ERROR: sme
 HOW ABOUT: ['some', 'same', 'Sm', 'Ame', 'ME', 'Me', 'SE', 'Se', 'me', 'Esme', 'Mme', 'SSE', 'See',
  'Sue', 'see', 'sue', 'Ste', "Sm's"]
-&gt;&gt; help
+>> help
 0..N:    replace with the numbered suggestion
 R0..rN:  always replace with the numbered suggestion
 i:       ignore this word
@@ -397,15 +397,15 @@ h:       print this help message
 ----------------------------------------------------
 HOW ABOUT: ['some', 'same', 'Sm', 'Ame', 'ME', 'Me', 'SE', 'Se', 'me', 'Esme', 'Mme', 'SSE', 'See',
  'Sue', 'see', 'sue', 'Ste', "Sm's"]
-&gt;&gt; 0
+>> 0
 Replacing 'sme' with 'some'
 ERROR: txt
 HOW ABOUT: ['text', 'TX', 'ext']
-&gt;&gt; i
-&gt;&gt;&gt; chkr.get_text()
+>> i
+>>> chkr.get_text()
 'this is some example txt'
-&gt;&gt;&gt;
-</p>
+>>>
+{% endsyntax %}</p>
 
 <p>As shown by this simple example, the CmdLineChecker prints each error
 it encounters, along with a list of suggested replacements.  The user
@@ -421,14 +421,14 @@ to assist with this task.  The purpose of this module is to provide an
 appropriate <i>tokenization function</i> which can be used to split
 the text.  Usually, all that is required is the <a href="./api/enchant.tokenize.html#-get_tokenizer" class="api-ref">get_tokenizer</a> function:</p>
 
-<p class="code lang-python">&gt;&gt;&gt; from enchant.tokenize import get_tokenizer
-&gt;&gt;&gt; tknzr = get_tokenizer("en_US")
-&gt;&gt;&gt; tknzr
-&lt;class enchant.tokenize.en.tokenize at 0x2aaaaab531d0&gt;
-&gt;&gt;&gt; [w for w in tknzr("this is some simple text")]
+<p class="code">{% syntax python %}>>> from enchant.tokenize import get_tokenizer
+>>> tknzr = get_tokenizer("en_US")
+>>> tknzr
+<class enchant.tokenize.en.tokenize at 0x2aaaaab531d0>
+>>> [w for w in tknzr("this is some simple text")]
 [('this', 0), ('is', 5), ('some', 8), ('simple', 13), ('text', 20)]
-&gt;&gt;&gt;
-</p>
+>>>
+{% endsyntax %}</p>
 
 <p>As shown in the example above, the function <a href="./api/enchant.tokenize.html#-get_tokenizer" class="api-ref">get_tokenizer</a> takes a
 language tag as input, and returns a tokenization class that is
@@ -447,19 +447,19 @@ string at which that word begins.</p>
 
 <p>A chunker is simply a special tokenizer function that breaks text up into large chunks rather than individual tokens.  They are typically used by passing a list of chunkers to the <a href="./api/enchant.tokenize.html#-get_tokenizer" class="api-ref">get_tokenizer</a> function:</p>
 
-<p class="code lang-python">&gt;&gt;&gt; from enchant.tokenize import get_tokenizer, HTMLChunker
-&gt;&gt;&gt;
-&gt;&gt;&gt; tknzr = get_tokenizer("en_US"])
-&gt;&gt;&gt; [w for w in tknzr("this is &lt;span class='important'&gt;really important&lt;/span&gt; text")]
+<p class="code">{% syntax python %}>>> from enchant.tokenize import get_tokenizer, HTMLChunker
+>>>
+>>> tknzr = get_tokenizer("en_US"])
+>>> [w for w in tknzr("this is <span class='important'>really important</span> text")]
 [('this', 0), ('is', 5), ('span', 9), ('class', 14), ('important', 21), ('really', 32), ('important', 39), ('span', 50), ('test', 56)]
-&gt;&gt;&gt;
-&gt;&gt;&gt;
-&gt;&gt;&gt; tknzr = get_tokenizer("en_US",chunkers=(HTMLChunker,))
-&gt;&gt;&gt; [w for w in tknzr("this is &lt;span class='important'&gt;really important&lt;/span&gt; text")]
+>>>
+>>>
+>>> tknzr = get_tokenizer("en_US",chunkers=(HTMLChunker,))
+>>> [w for w in tknzr("this is <span class='important'>really important</span> text")]
 [('this', 0), ('is', 5), ('really', 32), ('important', 39), ('test', 56)]
-</p>
+{% endsyntax %}</p>
 
-<p>When the HTMLChunker is applied to the tokenizer, the &lt;span&gt; tag and its contents are removed from the list of words.</p>
+<p>When the HTMLChunker is applied to the tokenizer, the <span> tag and its contents are removed from the list of words.</p>
 
 <p>Currently the only implemented chunker is <a href="./api/enchant.tokenize.html#HTMLChunker" class="api-ref">HTMLChunker</a>.  A chunker for LaTeX documents is in the works.</p>
 
@@ -473,17 +473,17 @@ be achieved by augmenting the tokenization process with <i>filters</i>.</p>
 <p>A filter is simply a wrapper around a tokenizer that can (1) drop certain words
 from the stream, and (2) further split words into sub-tokens.  They are typically used by passing a list of filters to the <a href="./api/enchant.tokenize.html#-get_tokenizer" class="api-ref">get_tokenizer</a> function:</p>
 
-<p class="code lang-python">&gt;&gt;&gt; from enchant.tokenize import get_tokenizer, EmailFilter
-&gt;&gt;&gt;
-&gt;&gt;&gt; tknzr = get_tokenizer("en_US")
-&gt;&gt;&gt; [w for w in tknzr("send an email to fake@example.com please")]
+<p class="code">{% syntax python %}>>> from enchant.tokenize import get_tokenizer, EmailFilter
+>>>
+>>> tknzr = get_tokenizer("en_US")
+>>> [w for w in tknzr("send an email to fake@example.com please")]
 [('send', 0), ('an', 5), ('email', 8), ('to', 14), ('fake@example.com', 17), ('please', 34)]
-&gt;&gt;&gt;
-&gt;&gt;&gt; tknzr = get_tokenizer("en_US",[EmailFilter])
-&gt;&gt;&gt; [w for w in tknzr("send an email to fake@example.com please")]
+>>>
+>>> tknzr = get_tokenizer("en_US",[EmailFilter])
+>>> [w for w in tknzr("send an email to fake@example.com please")]
 [('send', 0), ('an', 5), ('email', 8), ('to', 14), ('please', 34)]
-&gt;&gt;&gt;
-</p>
+>>>
+{% endsyntax %}</p>
 
 <p>When the EmailFilter is applied to the tokenizer, the email address is removed
 from the list of words.</p>
@@ -510,17 +510,17 @@ by accessing its <a href="./api/enchant.html#Dict" class="api-ref">provider</a> 
 This is a <a href="./api/enchant.html#ProviderDesc" class="api-ref">ProviderDesc</a> object
 with the properties <i>name</i>, <i>desc</i> and <i>file</i>.</p>
 
-<p class="code lang-python">&gt;&gt;&gt; d = enchant.Dict("en_US")
-&gt;&gt;&gt; d.provider
-&lt;Enchant: Aspell Provider&gt;
-&gt;&gt;&gt; d.provider.name
+<p class="code">{% syntax python %}>>> d = enchant.Dict("en_US")
+>>> d.provider
+<Enchant: Aspell Provider>
+>>> d.provider.name
 u'aspell'
-&gt;&gt;&gt; d.provider.desc
+>>> d.provider.desc
 u'Aspell Provider'
-&gt;&gt;&gt; d.provider.file
+>>> d.provider.file
 u'/usr/lib64/enchant/libenchant_aspell.so'
-&gt;&gt;&gt;
-</p>
+>>>
+{% endsyntax %}</p>
 
 <a name="advanced-brokers"><h3>Brokers</h3></a>
 
@@ -529,34 +529,34 @@ are managed by a <a href="./api/enchant.html#Broker" class="api-ref">Broker</a> 
 creating dictionaries and checking whether a particular dictionary
 exists, as shown in the example below.</p>
 
-<p class="code lang-python">&gt;&gt;&gt; b = enchant.Broker()
-&gt;&gt;&gt; b
-&lt;enchant.Broker object at 0x2aaaabdff810&gt;
-&gt;&gt;&gt; b.dict_exists("en_US")
+<p class="code">{% syntax python %}>>> b = enchant.Broker()
+>>> b
+<enchant.Broker object at 0x2aaaabdff810>
+>>> b.dict_exists("en_US")
 True
-&gt;&gt;&gt; b.dict_exists("fake")
+>>> b.dict_exists("fake")
 False
-&gt;&gt;&gt; b.list_languages()
+>>> b.list_languages()
 ['en', 'en_CA', 'en_GB', 'en_US', 'eo', 'fr', 'fr_CH', 'fr_FR']
-&gt;&gt;&gt; d = b.request_dict("en_US")
-&gt;&gt;&gt; d
-&lt;enchant.Dict object at 0x2aaaabdff8d0&gt;
-&gt;&gt;&gt;
-</p>
+>>> d = b.request_dict("en_US")
+>>> d
+<enchant.Dict object at 0x2aaaabdff8d0>
+>>>
+{% endsyntax %}</p>
 
 <p>Brokers also have the method <a href="./api/enchant.html#Broker-describe" class="api-ref">describe</a> which determines which providers
 are available, and the method <a href="./api/enchant.html#Broker-list_dicts" class="api-ref">list_dicts</a> which lists the dictionaries
 available through each provider.</p>
 
-<p class="code lang-python">&gt;&gt;&gt; b = enchant.Broker()
-&gt;&gt;&gt; b.describe()
-[&lt;Enchant: Aspell Provider&gt;, &lt;Enchant: Myspell Provider&gt;, &lt;Enchant: Ispell Provider&gt;]
-&gt;&gt;&gt; b.list_dicts()
-[('en', &lt;Enchant: Aspell Provider&gt;), ('en_CA', &lt;Enchant: Aspell Provider&gt;), ('en_GB', &lt;Enchant: Aspell Provider&gt;),
- ('en_US', &lt;Enchant: Aspell Provider&gt;), ('eo', &lt;Enchant: Aspell Provider&gt;), ('fr', &lt;Enchant: Aspell Provider&gt;),
- ('fr_CH', &lt;Enchant: Aspell Provider&gt;), ('fr_FR', &lt;Enchant: Aspell Provider&gt;)]
-&gt;&gt;&gt;
-</p>
+<p class="code">{% syntax python %}>>> b = enchant.Broker()
+>>> b.describe()
+[<Enchant: Aspell Provider>, <Enchant: Myspell Provider>, <Enchant: Ispell Provider>]
+>>> b.list_dicts()
+[('en', <Enchant: Aspell Provider>), ('en_CA', <Enchant: Aspell Provider>), ('en_GB', <Enchant: Aspell Provider>),
+ ('en_US', <Enchant: Aspell Provider>), ('eo', <Enchant: Aspell Provider>), ('fr', <Enchant: Aspell Provider>),
+ ('fr_CH', <Enchant: Aspell Provider>), ('fr_FR', <Enchant: Aspell Provider>)]
+>>>
+{% endsyntax %}</p>
 
 <a name="advanced-brokers-default"><h4>The Default Broker</h4></a>
 
@@ -566,27 +566,27 @@ Broker object and uses it whenever one is not explicitly given.  For example,
 the default broker is used when creating dictionary objects directly.  This
 object is available as <a href="./api/enchant.html" class="api-ref">enchant._broker</a>.</p>
 
-<p class="code lang-python">&gt;&gt;&gt; enchant._broker
-&lt;enchant.Broker object at 0x2aaaabdff590&gt;
-&gt;&gt;&gt; d = enchant.Dict("en_US")
-&gt;&gt;&gt; d._broker
-&lt;enchant.Broker object at 0x2aaaabdff590&gt;
-&gt;&gt;&gt;
-</p>
+<p class="code">{% syntax python %}>>> enchant._broker
+<enchant.Broker object at 0x2aaaabdff590>
+>>> d = enchant.Dict("en_US")
+>>> d._broker
+<enchant.Broker object at 0x2aaaabdff590>
+>>>
+{% endsyntax %}</p>
 
 <p>You may have noticed that the top-level functions provided by the
 enchant module (such as <a href="./api/enchant.html#-request_dict" class="api-ref">request_dict</a>, <a href="./api/enchant.html#-dict_exists" class="api-ref">dict_exists</a> and <a href="./api/enchant.html#-list_languages" class="api-ref">list_languages</a>)
 match the methods provided by the Broker class.  These functions are in
 fact the instance methods of the default Broker object:</p>
 
-<p class="code lang-python">&gt;&gt;&gt; enchant._broker
-&lt;enchant.Broker object at 0x2aaaabdff590&gt;
-&gt;&gt;&gt; enchant.request_dict.im_self
-&lt;enchant.Broker object at 0x2aaaabdff590&gt;
-&gt;&gt;&gt; enchant.dict_exists.im_self
-&lt;enchant.Broker object at 0x2aaaabdff590&gt;
-&gt;&gt;&gt;
-</p>
+<p class="code">{% syntax python %}>>> enchant._broker
+<enchant.Broker object at 0x2aaaabdff590>
+>>> enchant.request_dict.im_self
+<enchant.Broker object at 0x2aaaabdff590>
+>>> enchant.dict_exists.im_self
+<enchant.Broker object at 0x2aaaabdff590>
+>>>
+{% endsyntax %}</p>
 
 <a name="advanced-brokers-ordering"><h4>Provider Ordering</h4></a>
 
@@ -602,15 +602,15 @@ example states that for American English the MySpell provider should be tried
 first, followed by the aspell provider.  For all other languages, the
 ordering is reversed.</p>
 
-<p class="code lang-python">&gt;&gt;&gt; b = enchant.Broker()
-&gt;&gt;&gt; b.set_ordering("en_US","myspell,aspell")
-&gt;&gt;&gt; b.set_ordering("*","aspell,myspell")
-&gt;&gt;&gt; b.request_dict("en_US").provider
-&lt;Enchant: Myspell Provider&gt;
-&gt;&gt;&gt; b.request_dict("en_GB").provider
-&lt;Enchant: Aspell Provider&gt;
-&gt;&gt;&gt;
-</p>
+<p class="code">{% syntax python %}>>> b = enchant.Broker()
+>>> b.set_ordering("en_US","myspell,aspell")
+>>> b.set_ordering("*","aspell,myspell")
+>>> b.request_dict("en_US").provider
+<Enchant: Myspell Provider>
+>>> b.request_dict("en_GB").provider
+<Enchant: Aspell Provider>
+>>>
+{% endsyntax %}</p>
 
 <p>The user can also set their prefered ordering using enchant configuration
 files.  For this reason, application programmers are discouraged from

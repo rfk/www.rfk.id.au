@@ -21,7 +21,7 @@ tags:
 
 <p>Instead, I decided to make my project completely location-agnostic by introspecting an appropriate BASE_URL at runtime and forcibly modifying the other URL settings to match it.  This isn't exactly trivial, since Django actively discourages runtime changes to the settings module.  There's no obvious way to have some code run <i>after</i> the settings module has been loaded, <i>after</i> the request handler has determined the appropriate URL prefix, but <i>before</i> any requests have been processed.  Through a combination of  middleware and a signal handler, I've managed to make it work:</p>
 
-<p class="code lang-python">from django.conf import settings
+<p class="code">{% syntax python %}from django.conf import settings
 from django.core import signals
 from django.core.urlresolvers import get_script_prefix
 
@@ -58,7 +58,7 @@ class RuntimePathsMiddleware:
     """
     def __init__(self):
         signals.request_started.connect(set_runtime_paths)
-</p>
+{% endsyntax %}</p>
 
 <p>The key here is Django's <a class="api-ref">get_script_prefix</a> function, which uses runtime information to determine the root URL under which the project is deployed.  This is used by <a class="api-ref">set_runtime_paths</a> to configure BASE_URL and patch all the other hard-coded URLs appropriately.  Simple in theory, but it's made needlessly complicated by the fact that prefix information isn't available until immediately before the first request is processed.</p>
 

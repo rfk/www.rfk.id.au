@@ -37,16 +37,17 @@ some higher-level functionality than is available in the C API.
 
 <p>To get started, check out the comprehensive <a href="./tutorial.html">pyenchant tutorial</a> or the pydoc-generated <a href="./api/enchant.html">API listing</a>.  If you just want to get up and running in a hurry, here's a quick sample of pyenchant in action:</p>
 
-<p class="code lang-python">&gt;&gt;&gt; import enchant
-&gt;&gt;&gt; d = enchant.Dict("en_US")
-&gt;&gt;&gt; d.check("Hello")
+<p class="code">{% syntax python %}
+>>> import enchant
+>>> d = enchant.Dict("en_US")
+>>> d.check("Hello")
 True
-&gt;&gt;&gt; d.check("Helo")
+>>> d.check("Helo")
 False
-&gt;&gt;&gt; d.suggest("Helo")
+>>> d.suggest("Helo")
 ['He lo', 'He-lo', 'Hello', 'Helot', 'Help', 'Halo', 'Hell', 'Held', 'Helm', 'Hero', "He'll"]
-&gt;&gt;&gt;
-</p>
+>>>
+{% endsyntax %}</p>
 
 <p>You can <a href="http://github.com/rfk/pyenchant/issues/">report bugs</a> and view the latest development progress at the <a href="http://github.com/rfk/pyenchant/tree/master">github project page</a>.
 There are more downloads available at the <a href="http://pypi.python.org/pypi/pyenchant/">python package index</a>, including all the <a href="http://pypi.python.org/simple/pyenchant/">old versions of pyenchant</a>.</p>

@@ -13,37 +13,37 @@ tags:
 
 <p>In Python 2, you can automatically unpack a list/tuple/iterable into a series of variables using a single assignment statement:</p>
 
-<div class="code lang-python">&gt;&gt;&gt; a,b,c = [1,2,3]
-&gt;&gt;&gt; print a
+<div class="code">{% syntax python %}>>> a,b,c = [1,2,3]
+>>> print a
 1
-&gt;&gt;&gt; print c
+>>> print c
 3
-&gt;&gt;&gt;
-</div>
+>>>
+{% endsyntax %}</div>
 
 <p>This is a very elegant technique, assuming you know how many items are in the list and want each of them in a separate variable.  But if you want to unpack only certain elements of the list, you're stuck doing the unpacking yourself.  Python's slicing syntax makes this bearable, but still pretty ugly:</p>
 
-<div class="code lang-python">&gt;&gt;&gt; items = [1,2,3,4,5]
-&gt;&gt;&gt; start = items[0]
-&gt;&gt;&gt; end = items[-1]
-&gt;&gt;&gt; rest = items[1:-1]
-&gt;&gt;&gt; print start
+<div class="code">{% syntax python %}>>> items = [1,2,3,4,5]
+>>> start = items[0]
+>>> end = items[-1]
+>>> rest = items[1:-1]
+>>> print start
 1
-&gt;&gt;&gt; print rest
+>>> print rest
 [2, 3, 4]
-&gt;&gt;&gt; 
-</div>
+>>> 
+{% endsyntax %}</div>
 
 <p>Yuck.  But in Python 3, you can now use the starred-variable syntax familiar from function argument definitions to say "put all the unmatched elements into this variable":</p>{% endmark %}
 
-<div class="code lang-python">&gt;&gt;&gt; items = [1,2,3,4,5]
-&gt;&gt;&gt; start, *rest, end = items
-&gt;&gt;&gt; print(start)
+<div class="code">{% syntax python %}>>> items = [1,2,3,4,5]
+>>> start, *rest, end = items
+>>> print(start)
 1
-&gt;&gt;&gt; print(rest)
+>>> print(rest)
 [2, 3, 4]
-&gt;&gt;&gt; 
-</div>
+>>> 
+{% endsyntax %}</div>
 
 <p>The ability to compress this into a clean one-liner might seem trivial, but I'm already finding it a significant win.  When writing code, it lets you express your intention directly and then get on with the business of handling the data.  When reading code, it reduces the line-noise effect of the explicit slicing and makes your intention that much easier to discern.</p>
 

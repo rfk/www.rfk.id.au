@@ -25,16 +25,16 @@ tags:
 
 <p>I shaved about 5 seconds off the execution time by using a special "background thread" class to execute some tasks at lower priority:</p>
 
-<p class="code lang-python">class BGThread(threading2.Thread):
+<p class="code">{% syntax python %}class BGThread(threading2.Thread):
     def __init__(self,*args,**kwds):
         super(BGThread,self).__init__(*args,**kwds)
         self.priority = 0.2
-</p>
+{% endsyntax %}</p>
 
 <p>The biggest improvement, however, came from the following two lines of code:</p>
 
-<p class="code lang-python">cpu = random.choice(list(threading2.system_affinity()))
-threading2.process_affinity((cpu,))</p>
+<p class="code">{% syntax python %}cpu = random.choice(list(threading2.system_affinity()))
+threading2.process_affinity((cpu,)){% endsyntax %}</p>
 
 <p>The <span class="api-ref">system_affinity</span> function returns the set of all CPUs on the system, while the <span class="api-ref">process_affinity</span> function sets the CPU affinity for the entire Python process.  So what we're doing here is simply picking a random CPU, then forcing all threads in the program to run only on that CPU.  With this simple change, nose now reports an even <i>happier</i> little message for my tests:</p>
 

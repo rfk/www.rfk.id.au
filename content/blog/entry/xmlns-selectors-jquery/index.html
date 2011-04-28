@@ -17,7 +17,7 @@ jQuery doesn't support xml-namespace selectors.  Since I'm trying to parse <a hr
 document contains an element &lt;D:response&gt;, you can quite safely query
 for that element by name as long as you remember to backslash-escape the colon:</p>
 
-<p class="code lang-javascript">$(doc).find("D\\:response")</p>
+<p class="code">{% syntax javascript %}$(doc).find("D\\:response"){% endsyntax %}</p>
 
 <p>This works as long as you can guarantee that a single prefix is used for
 the target namespace, and that it's used uniformly throughout the document.  But
@@ -30,37 +30,37 @@ standard</a>, make it very clear that you can't rely on this in general.
 
 <p>Fortunately, the <a href="http://www.w3.org/TR/css3-selectors/">CSS Level 3</a> standard provides a very clear syntax and semantics for namespace-aware queries.  After declaring 'D' to be the proper WebDAV namespace URI, the CSS-3 equivalent to the above prefix query would be:</p>{% endmark %}
 
-<p class="code lang-javascript">$(doc).find("D|response")</p>
+<p class="code">{% syntax javascript %}$(doc).find("D|response") {% endsyntax %}</p>
 
 <p>Unfortunately, this syntax is largely still a pipe-dream.  Not only is it missing from jQuery, but I couldn't find another implementation to help get me off the ground.  The only thing for it was to implement it myself &ndash; so about six hours later, after studying the internals of the <a href="http://www.sizzlejs.com/">Sizzle selector engine</a> and adventuring from <i>getElementsByTagNameNS</i> through to XPath's <i>namespace-uri()</i> and <i>local-name()</i> functions, I have a solution that I'm happy to show to the world: <a href="/static/scratch/jquery.xmlns.js">jquery.xmlns.js</a>.</p>
 
 <p>This plugin extends the jQuery tag and attribute query functions to allow an optional namespace selector.  In the simplest case you declare a namespace prefix in the <i>$.xmlns</i> object, then just query for it as normal:</p>
 
-<p class="code lang-javascript">$.xmlns["D"] = "DAV:";
+<p class="code">{% syntax javascript %}$.xmlns["D"] = "DAV:";
 $(doc).find("D|response").each(...);
-</p>
+{% endsyntax %}</p>
 
 <p>Sadly, the namespace declarations need to be global since the underlying jQuery/Sizzle selector machinery is stateless.  If you're anything like me, such globals will offend your delicate programming sensibilities.  To perform a namespace-based query and automatically clean up when you're done, you can use the <i>xmlns</i> query method as follows:</p>
 
-<p class="code lang-javascript">$(doc).xmlns({D:"DAV:"},function() {
+<p class="code">{% syntax javascript %}$(doc).xmlns({D:"DAV:"},function() {
   //  The 'D' namespace is declared within this function
   return this.find("D|response").each(...);
   //  and removed again when the function exits
 });
-</p>
+{% endsyntax %}</p>
 
 <p>It's also possible to specify a default namespace, which will be used when no explicit selector is given.  Just pass a string rather than a mapping object, like so:</p>
 
-<p class="code lang-javascript">$(doc).xmlns("DAV:",function() {
+<p class="code">{% syntax javascript %}$(doc).xmlns("DAV:",function() {
   //  This only searches within the 'DAV:' namespace
   return this.find("response").each(...);
 });
-</p>
+{% endsyntax %}</p>
 
 <p>Namespaced attribute selectors are also supported, although there are some restrictions as spelled out <a href="http://www.w3.org/TR/css3-selectors/#attrnmsp">here</a>.  The following would search for elements with a 'href' attribute in any namespace:</p>
 
-<p class="code lang-javascript">$(doc).find("[*|href]");
-</p>
+<p class="code">{% syntax javascript %}$(doc).find("[*|href]");
+{% endsyntax %}</p>
 
 <p>Of course, there are plenty of caveats here.  I've tested this on Firefox and IE7 and it meets my expectations, but I haven't explored any of the bizarre corner cases that I'm sure are lurking out there.  I also haven't done any performance testing, although I have tried hard not to slow down the common case where a namespace selector is not specified.  I'm far from an expert here &ndash;  any bug reports, success reports or general suggestions most welcome!</p>
 
