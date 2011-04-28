@@ -79,3 +79,9 @@ urlcleaner:
         - index.html
     append_slash: true
 
+publisher:
+    github:
+        type:  hyde.ext.publishers.dvcs.Git
+        path: ../rfk.github.com
+        url: git@github.com:rfk/rfk.github.com.git
+
