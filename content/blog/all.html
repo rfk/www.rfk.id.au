@@ -1,16 +1,27 @@
 ---
 title: RFK | Blog
+extends: base.j2
 ---
 
-{% block blog_listing_footer %}
+{% block page_meta %}
+<link rel="alternate" title="RFK | Blog | Atom Feed" href="http://www.rfk.id.au/blog/feeds/atom.xml" type="application/atom+xml" />
+{% endblock %}
 
-<div class="blog-footer">
+{% from "macros.j2" import render_excerpt with context  %}
+{% block page_content %}
 
-<div class="blog-footer-left">
-</div>
+<h2>All Blog Entries</h2>
 
-<div class="blog-footer-right">
-<a href="/blog/all.html">view all entries...</a>
-</div>
+<ul>
+{% for res in resource.node.walk_resources_sorted_by_time() %}
+<li>
+    <a href="{{ content_url(res.url) }}">{{ res.meta.title }}</a>
+    &nbsp;&nbsp;
+    <time datetime="{{ res.meta.created.strftime('%Y-%m-%d') }}">
+        {{ res.meta.created.strftime('%a, %d %b %Y') }}
+    </time>
+</li>
+{% endfor %}
+<ul>
 
 {% endblock %}
