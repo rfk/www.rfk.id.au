@@ -68,17 +68,21 @@
 
   <div id="sidebar" class="column span-5 last">
    {% block page_sidebar %}
-   <p>I am a software developer based in Melbourne, Australia.  I do Python,
-JavaScript, and Logic Programming.  I'm sometimes available for contract
-development and consulting work.</p>
+   {% block page_sidebar_blurb %}
+   <p>I am a software developer specialising in Python, JavaScript, and Logic Programming.  I'm based in Melbourne, Australia.</p>
+   {% endblock %}
 
-   <p>
+   <br /><hr /><br />
+
+   <div>
    <a href="http://au.linkedin.com/in/ryanfkelly" ><img src="http://www.linkedin.com/img/webpromo/btn_liprofile_blue_80x15.png" width="80" height="15" border="0" alt="View Ryan Kelly's profile on LinkedIn"></a>
-   </p>
+   </div>
 
-   <p>
+   <div>
    <a href="http://www.twitter.com/rfkelly"><img src="http://twitter-badges.s3.amazonaws.com/twitter-a.png" alt="Follow rfkelly on Twitter"/></a>
-   </p>
+   </div>
+   {% block page_sidebar_extra %}
+   {% endblock %}
    {% endblock %}
   </div>
 
