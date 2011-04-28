@@ -1,0 +1,16 @@
+---
+title: RFK | Home
+---
+
+<p>I am a software developer based in Melbourne, Australia.  Most of my days are spent coding in Python and JavaScript, commercially through <a href="http://www.cloudmatrix.com.au/">Cloud Matrix</a> and for a variety of <a href="/software/">open-source projects</a>.  I also maintain a strong interest in logic programming, mainly as a result of my <a href="/ramblings/research/">doctoral thesis</a>.  I am occasionally available for contract development and consulting work; please read <a href="/about/">more about me</a> and check out my <a href="/about/cv.html">curriculum vitae</a> if you're interested.</p>
+<hr>
+
+
+{% from "macros.j2" import render_excerpt with context %}
+{% set latest = site.content.walk_resources_sorted_by_time()[:2] %}
+
+{% for post in latest %}
+  {{ render_excerpt(post, 'post') }}
+  <hr />
+{% endfor %}
+

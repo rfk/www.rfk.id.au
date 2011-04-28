@@ -1,0 +1,40 @@
+---
+title: >
+ RFK.id.au is moving
+slug: RFKidau-is-moving
+created: !!timestamp '2005-09-19 06:49:03'
+modified: !!timestamp '2008-11-16 22:30:17.837478'
+---
+
+{% mark excerpt %}<p>I'm finally putting my grand plan into action: the RFK.id.au domain is moving out of my loungeroom and onto some proper iron.  I've set up a Virtual Private Server with <a href="http://rimuhosting.com/">Rimu Hosting</a> and I'm not looking back!</p>
+<p>What does this mean for you?  Besides a (hopefully very) few hiccups during the transition, the only change you should notice will be the look-n-feel of this blog as I move away from COREblog and onto something of my own creation.  Oh, and things won't suddenly disappear when our internet connection drops out or I break the modem on my server yet again.</p>
+<p>I wont post all the gory details here at the top level.  If you're interested, read on...</p>
+<p>First, the hosting.  There are plenty of VPS hosts out there and as much as I would have liked to go with an Australian company, I just couldn't find a competitor to <a href="http://rimuhosting.com/">Rimu</a>.  Here are a couple of my favourite points:</p>
+<ul>
+<li>Run by geeks, for geeks.  No stuffiness or sales reps.  Just people
+who love cool technology and want to help you out with it</li>
+<li>Based in New Zealand, which is close enough to make me feel better about not buying Australian</li>
+<li>Plenty of options for the base install, including a barebones Debian option for the get-your-hands-dirty geeks</li>
+<li>Free backup FTP space, backup MX server, and more</li>
+<li>Support for the open-source community in the form of Developer Discounts - I got 10% off my monthly fees on account of <a href="http://www.rfk.id.au/software/projects/">my projects</a></li>
+<li>All that, and still at some of the best prices I could find!</li>
+</ul>
+
+<p>The newly christened "Guava" can be pinged at "guava.rfk.id.au".  There's not much else there at the moment, but I'll be slowly getting everything operational over the coming weeks.  I've set a November 1st deadline so it'll be ready in time for me to move house.  The specs are actually quite modest, but fit my needs just fine:</p>{% endmark %}
+<ul>
+<li>96MB RAM</li>
+<li>30GB monthly traffic</li>
+<li>4GB disk space</li>
+</ul>
+<p>Of course, I can upgrade all this with a reboot.</p>
+
+<p>The system is <a href="http://www.debian.org/">Debian Linux</a> rather than my favoured <a href="http://www.gentoo.org/">Gentoo</a>.  I actually started out on Debian way back in the day (2001 I believe...wow does time fly!) but I'm still having a little trouble getting around.  Expect a blog post about all the advantages of Gentoo over Debian :-)</p>
+<p>This is also a great chance to clean out under the hood and try out a few new bits of technology:</p>
+<ul>
+<li>I'm moving off Zope and onto <a href="http://www.cherrypy.org/">CherryPy</a> for the website.  According to the press releases and the work I've done so far, it makes writing a website like writing any other Python application - which is to say, my own personal paradise.  Thanks to the nifty <a href="http://www.owlfish.com/software/simpleTAL/">simpleTAL</a> package I can use all my static Zope pages with the barest of modifications, but it means COREblog is out of the picture.  I'll be replacing it with a home-grown solution, stay tuned.</li>
+<li>I'm dumping <a href="http://www.qmail.org/">qmail</a> in favour of <a href="http://www.postfix.org/">Postfix</a>, mainly because its friendlier stance on packaging makes it slightly less painful to install on Debian.  I'm also excited about trying out something new, but please don't construe this as an end to my qmail love-affair.</li>
+<li>I'm still looking for a replacement for <a href="spamassassin.apache.org/">SpamAssassin</a> as I feel it could be done better</li>
+<li>I'm keeping <a href="http://www.apache.org/">Apache</a>, <a href="http://www.procmail.org/">Procmail</a>, <a href="http://www.clamav.net/">ClamAV</a> and <a href="http://subversion.tigris.org/">Subversion</a>, among others.</li>
+</ul>
+
+<p>So I suppose, rather than just chatting about it, I should get to work putting some of this together.  Apologies in advance for the bumps along the ride.</p>

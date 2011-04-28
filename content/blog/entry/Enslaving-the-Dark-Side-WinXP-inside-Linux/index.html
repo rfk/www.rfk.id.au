@@ -1,0 +1,24 @@
+---
+title: >
+ Enslaving the Dark Side: WinXP inside Linux
+slug: Enslaving-the-Dark-Side-WinXP-inside-Linux
+created: !!timestamp '2004-12-11 05:08:18'
+modified: !!timestamp '2008-11-16 22:30:17.025044'
+tags: 
+    - software
+    - technology
+---
+
+{% mark excerpt %}<p>Between my (now full-time) job as a software developer and my own open-source projects, the limited availability of a Windows machine at home is becoming more and more of a problem.  As much as I might like to avoid it, my software does need to run under Windows so I do need to test it there.  There was only one reasonable solution - bend a copy of Windows to my will by running it from <a href="http://www.rfk.id.au/scratch/images/WinXP.png">within my Linux box</a>.</p>
+<p>Of course there are proprietary solutions such as VMWare that I could have used, but that'd take all the fun out of it.  What I was really after was a way to completely enslave Windows within an open-source environment.  I originally had high hopes for a project called <a href="http://bochs.sourceforge.net/">Bochs</a>, which is a full software simulation of an x86-based PC.  Sadly, it suffered from the following ailments:</p>
+ <ul><li>Just <b>too slow</b> to be useful, even on my 3000+ Athlon64.</li>
+<li>Simulated VGA graphics that made Windows XP look like a water-colour that had been left out in the rain</li>
+<li>Far too many obscure settings to be tweaked by hand to get things stable enough to work</li>
+</ul>
+<p>Having said that, I <i>did</i> manage to get XP installed and running, although I never got network access working properly.  Googling around for a solution brought me into contact with what turned into an even better solution: <a href="http://fabrice.bellard.free.fr/qemu/">Qemu</a>.</p>
+<p>Like Bochs, Qemu can simulate an entire x86-based machine.  Unlike Bochs, it can do so easily without making you specify more than one or two parameters.  I've now got a fully-functional install of Windows XP, including NAT'd network access, up and running in under five hours.</p>{% endmark %}
+<p>"Bah!", I can hear you say, "five hours is a lifetime!  What a painful process!".  Let me just say that probably fifteen minutes of that was to do with Qemu itself.  The rest can be attributed to two things:</p>
+<ul><li>The XP install process takes long enough under normal circumstanes, let alone when the entire PC is being simulated in software</li>
+<li>XP stubbornly refused to run in anything other than safe mode until I had installed service pack 1</li>
+</ul>
+<p>Two other things about Qemu deserve a mention. One, it's got a Windows port in the works which appears to be progressing nicely.  Two, it is also capable of simulating SPARC and PowerPC machines, although they're a lot flakier than the x86 version.  So if you're feeling adventurous (and have the cash to spare for a proper license, of course!) you could soon be trying out OSX or Solaris inside your Windows machine.  Watch this space for an OSX-inside-Windows-inside-Linux entry if I ever get it figured out...</p>

@@ -1,0 +1,77 @@
+---
+title: >
+ Making a Movable Django Project
+slug: making-a-movable-django-project
+created: !!timestamp '2009-08-11 20:30:54.016299'
+modified: !!timestamp '2009-08-12 15:30:06.986265'
+tags: 
+    - python
+    - django
+---
+
+<p>Deploying Django projects is in general a straightforward affair, but it still suffers from a pain-point that's as old as web apps themselves: deploying at an arbitrary root URL.  In my ideal world, I would push my shiny new Django project to the server, instruct Apache to mount it at "/my/shiny/app", and everything would just work &ndash;  all URLs would magically have "/my/shiny/app" stripped off on their way into Django and prepended again on their way out.  In the real world, Django comes pretty close to this ideal but stops just far enough short to be annoying.</p>
+
+<p>First, here's what Django gets right: <a href="http://docs.djangoproject.com/en/dev/topics/http/urls/#reverse" class="api-ref">reverse()</a>, <a href="http://docs.djangoproject.com/en/dev/topics/http/urls/#permalink" class="api-ref">permalink()</a> and <a href="http://docs.djangoproject.com/en/dev/ref/templates/builtins/#ttag-url" class="api-ref">{{ '{%' }} url {{ '%}' }}</a> are awesome.  They introspect Django's runtime environment to translate an application-level name or object into a deployment-level URL.  Your applications have no excuse for hard-coding URLs or even URL fragments.  In theory, these two functions should be enough to make Django completely agnostic about its deployment location.</p>
+
+<p>Now here's what Django gets wrong: <i><b>some of its core components don't use them</b></i>.  Instead they use hard-coded URLs defined in the settings module, such as settings.ADMIN_MEDIA_PREFIX and settings.LOGIN_URL. Attempts to patch these components to avoid hard-coded URLs have been <a href="http://code.djangoproject.com/ticket/8906">closed wontfix</a>, so I guess we're stuck with them for a while.</p>
+
+<p>The recommended approach is to have a separate settings.py file for each deployment scenario, so that you can adjust these hard-coded URLs as appropriate.  If you're careful, you can <a href="http://gnuvince.wordpress.com/2007/12/22/django-paths-and-urls/">define a single setting named BASE_URL</a> and derive all the other hard-coded paths from that.  When you move the project to a new URL, you update settings.BASE_URL and things should just work.</p>
+
+<p>It's a little less <a href="http://en.wikipedia.org/wiki/Don%27t_repeat_yourself">DRY</a> than I'd like, as you have to repeat information in your Apace config and in your settings.py file.  Nevertheless, this solution works well and it's what I've been doing until today.  But I've just set up a new testing server where individual tags and branches are available under dynamic URLs &ndash; http://test.example.com/trunk/ runs a copy of mainline trunk, /my-branch/ runs a particular branch, /rel-X.Y.Z/ runs a particular release version, and so forth.  Managing a BASE_URL setting for each individual tag or branch in this scenario would quickly get out of control.</p>
+
+<p>Instead, I decided to make my project completely location-agnostic by introspecting an appropriate BASE_URL at runtime and forcibly modifying the other URL settings to match it.  This isn't exactly trivial, since Django actively discourages runtime changes to the settings module.  There's no obvious way to have some code run <i>after</i> the settings module has been loaded, <i>after</i> the request handler has determined the appropriate URL prefix, but <i>before</i> any requests have been processed.  Through a combination of  middleware and a signal handler, I've managed to make it work:</p>
+
+<p class="code lang-python">from django.conf import settings
+from django.core import signals
+from django.core.urlresolvers import get_script_prefix
+
+def set_runtime_paths(sender,**kwds):
+    """Dynamically adjust path settings based on runtime configuration.
+
+    This function adjusts various path-related settings based on runtime
+    location info obtained from the get_script_prefix() function.  It also
+    adds settings.BASE_URL to record the root of the Django server.
+    """
+    # We only want to run this once; the signal is just for bootstrapping
+    signals.request_started.disconnect(set_runtime_paths)
+    base_url = get_script_prefix()
+    while base_url.endswith("/"):
+        base_url = base_url[:-1]
+    settings.BASE_URL = base_url
+    url_settings = ("MEDIA_URL","ADMIN_MEDIA_PREFIX","LOGIN_URL",
+                             "LOGOUT_URL","LOGIN_REDIRECT_URL")
+    for setting in url_settings:
+        oldval = getattr(settings,setting)
+        if "://" not in oldval and not oldval.startswith(settings.BASE_URL):
+            if not oldval.startswith("/"):
+                oldval = "/" + oldval
+            setattr(settings,setting,settings.BASE_URL + oldval)
+
+class RuntimePathsMiddleware:
+    """Middleware to re-configure paths at runtime.
+
+    This middleware class doesn't do any request processing.  Its only
+    function is to connect the set_runtime_paths function to Django's
+    request_started signal.  We use a middleware class to be sure that it's
+    loaded before any requests are processed, but need to trigger on a signal
+    because middleware is loaded before the script prefix is set.
+    """
+    def __init__(self):
+        signals.request_started.connect(set_runtime_paths)
+</p>
+
+<p>The key here is Django's <a class="api-ref">get_script_prefix</a> function, which uses runtime information to determine the root URL under which the project is deployed.  This is used by <a class="api-ref">set_runtime_paths</a> to configure BASE_URL and patch all the other hard-coded URLs appropriately.  Simple in theory, but it's made needlessly complicated by the fact that prefix information isn't available until immediately before the first request is processed.</p>
+
+<p>No problem you say, we'll simply connect to the <i>request_started</i> signal and then disconnect once we've done our thing.  Fine, but where do we do this connection?  It can't be done from within settings.py since that would produce a circular import.  It could be done in urls.py or within one of your applications, but you run the risk of another application squireling away a setting before you get around to changing it (@login_required, for example, takes a local copy of settings.LOGIN_URL).  We really need it to be connected before any views get loaded.</p>
+
+<p>The solution that worked for me was to connect the signal in the constructor of a custom middleware class.  Django guarantees that all middleware classes are initialised before doing any request processing, and it doesn't add any overhead once the signal is connected; the middleware list gets filtered according to the methods that each class defines, and since RuntimePathsMiddleware doesn't define any of them it will simply be discarded.</p>
+
+<p>Then you just follow a few simple rules:</p>
+
+<ul>
+<li>Use reverse() to build URLs in your view functions</li>
+<li>Use {{ '{%' }} url {{ '%}' }} to build URLs in your application-level templates</li>
+<li>Use BASE_URL or derivatives to build URLs in your project-level templates</li>
+</ul>
+
+<p>The end result: a Django project that can be moved to an arbitrary root URL without needing to change a single thing.</p>

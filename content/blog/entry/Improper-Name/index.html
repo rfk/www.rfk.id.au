@@ -1,0 +1,28 @@
+---
+title: >
+ Improper Name
+slug: Improper-Name
+created: !!timestamp '2006-04-28 09:32:46'
+modified: !!timestamp '2008-11-16 22:30:18.123577'
+tags: 
+    - personal
+---
+
+{% mark excerpt %}<p>My computer helpfully comes with the file <i>/usr/share/dict/propernames</i>, a list of proper names that can be used for spellchecking.  Consider my surprise at the following interaction:</p>
+<pre>
+rfk@mango ~ $
+rfk@mango ~ $ wc -l /usr/share/dict/propernames
+1516 /usr/share/dict/propernames
+rfk@mango ~ $ grep 'Ragnar' /usr/share/dict/propernames
+Ragnar
+rfk@mango ~ $ grep 'Rainer' /usr/share/dict/propernames
+Rainer
+rfk@mango ~ $ grep 'Reinhard' /usr/share/dict/propernames
+Reinhard
+rfk@mango ~ $ grep 'Rodent' /usr/share/dict/propernames
+Rodent
+rfk@mango ~ $ grep 'Ryan' /usr/share/dict/propernames
+rfk@mango ~ $
+</pre>
+<p>One thousand, five hundred and sixteen names and "Ryan" still doesnt make the cut.  To whom should I submit this travesty of a bug??</p>
+<p>Well, at least I can take solace in the relative availability of "Ryan" mugs and keyrings throughout Australia...</p>{% endmark %}

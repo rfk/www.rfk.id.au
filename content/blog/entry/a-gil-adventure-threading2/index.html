@@ -1,0 +1,45 @@
+---
+title: >
+ A GIL Adventure (with a happy ending)
+slug: a-gil-adventure-threading2
+created: !!timestamp '2010-02-05 13:33:01.185423'
+modified: !!timestamp '2010-02-05 13:33:01.185488'
+tags: 
+    - software
+    - python
+---
+
+{% mark excerpt %}<p>I just halved the running time of one of my test suites.</p>
+
+<p>The tests in question are multi-threaded, and while they perform a lot of IO they still push the CPU pretty hard.  For some time now, <a href="http://somethingaboutorange.com/mrl/projects/nose/">nose</a> has been reporting a happy little message along these lines:</p>
+
+<p class="code">Ran 35 tests in 24.893s</p>
+
+<p>I wouldn't have though anything of it, but every so often this number would drop dramatically &ndash; often down to as little as 15 seconds.  After a lot of puzzling, I realised that the tests would run faster whenever I had another test suite running <i>at the same time</i>.  Making my computer work harder made these tests run almost twice as fast!</p>
+
+<p>Could it be?  Yes, I was finally seeing a manifestation of Python's dreaded <a href="http://en.wikipedia.org/wiki/Global_Interpreter_Lock">Global Interpreter Lock</a> - a.k.a. the <a href="http://blog.ianbicking.org/gil-of-doom.html">"GIL of Doom"</a>.  Because I'm running on a dual core system, the different threads in this test suite were spreading themselves over both processors and engaging in an epic <a href="http://blip.tv/file/2232410">GIL Battle</a> that bogged down the whole process.</p>
+
+<p>The typical response to this awful multi-core behaviour is "just use <a href="http://docs.python.org/library/multiprocessing.html">multiprocessing</a>".  That's not an option here, not least because these tests are supposed to be checking the thread safety of my code!</p>{% endmark %}
+
+<p>Not one to take such an indignity lying down, I've put together a set of extensions to Python's threading library that gives you more control over the behaviour of each thread.   In particular, it lets specify both a priority and a <a href="http://en.wikipedia.org/wiki/Processor_affinity">CPU affinity</a> for each thread.  Grab it from PyPI: <a href="http://pypi.python.org/pypi/threading2">threading2</a>.</p>
+
+<p>I shaved about 5 seconds off the execution time by using a special "background thread" class to execute some tasks at lower priority:</p>
+
+<p class="code lang-python">class BGThread(threading2.Thread):
+    def __init__(self,*args,**kwds):
+        super(BGThread,self).__init__(*args,**kwds)
+        self.priority = 0.2
+</p>
+
+<p>The biggest improvement, however, came from the following two lines of code:</p>
+
+<p class="code lang-python">cpu = random.choice(list(threading2.system_affinity()))
+threading2.process_affinity((cpu,))</p>
+
+<p>The <span class="api-ref">system_affinity</span> function returns the set of all CPUs on the system, while the <span class="api-ref">process_affinity</span> function sets the CPU affinity for the entire Python process.  So what we're doing here is simply picking a random CPU, then forcing all threads in the program to run only on that CPU.  With this simple change, nose now reports an even <i>happier</i> little message for my tests:</p>
+
+<p class="code">Ran 35 tests in 12.299s</p>
+
+<p>It's sad to have to resort this kind of hackery, but at least there's a straightforward workaround. If I get a chance I'll try this out on Python 3 and report back &ndash; it's got a <a href="http://mail.python.org/pipermail/python-dev/2009-October/093321.html">new GIL implementation</a> designed to avoid some of these pathological performance issues</p>
+
+<p>And finally, before anyone chimes in with "why doesn't python set the process affinity automatically?!?!" &ndash; there are plenty of cases where spreading your threads across several processors can be a useful, sensible and efficient thing to do in Python.  But given the known pathological behaviour of the GIL in some cases, it should be easy to disable multi-core execution for programs that can't make use of it.  Well, <a href="http://pypi.python.org/pypi/threading2">now you can</a>.

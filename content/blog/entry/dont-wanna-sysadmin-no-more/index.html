@@ -1,0 +1,41 @@
+---
+title: >
+ I don't wanna sysadmin no more
+slug: dont-wanna-sysadmin-no-more
+created: !!timestamp '2011-04-27 13:43:55.879511'
+modified: !!timestamp '2011-04-27 16:27:18.108225'
+tags: 
+    - technology
+---
+
+{% mark excerpt %}<p>For several years now I've had this domain running on a small VPS from <a href="http://www.rimuhosting.com/">RimuHosting</a>.  They've been fantastic and I will readily recommend them to anyone looking for hosting.  But there's just one problem:  I don't wanna sysadmin no more.</p>
+
+<p>Right now every `apt-get upgrade` on my VPS tells me that it is "unable to migrate to dependency-based boot system".  Then it issues a bunch of warnings about parsing the file /var/lib/dpkg/status.  I could probably fix this with a little googling and a few precious hours of my time.  But I just can't bring myself to keep shaving that particular yak.</p>
+
+<p>As the folks on those new ads keep telling me: to the cloud!</p>
+
+<p>There's really not that much on my VPS these days.  A basic Python/WSGI website.  A mail server.  A few private git repos.  I figure it should be simple to farm out this hosting work for less than the $30 I pay to RimuHosting each month.</p>
+
+<p>Here's the current plan.  Any advice, alternatives or suggestions appreciated.</p>
+
+<h3>FastMail for email and DNS</h3>
+
+<p>I already use <a href="http://www.fastmail.fm/">FastMail</a> for a backup email address in case my domain goes down.  Their "enhanced" personal plan works out to $3.33 per month and comes with full support for custom domains, secure IMAP and SMTP, and a simple DNS manager.  Sounds like a good deal to me.</p>
+
+<h3>GitHub for personal repos</h3>
+
+<p>I already use <a href="http://github.com/rfk/">GitHub</a> for all my open-source projects, but I've also got some semi-private repos (e.g. my doctoral thesis, some harebrained startup ideas) served from the VPS.  For $7 a month I can just plunk them all into private repos on github and forget about it.</p>{% endmark %}
+
+<h3>S3 for backups and archives</h3>
+
+<p>Storage these days is cheap.  Budgeting a modest $5 per month I can keep all my old wedding photos, email, undergrad projects and other precious memories safely archived in the cloud.  There are plenty of more user-friendly options but there's also a certain appeal to the cheap-and-nasty solution of <a href="http://aws.amazon.com/s3/">raw S3 storage</a>.</p>
+
+<h3>DotCloud or ep.io for Web</h3>
+
+<p>Here I haven't made up my mind.  This website is a very basic Django project, and I could probably find some super-cheap shared hosting to run it just fine.  But dammit, I've got $15/month left in my budget and I want to try out something new and cool.  Both <a href="http://www.dotcloud.com/">DotCloud</a> and <a href="http://www.ep.io/">ep.io</a> look like excellent platforms for hosting a Python webapp, but unfortunately both are still in limited beta.  Here's hoping I can get on board and try them out in the near future.</p>
+
+<h3>Others?</h3>
+
+<p>Any other suggestions or alternatives for hosting a personal domain in the cloud?  I considered <a href="http://www.google.com/apps">Google Apps</a> but took an irrational dislike.  Anything I seem to have forgotten?</p>
+
+<p>I'll post about my experiences, good or bad, as the migration proceeds.</p>

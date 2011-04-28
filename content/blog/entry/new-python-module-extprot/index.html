@@ -1,0 +1,78 @@
+---
+title: >
+ New Python module: extprot
+subtitle: >
+ compact, efficient, extensible data serialisation
+slug: new-python-module-extprot
+created: !!timestamp '2009-08-04 12:01:54.140449'
+modified: !!timestamp '2009-08-04 12:01:54.140519'
+tags: 
+    - software
+    - python
+---
+
+{% mark excerpt %}
+<p>One of my commercial projects requires a space-efficient object serialisation format, and until now I've been using the obvious choice in Google's <a href="http://code.google.com/p/protobuf/">Protocol Buffers</a>.  I'm happy enough with the format itself, but the experience of using the Python bindings was just barely satisfactory.  The interface feels quite Java-ish and there are some non-obvious gotchas, such as having to use special methods to manipulate list fields.  I ploughed ahead, but was quietly looking around for alternatives.</p>
+
+<p>The last straw came when I tried to establish a deployment scheme using <a href="http://blog.ianbicking.org/2008/12/16/using-pip-requirements/">pip requirements files</a>.  Both "pip install protobuf" and "easy_install protobuf" fail hard: the pypi eggs are out of date, the source download has a non-standard structure, and the setup.py script tries to bootstrap itself using the protobuf compiler that it assumes you have already built.  Yuck.  This was more pain than I was willing to put up with.  Plus it was a good opportunity to take another look around.</p>
+
+<p>I toyed briefly with <a href="http://developers.facebook.com/thrift/">Facebook's</a>...errr...I mean <a href="http://developers.facebook.com/thrift/">Apache Thrift</a>, but it had too much remote-procedure-call baggage and not enough documentation.  Then I stumbled across a great little screed about <a href="http://eigenclass.org/R2/writings/extprot-extensible-protocols-intro">extprot</a>, a technology to create "compact, efficient and extensible binary protocols that can be used for cross-language communication and long-term data serialization".</p>{% endmark %}
+
+<p>Yet another wire format for data serialisation?  Yes, but this one has some neat features that fit well into my headspace:</p>
+
+<ul>
+<li>a <b>powerful type system</b>; <p style="margin-left: 2em;">This inludes strongly-typed tuples and lists, tagged disjoint unions, and parametric polymorphism in the style of Haskell or ML.  Once you've used a disjoint union type, you will never want to see another enum as long as you live.</p></li>
+<li><b>self-describing data</b>; <p style="margin-left: 2em;">The 'skeleton' of a message can be recovered without knowing the protocol definition.  This is approximately like reading an XML document without knowing anything about the tag names.</p></li>
+<li><b>self-delimiting data</b>; <p style="margin-left: 2em;">All serialised messages indicate their length, allowing easy streaming and skipping of individual protocol components.  Entirely new wire types can thus be added without breaking existing parsers.</p></li>
+</ul>
+
+<p>These features combine to make extprot strongly extensible. Messages can often maintain backward <i>and</i> forward compatibility across protocol extensions that include adding fields to a message, adding elements to a tuple, adding cases to a disjoint union, and promoting a primitive type into
+a tuple, list or union.</p>
+
+<p>There's just one problem of course &ndash; no Python bindings.  But as they say, every problem is an opportunity in disguise.</p>
+
+<p>The module's called "extprot", the packages are on <a href="http://pypi.python.org/pypi/extprot/">pypi</a>, and the code is on <a href="http://github.com/rfk/extprot/tree/master">github</a>.  It was a remarkably fun experience trying to reify a Hindley-Milner-style type system as Python class objects, and I'm quite happy with the way it turned out.  As an added bonus I got to try out the fabulous <a href="http://pyparsing.wikispaces.com/">pyparsing</a> module for the first time.  In the author's humble opinion, this extprot package has got some serious advantages over the protobuf python bindings:</p>
+
+<ul>
+<li>It's a pure-python module, packaged and distributed in the standard fashion.</li>
+<li>It's friendly to dynamic package management tools like pip.</li>
+<li>It works exclusively with standard Python objects.  Declared a list field?  It's a native list object.</li>
+<li>You don't need to compile your protocol definitions.
+</ul>
+
+<p>That last point deserves a special mention.  Dammit, <b><i>this is Python!</i></b>  I don't want to introduce a compiler into my fantastically productive read-eval-print loop.  With extprot, you can point the module to your protocol definition file and dynamically compile it into an in-memory class structure.  Suppose I have the following protocol definition file:</p>
+
+<p class="code">    message person = {
+        id:   int;
+        name: string;
+        emails: [ string ]
+    }
+</p>
+
+<p>I can load and use it in python with this much work:</p>
+
+<p class="code lang-pycon">&gt;&gt;&gt; import extprot
+&gt;&gt;&gt; extprot.import_protocol("mydefs.proto",globals())
+&gt;&gt;&gt; print person
+&lt;class '&lt;extprot.dynamic&gt;.person'&gt;
+</p>
+
+<p>And I can work with the resulting classes without any knowledge of extprot:</p>
+
+<p class="code lang-pycon">&gt;&gt;&gt; p1 = person(1,"Guido")    # kwd args would also work
+&gt;&gt;&gt; print p1.emails    # fields use a sensible default if possible
+[]
+&gt;&gt;&gt; p1.emails.append("guido@python.org")
+&gt;&gt;&gt; p1.emails.append(7)    # all fields are dynamically typechecked
+Traceback (mosts recent call last):
+    ...
+ValueError: not a valid String: 7
+&gt;&gt;&gt; print repr(p1.to_string())    # look at that compact binary string!
+'\x01\x1f\x03\x00\x02\x03\x05Guido\x05\x13\x01\x03\x10guido@python.org'
+&gt;&gt;&gt; print person.from_string(p1.to_string()).name
+'Guido'
+</p>
+
+<p>Now it's time to fess up just a little: the size of the encodings produced by extprot are of the same order as those from protobuf, but they do have a few extra bytes of overhead due to their self-delimiting nature.  For my applications these extra bytes don't outweigh the advantages I've described above, but your mileage may vary.  I also suspect it would be trivial to remove these delimiters in a separate translation step if you really needed to squeeze them out.</p>
+
+<p>So, looking for a language-neutral serialisation or messaging scheme?  Take a look at <a href="http://eigenclass.org/R2/writings/extprot-extensible-protocols-intro">extprot</a>, its very powerful <a href="http://github.com/mfp/extprot/blob/38ef5d4d9c6d206943ef96abf1e36a01f5578176/doc/protocol-definition.md">type system</a> and the flexible <a href="http://eigenclass.org/R2/writings/protocol-extension-with-extprot">protocol extensions</a> that it permits.  In my opinion it's a serious contender, and I hope these Python bindings help push it along  just a little.</p>

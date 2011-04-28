@@ -1,0 +1,18 @@
+---
+title: >
+ Mechanize Web Scraping
+slug: Mechanize-Web-Scraping
+created: !!timestamp '2005-04-29 12:40:07'
+modified: !!timestamp '2008-11-16 22:30:17.351811'
+tags: 
+    - software
+---
+
+{% mark excerpt %}<p><a href="http://www.sazz.rfk.id.au/">Sazz</a> approached me this evening with an interesting little challenge.  She volunteers with a group called <a href="http://www.wire.org.au/">WIRE</a> and has been charged with gathering a list of all GPs in rural Victoria in order to distribute information.  Fortunately this information is available from the government's <a href="http://humanservicesdirectory.vic.gov.au/Search.aspx">Human Services Directory</a> search page, but the prospect of manually entering each suburb/town in Victoria and copying across the results was, clearly, less than thrilling.</p>
+<p>"Aha!", I thought, time to dust off my old web-scraping skills and whip up a bit of <a href="http://www.python.org/">Python</a> to fix this problem.  Unfortunately, the search form (which appears to have been developed using MS Visual Studio) depends on hidden fields, POST variables and a JavaScript submission system, meaning that things are a lot more complicated than just fetching a few HTML pages.</p>
+<p>To the rescue comes a really neat piece of Python technology named <a href="http://wwwsearch.sourceforge.net/mechanize/">Mechanize</a>.</p>
+<p>Mechanize is designed to be a web-browser within a program.  It can open a page, find and follow links, fill in and submit forms, all through a simple, clean API.  The only thing it doesnt handle is JavaScript, but I was able to recreate the effect in Python by mimicing the sequence of hidden-field assignments and form submission that the code was carrying out.  Quite frankly, I was amazed at how much Mechanize allowed me to do "for free".</p>{% endmark %}
+<p>The result was a 96 line script (including docstrings and proper comments!) that was able to query the website, parse the output, and spit out a list of 1290 GP clinics in the state, along with addresses and contact details.  I've uploaded it if anyone is interested in seeing the Mechanize API in action: <a href="http://www.rfk.id.au/scratch/gp_lister.py">gp_lister.py</a>.</p>
+<p>Kudos to the Mechanize developers (developer?) for providing exellent docstrings on all the Python modules, making working with the API pretty much painless.  My only complaint would be that the API docs should also be online to save having to read them from within the Python interpreter.</p>
+<p>I understand that this library was inspired by a Perl library of similar name, so I'm not going to proclaim Python the ultimate platform for web-scraping technology.  As much as I'd like to.  But if you dont feel like wrapping your head around the  $&lt; /!@/&lt; of Perl to get something like this done, I can heartily recommend Python and Mechanize.</p>
+<p><b>Update [01/05/05, 0200]:</b> Fixed some very obviously broken doubling-up of content.  Remember kids, dont blog in your sleep.</p>
