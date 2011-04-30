@@ -24,12 +24,12 @@ tags:
 
 <p>A good idea, but most implementations of it annoy me.  They tend to create a little mini-language for declaring the imports, which you provide as a string in your source file.  Compare this example from the <a href="http://peak.telecommunity.com/DevCenter/Importing">Importing</a> module:</p>
 
-<p class="code">{% syntax python %}sdist = lazyModule('distutils.command.sdist')
-{% endsyntax %}</p>
+{% syntax python %}sdist = lazyModule('distutils.command.sdist')
+{% endsyntax %}
 
 <p>And this one using <a href="http://people.canonical.com/~mwh/bzrlibapi/bzrlib.lazy_import.html">bzrlib.lazy_import</a>:</p>
 
-<p class="code">{% syntax python %}lazy_import(globals(), '''
+{% syntax python %}lazy_import(globals(), '''
 from bzrlib import (
     errors,
     osutils,
@@ -37,41 +37,41 @@ from bzrlib import (
     )
 import bzrlib.branch
 ''')
-{% endsyntax %}</p>
+{% endsyntax %}
 
 <p>Why don't I like this approach?  It tends to hide your imports from various analysis tools.  In the first example above, you can't even <i>grep</i> for your imports without knowing that lazyModule is being used.  I like the bzrlib approach much better, but I still worry that it hides the imports from tools like <a href="http://www.py2exe.org/">py2exe</a>, which tracks imports by crawling the compiled code looking for import-related opcodes.</p>
 
 <p>In the end I rolled my own solution, which is included in the latest release of <a href="http://pypi.python.org/pypi/esky/">esky</a>.  It's a simple decorator syntax that works as follows:</p>
 
-<p class="code">{% syntax python %}from esky.util import lazy_import
+{% syntax python %}from esky.util import lazy_import
 
 @lazy_import
 def socket():
     import socket
     return socket
-{% endsyntax %}</p>
+{% endsyntax %}
 
 <p>For a simple example like that, this syntax is much more verbose than the alternatives shown above.  But here the imports live in actual code inside your module, so they won't be hidden from anything but the most simple-minded analysis tools.  And instead of trying to parse an import-related mini-language, I can use the full power of python to describe the lazy imports.  For example:</p>
 
-<p class="code">{% syntax python %}@lazy_import
+{% syntax python %}@lazy_import
 def pickle():
     try:    
         import cPickle as pickle
     except ImportError:
         import pickle
     return pickle
-{% endsyntax %}</p>
+{% endsyntax %}
 
 <p>It even supports lazily-evaluated conditional imports like this:</p>
 
-<p class="code">{% syntax python %}@lazy_import
+{% syntax python %}@lazy_import
 def fcntl():
     try:    
         import fcntl
     except ImportError:
         fcntl = None
     return fcntl
-{% endsyntax %}</p>
+{% endsyntax %}
 
 <p>I'm sure there are lots of corner-cases where this scheme breaks down, but as long as you keep your imports simple it will work fine.  Most importantly, I cut more than a second off my program's startup time with just a few @lazy_import decorators.</p>
 
@@ -88,14 +88,14 @@ def fcntl():
 
 <p>Create the index files like this:</p>
 
-<p class="code">{% syntax python %}from zipimportx import zipimporter
+{% syntax python %}from zipimportx import zipimporter
 zipimporter("/path/to/library.zip").write_index()
-{% endsyntax %}</p>
+{% endsyntax %}
 
 <p>And enable their use in your frozen app like this:</p>
 
-<p class="code">{% syntax python %}zipimportx.zipimporter.install()
-{% endsyntax %}</p>
+{% syntax python %}zipimportx.zipimporter.install()
+{% endsyntax %}
 
 <p>My tests show that the use of these pre-processed index files can speed up zipfile loading by about a factor of 3 on Linux, a factor of 5 on Windows, and a factor of <i>thousands</i> when running from a mapped SMB drive.  I'll let you draw your own conclusions about the I/O subsystems of each platform.</p>
 

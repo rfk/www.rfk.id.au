@@ -15,18 +15,18 @@ tags:
 
 <p>Let's begin with the PySide version of "hello world".  Here's the code:</p>
 
-<p class="code">{% syntax python %}import sys
+{% syntax python %}import sys
 from PySide import QtGui
 
 app = QtGui.QApplication(sys.argv)
 msg = QtGui.QLabel("Hello  World!")
 msg.show()
 app.exec_()
-{% endsyntax %}</p>
+{% endsyntax %}
 
 <p>To make this into a stand-alone application, we can freeze it using <a href="http://cx-freeze.sourceforge.net/">cxfreeze</a> (or <a href="TODO">bbfreeze</a>, or <a href="TODO">py2exe</a>, or <a href="TODO">pyp2app</a>, the results will all be similar).  Using just the packages installed into my system python, we get the following:</p>{% endmark %}
 
-<p class="code">{% syntax sh %}$> #  call cxfreeze to generate the frozen app
+{% syntax sh %}$> #  call cxfreeze to generate the frozen app
 $> cxfreeze hello.py
 ...
 ...  lots of output from cxfreeze
@@ -38,29 +38,29 @@ _codecs_cn.so       _codecs_tw.so  libpython2.6.so.1.0      PySide.QtCore.so
 _codecs_hk.so       datetime.so    libQtCore.so.4           PySide.QtGui.so
 _codecs_iso2022.so  _heapq.so      libQtGui.so.4            readline.so
 _codecs_jp.so       hello          libshiboken-py26.so.1.0
-{% endsyntax %}</p>
+{% endsyntax %}
 
 <p>And here's the resulting application running in all its glory on my Ubuntu box:<p>
 
-<p class="code">{% syntax sh %}$> ./dist/hello
-{% endsyntax %}</p>
+{% syntax sh %}$> ./dist/hello
+{% endsyntax %}
 
 <p><img src="/static/scratch/helloworld.png" /></p>
 
 <p>Very nice.  Unfortunately, it's gigantic:</p>
 
-<p class="code">{% syntax sh %}$> du -hs dist/
+{% syntax sh %}$> du -hs dist/
 33M	dist/
-{% endsyntax %}</p>
+{% endsyntax %}
 
 <p>Yes, that's 33 megabytes for "hello world"!  We can definitely do better.  Of course there are no prizes for guessing what's taking up most of that space:</p>
 
-<p class="code">{% syntax sh %}$> du -hs dist/* | grep Qt
+{% syntax sh %}$> du -hs dist/* | grep Qt
 2.5M	dist/libQtCore.so.4
 11M	dist/libQtGui.so.4
 2.8M	dist/PySide.QtCore.so
 13M	dist/PySide.QtGui.so
-{% endsyntax %}</p>
+{% endsyntax %}
 
 <p>That's 13.5M for the Qt libraries, plus another 15.8M for the PySide bindings, for over 29M out of a 33M distribution.  I repeat:  we can do better!</p>
 
@@ -73,7 +73,7 @@ _codecs_jp.so       hello          libshiboken-py26.so.1.0
 
 <p>The results were actually far better than I expected:</p>
 
-<p class="code">{% syntax sh %}$> rm -rf dist/
+{% syntax sh %}$> rm -rf dist/
 $> ~/smallpy/local/bin/cxfreeze hello.py
 ...
 ...
@@ -86,7 +86,7 @@ $> du -hs dist/* | grep Qt
 $>
 $> du -hs dist/
 23M	dist/
-{% endsyntax %}</p>
+{% endsyntax %}
 
 <p>A nice improvement!  We've saved around 10M just by adjusting the compiler options.  But 23M for a "hello world" application is still somewhere in the vicinity of gigantic.  We should be able to do better.</p>
 
@@ -96,8 +96,8 @@ $> du -hs dist/
 
 <p>There's only one thing for it:  we must eliminate unused code from within the PySide bindings themselves.  Enter the latest addition to my <a href="http://pypi.python.org/pypi/PySideKick/">PySideKick</a> utility module: <a href="https://github.com/rfk/pysidekick/blob/master/PySideKick/Hatchet.py">Hatchet</a>.  Hatchet lets you hack your PySide binaries down to size, by rebuilding them with just the classes and methods you need.  Grab it like so:</p>
 
-<p class="code">{% syntax sh %}$> pip install PySideKick
-{% endsyntax %}</p>
+{% syntax sh %}$> pip install PySideKick
+{% endsyntax %}
 
 <p>Here's what Hatchet does to your frozen app in a nutshell:</p>
 
@@ -111,7 +111,7 @@ $> du -hs dist/
 
 <p>Let's take a look:</p>
 
-<p class="code">{% syntax sh %}$> #  execute Hatchet as a script, giving the path to the frozen app
+{% syntax sh %}$> #  execute Hatchet as a script, giving the path to the frozen app
 $> ~/smallpy/local/bin/python -m PySideKick.Hatchet ./dist/
 ...
 ... Lots of output from Hatchet.
@@ -132,7 +132,7 @@ $> du -hs dist/* | grep Qt
 $>
 $> du -hs dist
 16M	dist
-{% endsyntax %}</p>
+{% endsyntax %}
 
 <p>You'll notice that the sizes of the PySide binaries are now reported in kilobytes rather than megabytes.  Very nice!  We've saved another 7M by hacking dead code out of the PySide bindings.  How much code?  Hatchet reports that it has kept the bindings for only 66 classes, entirely eliminating 761 classes from the Qt API.  And for the classes it kept, it suppressed the bindings for an additional 3881 methods.</p>
 
@@ -140,7 +140,7 @@ $> du -hs dist
 
 <p>To avoid some false positives, we can tell Hatchet to only examine the code in our hello.py script rather than looking at the entire frozen application:<p>
 
-<p class="code">{% syntax sh %}$> #  tell Hatchet to only examine hello.py, and not follow any imports
+{% syntax sh %}$> #  tell Hatchet to only examine hello.py, and not follow any imports
 $> ~/smallpy/local/bin/python -m PySideKick.Hatchet --no-follow-imports ./dist/ ./hello.py
 ...
 ... Lots of output from Hatchet.
@@ -161,20 +161,20 @@ $> du -hs dist/* | grep Qt
 $>
 $> du -hs dist
 15M	dist
-{% endsyntax %}</p>
+{% endsyntax %}
 
 <p>Another meg saved.  Not bad.</p>
 
 <p>And just to confirm, it still does everything that a hello-world app should do:</p>
 
-<p class="code">{% syntax sh %}$> ./dist/hello
-{% endsyntax %}</p>
+{% syntax sh %}$> ./dist/hello
+{% endsyntax %}
 
 <p><img src="/static/scratch/helloworld.png" /></p>
 
 <p>By tweaking the build options and eliminating dead code from within PySide, we have managed to <i>halve</i> the size of the distribution.  Now, 15M is still pretty big for a simple "hello world" application.  But a fair chunk of that size can be attributed to Python rather than to the GUI libraries.  For comparison, a text-only "hello world" in python freezes at around 4.5M on my machine:</p>
 
-<p class="code">{% syntax sh %}$> cat hellotxt.py 
+{% syntax sh %}$> cat hellotxt.py 
 
 print "hello world"
 
@@ -184,7 +184,7 @@ $> cxfreeze hellotxt.py
 $>
 $> du -hs dist/
 4.5M	dist/
-{% endsyntax %}</p>
+{% endsyntax %}
 
 <p>Can we do better still?  To make any serious progress, we would need to start eliminating dead code from within the Qt libraries themselves.  There's an interesting possibility here &ndash; although we can't compile PySide itself as a static library, we <i>could</i> statically link Qt into the PySide libraries.  Since the hacked-down PySide bindings no longer reference large parts of the Qt API, this should provide a nice additional saving.  I've done some initial experiments but the results have been too buggy to be practical.  Watch this space for updates; I aim to get this hello-world application below 10M uncompressed.</p>
 
