@@ -20,6 +20,14 @@ h2 a {
   border-bottom: dotted 1px #000064;
 }
 
+h4 {
+  margin-bottom: 0.2em;
+}
+div.techcheck {
+  margin: 1em;
+  float: left;
+}
+
 span.details {
   display: block;
   font-size: x-small;
@@ -28,22 +36,29 @@ span.details {
 </style>
 {% endblock %}
 
+
+{% block page_sidebar %}
+
+{% endblock %}
+
+
 {% block page_content %}
   <h1>Curriculum Vitae of Ryan Francis Kelly</h1>
 
    <p>I am a freelance software developer and consultant living in Melbourne, Australia.  The best way to contact me is by email:</p>
   <p><span class="email-addr">&#114;ya&#110;&#64;&#114;&#102;&#107;&#46;&#105;d&#46;&#97;u</span></p>
 
-  <p>Professionally, I have worked as a programmer and system administrator for the better part of the last decade.  I am particularly experienced with the Python programming language, which I have used to develop both web-based and desktop applications. I also enjoy logic programming using languages such as Prolog and Mozart.</p>
+  <p>Professionally, I have worked as a programmer and system administrator for over a decade.  I am particularly experienced with the Python programming language, which I have used to develop both web-based and desktop applications. I also enjoy logic programming using languages such as Prolog and Mozart.</p>
 
   <p>Academically, I have completed a PhD in Computer Science with the Intelligent Agents Laboratory at the University of Melbourne.  My undergraduate studies were a double bachelor's degree in Engineering and Computer Science, which I was awarded with first class honours.</p>
 
   <p>Personally, I enjoy public speaking, theatre and performance arts of any persuasion.  I am a keen hiker and camper, even though it means being disconnected from the Internet for days at a time.</p>
 
-  <p>You can find more details in the sections below:</p>
+  <p>More details are available in the sections below:</p>
   <ul>
   <li><a href="#employment">Employment History</a></li>
   <li><a href="#education">Education</a></li>
+  <li><a href="#technologies">Technology Checklist</a></li>
   <li><a href="#languages">Programming Languages</a></li>
   <li><a href="#publications">Publications</a></li>
   <li><a href="#awards">Awards and Scholarships</a></li>
@@ -55,23 +70,24 @@ span.details {
 
   <h3>Director/Lead Developer, Cloud Matrix
   <span class="details">July 2009 to Present</span></h3>
-  <p>I am currently co-director and lead developer at <a href="http://www.cloudmatrix.com.au/">Cloud Matrix</a>, a small Melbourne-based startup in the cloud storage space.  We build <a href="http://www.saltdrive.com/">SaltDrive</a>, an encrypted cloud-enabled USB stick.</p>
+  <p>I am currently co-director and lead developer at <a href="http://www.cloudmatrix.com.au/">Cloud Matrix</a>, a small Melbourne-based startup in the cloud storage space.  We build <a href="http://www.saltdrive.com/">SaltDrive</a>, an encrypted cloud-enabled USB stick.  The SaltDrive technology stack is all built using Python, including the server-side file storage, client-side interface, and website.</p>
 
-  <p>The SaltDrive technology stack is all built using Python, including the server-side file storage, client-side interface, and website.  Key technologies include <a href="http://www.djangoproject.com/">Django</a>, <a href="http://www.eventlet.net/">Eventlet</a>, <a href="http://www.pycrypto.org/">PyCrypto</a>, and various tools for distributing <a href="http://www.py2exe.org/">frozen</a> <a href="http://cx-freeze.sourceforge.net/">Python</a> <a href="https://github.com/rfk/esky">applications</a>.</p>
 
   <h3>Freelance Developer and Consultant
   <span class="details">November 2008 to Present</span></h3>
   <p>I currently do occasional work as a freelance developer and software consultant.  My past projects have involved developing Python-based desktop and online applications, and code maintenance and translation services for Prolog.</p>
 
+
   <h3>Programmer, The Victorian Partnership for Advanced Computing
   <span class="details">March 2004 to November 2008</span></h3>
   <p>After completing my Summer Internship with the Victorian Partnership for Advanced Computing, I undertook ongoing programming work on a casual basis.  My roles have ranged from developer to software architect to project leader, handling the design and development of software for engineering applications.</p>
 
- <p>Most recently, I was the lead architect and developer for a web-based project management portal used to coordinate research and development activities among several large organisations.  This was an AJAX-style application using PHP on the server side and JavaScript (specifically the <a href="http://dojotoolkit.org/">Dojo toolkit</a>) on the client side.</p>
+ <p>Most recently, I was the lead architect and developer for a web-based project management portal used to coordinate research and development activities among several large organisations.</p>
+
 
   <h3>Casual Tutor, The University of Melbourne
   <span class="details">July 2005 to June 2006</span></h3>
-  <p>While studying for my PhD, I undertook two semesters of casual teaching work in the Department of Computer Science and Software Engineering at the University of Melbourne.  I tutored the subject "Algorithms and Data Structures", a second-year subject focusing on the development and formal analysis of common algorithms and data structures.  I was also a lab demonstrator for the subject "Logic and Computation", a second-year subject focusing on the theoretical aspects of logic and computability.  Duties included preparing and running both tutorial sessions and practical programming sessions, along with assessment of assignments and marking of exams.</p>
+  <p>While studying for my PhD, I undertook two semesters of casual teaching work in the Department of Computer Science and Software Engineering at the University of Melbourne.  I tutored the subject "Algorithms and Data Structures" and was a lab demonstrator for the subject "Logic and Computation".  Duties included preparing and running both tutorial sessions and practical programming sessions, along with assessment of assignments and marking of exams.</p>
   <p>As a result of significant positive feedback from both students and faculty, in 2006 I was awarded an "Excellence in Tutoring" award from the department.</p>
 
   <h3>Computational Engineer, The Victorian Partnership for Advanced Computing
@@ -80,23 +96,17 @@ span.details {
 
   <h3>IT Manager, Whitley College
   <span class="details">January 2003 to December 2004</span></h3>
-  <p>This position was a formalisation of many aspects of the volunteer role I had played at Whitley College in previous years.  Whitley College is a Residential College of the University of Melbourne as well as a teaching organisation of the Melbourne College of Divinity.  Aspects of my role as IT Manager included:</p>
-  <ul> 
-   <li>Coordinating meetings of the IT Committee, the group charged with the practical aspects of running the College's IT infrastructure.</li>
-   <li>Attending meetings of the Computer Committee, the group charged with overseeing the College's IT infrastructure by the Board of Directors.</li>
-   <li>Acting as Project Manager and Lead Programmer for the College's website development project.</li>
-   <li>Providing technical support for the College's residential and academic staff.</li>
-   <li>Providing strategic planning advice to the College leadership</li>
-    <li>Evaluating, testing and implementing new technologies for enhancing IT service.</li>
-  </ul>
+  <p>This position was a formalisation of many aspects of the volunteer role I had played at Whitley College in previous years.  As IT Manager I was responsible for coordinating technical support for the College's residents and academic staff, evaluating and implementing new technologies for the campus network, and liaising with student volunteers and with the College's Board of Directors.</p>
+  <p>I also filled the role of Project Manager and Lead Developer during an overhaul of the College's public website.</p>
+
+  <h3>Vacation Work, Agilent Technologies
+  <span class="details">January 2001 to February 2001</span></h3>
+  <p>As part of my undergraduate scholarship with the University of Melbourne's Faculty of Engineering, I obtained vacation employment with Agilent Technologies in Melbourne.  The division to which I was assigned was responsible for updating a major portion of the company website, and my tasks included web-page development and maintenance, content solicitation from other employees, and testing and debugging of the site.</p>
 
   <h3>System Administrator, Whitley College
   <span class="details">July 2000 to December 2003</span></h3>
   <p>This is a voluntary role that students at Whitley College may take on in order to help maintain and develop the College's information technology facilities.  The IT infrastructure of the entire College is run by such volunteers &ndash; including both the technical aspects of administering servers, email, web-services and so-on, and the personal aspects such as technical support and liaising with College administration.</p>
 
-  <h3>Vacation Work, Agilent Technologies
-  <span class="details">January 2001 to February 2001</span></h3>
-  <p>As part of my undergraduate scholarship with the University of Melbourne's Faculty of Engineering, I obtained vacation employment with Agilent Technologies in Melbourne.  The division to which I was assigned was responsible for updating a major portion of the company website, and my tasks included web-page development and maintenance, content solicitation from other employees, and testing and debugging of the site.</p>
 
   <h2><a name="education">Education</a></h2>
 
@@ -104,6 +114,88 @@ span.details {
 
   <p>Prior to this, I obtained a Bachelor of Engineering (Mechatronics) and a Bachelor of Computer Science from the University of Melbourne, graduating with first-class honours.  The subjects undertaken and a summary of my results are available here: <a href="./ugrad-results.html">summary of results</a>.</p>
 
+  <h2><a name="technologies">Technology Checklist</a></h2>
+
+  <div class="techcheck">
+  <h4>Languages</h4>
+  <ul>
+  <li>Python</li>
+  <li>JavaScript</li>
+  <li>C</li>
+  <li>PHP</li>
+  <li>Prolog</li>
+  <li>Mozart</li>
+  </ul>
+  </div>
+
+  <div class="techcheck">
+  <h4>Databases</h4>
+  <ul>
+  <li>SQL</li>
+  <li>Django ORM</li>
+  <li>SQLAlchemy</li>
+  <li>SQLite</li>
+  <li>MySQL</li>
+  </ul>
+  </div>
+
+  <div class="techcheck">
+  <h4>Web (Server)</h4>
+  <ul>
+  <li>WSGI</li>
+  <li>Django</li>
+  <li>Eventlet</li>
+  <li>Apache</li>
+  <li>Mongrel2</li>
+  <ul>
+  </ul>
+  </div>
+
+  <div class="techcheck">
+  <h4>Web (Client)</h4>
+  <ul>
+  <li>HTML</li>
+  <li>HTTP</li>
+  <li>JavaScript</li>
+  <li>XML and JSON</li>
+  <li>AJAX</li>
+  <li>jQuery</li>
+  </ul>
+  </div>
+
+
+  <br style="clear: both" />
+
+  <div class="techcheck">
+  <h4>OSs</h4>
+  <ul>
+  <li>Linux (Ubuntu)</li>
+  <li>Windows (XP/Vista/7)</li>
+  <li>Mac OSX</li>
+  </ul>
+  </div>
+
+  <div class="techcheck">
+  <h4>Testing</h4>
+  <ul>
+  <li>Unit Testing</li>
+  <li>Doctest</li>
+  <li>In-Browser Testing</li>
+  </ul>
+  </div>
+
+  <div class="techcheck">
+  <h4>VCS</h4>
+  <ul>
+  <li>Git</li>
+  <li>Fossil</li>
+  <li>Subversion</li>
+  </ul>
+  </div>
+
+
+  <p style="clear: both" />
+  
 
   <h2><a name="languages">Programming Languages</a></h2>
 
@@ -218,5 +310,7 @@ span.details {
   <p><b>Theatre:</b> I have had major roles in a number of amateur theatrical/musical productions include <i>Into the Woods</i>, <i>Cosi</i>, <i>The Baker's Wide</i> and <i>Bugsy Malone</i>.  I also enjoy impromptu theatre and I am a keen participant in theatrical challenges such as Theatre Sports.</p>
 
   <p><b>Hiking and Camping:</b> I have a growing interest in hiking, camping, and related outdoor activities, and have been exploring local Victorian attractions such as the Grampians, Croajingolong National Park, and most recently a five-day hike through Wilson's Promontory.  Free-time-pending, I hope to expand my horizons in the near future by hiking Tasmania's Overland Trail.</p>
+
+  <h2></h2>
 
 {% endblock %}
