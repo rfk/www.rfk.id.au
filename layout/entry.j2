@@ -71,4 +71,30 @@
 <a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="rfkelly">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
 </div>
 
+
+<div id="flattr_share">
+</div>
+
+{%- endblock %}
+
+
+{%- block page_js_extra %}
+
+    <script type="text/javascript" src="http://api.flattr.com/js/0.6/load.js"> </script>
+    <script type="text/javascript">
+    $(function() {
+      FlattrLoader.render({
+          mode: "manual",
+          uid: "rfk",
+          language: "en_GB",
+          category: "text",
+          button: "compact",
+          url: "http://www.rfk.id.au/blog/entry/{{ resource.meta.slug }}",
+          title: "{{ resource.meta.title.strip() }}",
+          description: "{{ resource.meta.title.strip() }}"
+      },$("#flattr_share").get(0),"append");
+    });
+/* ]]> */
+    </script>
+
 {%- endblock %}
