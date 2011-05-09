@@ -1,3 +1,0 @@
-
-
-When github grows support for it, redirect /research/ to /ramblings/research/
