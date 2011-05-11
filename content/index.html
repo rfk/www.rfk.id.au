@@ -5,6 +5,10 @@ default_block:
 
 {% block page_meta %}
 <link rel="alternate" title="RFK | Blog | Atom Feed" href="http://www.rfk.id.au/blog/feeds/atom.xml" type="application/atom+xml" />
+
+<meta http-equiv="X-XRDS-Location" content="http://www.myopenid.com/xrds?username=rfk.myopenid.com" />
+<link rel="openid.server" href="http://www.myopenid.com/server" />
+<link rel="openid.delegate" href="http://rfk.myopenid.com/" />
 {% endblock %}
 
 {% block page_content %}
