@@ -25,7 +25,7 @@ Almost all of <a href="/software/">my open-source projects</a> come with automat
 
 {% endmark %}
 
-<p>I'll probably fail at such a lofty goal.  That's OK.  100% test coverage is no panacea anyway.  But my code will be better for the effort and I'll add some powerful new toys to my toolkit along the way:</p>
+<p>I'll probably fail at such a lofty goal.  That's OK.  100% test coverage is <a href="http://nedbatchelder.com/blog/200710/flaws_in_coverage_measurement.html">no panacea</a> anyway.  But my code will be better for the effort and I'll add some powerful new toys to my toolkit along the way:</p>
 
 <ul>
 <li><b><a href="http://nedbatchelder.com/code/coverage/">coverage</a></b>.  This tool tells you what parts of your code are actually getting executed by the test suite.  It can't guarantee that you're testing that code properly, but it'll tell you if there's code that isn't being tested at all.</li>
@@ -132,14 +132,7 @@ TOTAL              803     82    90%
 
 <p>I spent a good few hours this morning rinsing and repeating the above, slowly working the coverage up to 100%.  The end result was so satisfying that I re-ran the tests at least ten times when I was finished, just to bask in my achievement:</p>
 
-{% syntax console %} $> coverage run `which nosetests`
-...................................
-----------------------------------------------------------------------
-Ran 35 tests in 0.115s
-
-OK
-$>
-$> coverage report --include="*dexml*" --omit="*test*"
+{% syntax console %}$> coverage report --include="*dexml*" --omit="*test*"
 Name             Stmts   Miss  Cover
 ------------------------------------
 dexml/__init__     329      0   100%
@@ -231,7 +224,7 @@ $>
 <ul>
 <li>Measure <a href="http://nedbatchelder.com/code/coverage/branch.html">branch coverage</a> rather than statement coverage.  This should entail just flicking a switch in the coverage command-line and putting in the grunt-work to get back to 100%.</li>
 <li>Add Jython and PyPy to the list of supported platforms.  Tox supports them out of the box, so it should be a simple matter of getting them up and running on all my machines.</li>
-<li>
 </ul>
 
-<p>
+<p>For now though, I call this first experiment a win.</p>
+

@@ -32,7 +32,7 @@ tags:
 
 <p>To build libraries that work all the way back to OSX 10.4, you need to build against the 10.4u SDK. But there's a problem &ndash; the 10.4u SDK is missing 64-bit versions of several vital APIs.  The only way I could find to work around it was to compile the i386 and ppc versions of the library against the 10.4u SDK, compile the x86_64 version against the 10.5 SDK, then stitch them together into a custom fat binary.  Here are the basics of how it looks in the PyEnchant build script:</p>
 
-{% syntax sh %}# create three different compile trees for the three architectures.
+{% syntax console %}# create three different compile trees for the three architectures.
 cp -r glib-2.24.1 glib-2.24.1.i386
 cp -r glib-2.24.1 glib-2.24.1.ppc
 cp -r glib-2.24.1 glib-2.24.1.x86_64
@@ -58,7 +58,7 @@ lipo -create -arch i386 glib-2.24.1.i386/glib/.libs/libglib.dylib -arch ppc glib
 
 <p>Just to be sure, we can also use lipo to verify that the resulting library contains code for all three architectures:</p>
 
-{% syntax sh %}$> lipo -info ./libglib.dylib
+{% syntax console %}$> lipo -info ./libglib.dylib
 Architectures in the fat file: ./libglib.dylib are: i386 ppc x86_64
 {% endsyntax %}
 
@@ -67,7 +67,7 @@ Architectures in the fat file: ./libglib.dylib are: i386 ppc x86_64
 
 <p>If you take a peek inside the resulting dynamic libraries, you will see that they embed <i>absolute paths</i> at which they expect to find their runtime dependencies.  Here are the dependencies from the glib library after compiling using the trick above:</p>
 
-{% syntax sh %}$> otool -L ./build/lib/libglib-2.0.0.dylib
+{% syntax console %}$> otool -L ./build/lib/libglib-2.0.0.dylib
 ./build/lib/libglib-2.0.0.dylib:
         /Users/rfk/software/pyenchant/tools/pyenchant-bdist-osx-sources/build/lib/libglib-2.0.0.dylib (...snip...)
         /System/Library/Frameworks/Carbon.framework/Versions/A/Carbon (...snip...)
@@ -87,7 +87,7 @@ Architectures in the fat file: ./libglib.dylib are: i386 ppc x86_64
 
 <p>In my setup.py file I use <a href="http://developer.apple.com/mac/library/documentation/Darwin/Reference/ManPages/man1/install_name_tool.1.html">install_name_tool</a> to adjust these paths to the following:</p>
 
-{% syntax sh %}$> otool -L ./enchant/lib/libglib-2.0.0.dylib
+{% syntax console %}$> otool -L ./enchant/lib/libglib-2.0.0.dylib
 ./enchant/lib/libglib-2.0.0.dylib:
         @loader_path/libglib-2.0.0.dylib (...snip...)
         /System/Library/Frameworks/Carbon.framework/Versions/A/Carbon (...snip...)
