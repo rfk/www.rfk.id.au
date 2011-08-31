@@ -1,2 +1,0 @@
-extends: pyenchant.j2
-default_block: page_content
