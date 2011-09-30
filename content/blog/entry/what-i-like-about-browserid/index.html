@@ -1,0 +1,63 @@
+---
+title: >
+ What I like about BrowserID
+slug: what-i-like-about-browserid
+created: !!timestamp '2011-09-30 14:08:00.000000'
+modified: !!timestamp '2011-09-30 14:08:00.000000'
+tags: 
+    - technology
+listable: false
+---
+
+{% mark excerpt %}
+
+<p>I'm really impressed by Mozilla's new <a href="http://browserid.org">BrowserID</a> project.</p>
+
+<p>A robust, distributed identity infrastucture will make the internet a better place.  I was quick to jump on the OpenID bandwagon when it came rolling by, and still use <a href="http://www.rfk.id.au">http://www.rfk.id.au</a> as a delegated identity on sites that support it.  But I've never really <i>liked</i> OpenID, it has always felt clunky at both a UI and at a protocol level.</p>
+
+<p>BrowserID seems to fix pretty much all of the things I dislike about OpenID, and a couple more besides.</p>
+
+{% endmark %}
+
+<p>First, the simple stuff.  I don't care how hard you try to rename it a "Universal Resource Identifier", anything that looks like "http://blah.blah.com" is a going to be thought of as a <i>URL</i>.  It's not an identity, it's a location.  A address.</p>
+
+<p>Therefore, using OpenID feels wierd.  It's like someone asking "what's your name" and me replying with "15201 Maple Systems Road".</p>
+
+<p>An email address, on the other hand, is inextricably tied to a person.  It <i>feels</i> like an identity.</p>
+
+<p>It also doesn't hurt that the folks behind BrowserID make a web browser, and the UI is that much better.</p>
+
+<p>Second, and to me more importantly, I like the BrowserID protocol and workflow a whole lot more than OpenID.</p>
+
+<p>OpenID is built around HTTP redirects, in order to support legacy browsers without the use of JavaScript.  It's also built using symmetric cryptographic signatures.<p>
+
+<ol>
+<li>The Website asks the User to sign in with OpenID.</li>
+<li>The User sends the Website their OpenID URL.</li>
+<li>The Website looks up the URL to determine the appropriate Identity provider and metadata about the authentication.</li>
+<li>The Website negotiates a shared secret with the Identity provider.</li>
+<li>The Website sends a token to the User to have it signed.</li>
+<li>The User provides their credentials to the the Identity provider, asking them to sign the token.</li>
+<li>The Identity provider sends back the signed token.</li>
+<li>The user provides the signed token to the Website.</li>
+</ol>
+
+
+<p>Now look at BrowserID</p>
+
+<ol>
+<li>The Website asks the User to sign in with BrowserID.</li>
+<li>The User sends their credentials to the Identity provider, asking them to sign the User's public key.</li>
+<li>The Identity provider sends back a signature to the User.</li>
+<li>The User creates a signed assertion using their private key, and sends this to the Website along with their signed public key.</li>
+<li>The Website asks the Identity provider for their public key.</li>
+<li>The Identity provider sends their public key to the Website, which uses it to verify the assertion.</li>
+</ol>
+
+<p>The first thing to notice is that this protocol is shorter There is only one round-trip between the Website and User: "please provide a BrowserID assertion", "OK here it is".</p>
+
+<p>More importantly, the interactions between User and Website, User and Identifier, and Website and Identifier are <i>completely</i> decoupled.  They can happen asynchronously, results can be cached and re-used.</p>
+
+<p>This provides one of the key benefits to BrowserID - privacy.  The User talks to the Identifier about their identity, not about the site they are visiting.  Likewise, the Website talks to the Identifier about about who they are, not about what Users are visiting.</p>
+
+<p>There are a lot of competing technologies

@@ -1,3 +1,3 @@
 
-Ryan's personal website, experimentally produced using Hyde.
+Ryan's personal website, produced using Hyde.
 
