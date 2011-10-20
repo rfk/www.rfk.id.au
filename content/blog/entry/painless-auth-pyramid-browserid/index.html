@@ -1,0 +1,138 @@
+---
+title: >
+   Painless Authentication with Pyramid and BrowserID
+slug: painless-auth-pyramid-browserid
+created: !!timestamp '2011-10-20 16:08:00.000000'
+modified: !!timestamp '2011-10-20 16:08:00.000000'
+tags: 
+    - technology
+listable: false
+---
+
+{% mark excerpt %}
+
+<p>There are a couple of really exciting projects underway at Mozilla right now.</p>
+
+<p>The first is <a href="https://browserid.org/">BrowserID</a>, a distributed single-signon system from the <a href="http://identity.mozilla.com/">Mozilla Identity Team</a>.  BrowserID sports a very slick sign-in process, simple integration with your existing software stack, and is designed from the ground up to provide strong <a href="http://identity.mozilla.com/post/7899984443/privacy-and-browserid">user privacy</a> guarantees.</p>
+
+<p>The second is <a href="https://wiki.mozilla.org/Services/Sagrada">Project Sagrada</a>, a platform for quickly building secure, scalable web applications from the folks I work with on the <a href="http://blog.mozilla.com/services/">Mozilla Services Team</a>.  While initial development is being driven by Mozilla's internal projects and needs, the hope is that one day developers will be able to just <a href="https://tarekziade.wordpress.com/2011/09/22/sagrada-creation-and-hosting-of-web-services/">write some simple service definitions</a> then deploy their applications across Mozilla's infrastructure.</p>
+
+<p>Of course, we're not there yet, but we're building up to it piece by piece.  One piece I've been working on, and which is coming along quite nicely if I so say so myself, is authentication.  We are building a secure, flexible and efficient authentication stack on top of some key Python web technologies such a <a href="http://www.pylonsproject.org/projects/pyramid/about">Pyramid</a> and <a href="http://pypi.python.org/pypi/repoze.who/">repoze.who</a>.</p>
+
+<p>So without further ado, here's a glimpse of my first tiny piece of Project Sagrada: adding BrowserID support to a Pyramid app with just a few lines of configuration.</p>
+
+{% endmark %}
+
+<p>Let's start with a simple "hello world" program in Pyramid:</p>
+
+{% syntax python %}from paste.httpserver import serve
+from pyramid.config import Configurator
+from pyramid.response import Response
+
+
+def hello_world(request):
+    return Response('Hello World!')
+
+
+if __name__ == '__main__':
+    config = Configurator()
+    config.add_route('hello', '/')
+    config.add_view(hello_world, route_name='hello')
+    app = config.make_wsgi_app()
+    serve(app, host='0.0.0.0')
+{% endsyntax %}
+
+<p>Run this as a script and you'll get a delightful little webpage that says "Hello World!", like this:</p>
+
+<img src="./images/hello1.png" style="padding: 1em; align: center"/>
+
+<p>Exciting stuff.</p>
+
+<p>Now let's say you want to spice this up a little by including the user's name in the welcome message.  Pyramid provides the function "authenticated_userid" to obtain the username of the currently logged-in user, so we can change our "hello_world" view function to the following:</p>
+
+
+{% syntax python %}
+from pyramid.response import Response
+from pyramid.security import authenticated_userid
+
+
+def hello_world(request):
+    userid = authenticated_userid(request)
+    return Response('Hello %s!' % (userid,))
+{% endsyntax %}
+
+<p>Restart the script and you will now be greeted with:</p>
+
+<img src="./images/hello2.png" style="padding: 1em; align: center"/>
+
+<p>Oops.  In order to report back your username, we first have to get you to log in.  Pyramid provides a <a href="http://docs.pylonsproject.org/projects/pyramid/1.2/narr/security.html">sophisticated permission-based security system</a>, but for the purposes of this demonstration, let's just forbid access unless you are logged in:</p>
+
+{% syntax python %}
+from pyramid.response import Response
+from pyramid.security import authenticated_userid
+from pyramid.exceptions import Forbidden
+
+
+def hello_world(request):
+    userid = authenticated_userid(request)
+    if userid is None:
+        raise Forbidden()
+    return Response('Hello %s!' % (userid,))
+{% endsyntax %}
+
+
+<p>Restart the script again and...</p>
+
+<img src="./images/hello3.png" style="padding: 1em; align: center"/>
+
+<p>Almost.  The final piece of the puzzle is configuring the authentication system.  For that, we're going to use the <a href="https://github.com/mozilla-services/pyramid_whoauth">pyramid_whoauth</a><sup>[<a name="note1" href="#foot1">1</a>]</sup> package to set up a <a href="http://pypi.python.org/pypi/repoze.who/">repoze.who</a> authentication stack, and the <a href="https://github.com/mozilla-services/repoze.who.plugins.browserid">repoze.who browserid plugin</a> to activate support for BrowserID.</p>
+
+<p>Sounds complicated?  There are a few moving parts, but the end result is really quite simple and elegant.</p>
+
+<p>Here's the important point: our view code <i>does not need to change</i>.  Instead we simply tweak the configuration of our pyramid app to hook up the necessary components:
+
+{% syntax python %}if __name__ == '__main__':
+    settings = {
+      # The "auth_tkt" plugin implements signed login cookies.
+      # Use it to remember the login so that you don't have to
+      # click through the BrowserID dialog over and over.
+      "who.plugin.authtkt.use": "repoze.who.plugins.auth_tkt:make_plugin",
+      "who.plugin.authtkt.secret": "OH_SO_SECRET",
+
+      # The "browserid" plugin lets you login with BrowserID.
+      "who.plugin.browserid.use": "repoze.who.plugins.browserid:make_plugin",
+      "who.plugin.browserid.postback_url": "/login",
+
+      # Assign plugins to each phase of the authentication process.
+      "who.identifiers.plugins": "authtkt browserid",
+      "who.authenticators.plugins": "authtkt browserid",
+      "who.challengers.plugins": "browserid",
+    }
+
+    # Include pyramid_whoauth as part of the config.
+    # It will plug itself in and take over authentication duties.
+    config = Configurator(settings=settings)
+    config.include("pyramid_whoauth")
+    # Then continue with config as normal.
+    config.add_route('hello', '/')
+    config.add_view(hello_world, route_name='hello')
+    app = config.make_wsgi_app()
+{% endsyntax %}
+
+<p>The "settings" dict is used to tell repoze.who what authentication plugins it should use, and how to stitch them all together.  In a real application these settings would be read from e.g. a PasteDeploy ini-file.</p>
+
+<p>Restart the script again and you'll finally be greeted by a page telling you to sign in with BrowserID:</p>
+
+<img src="./images/hello4.png" style="padding: 1em; align: center"/>
+
+<p>Yeah, it's ugly, nevermind that for now.  Click the button, walk through the slick BrowserID login process, and you will be rewarded with the end result:</p>
+
+<img src="./images/hello5.png" style="padding: 1em; align: center"/>
+
+</p>By adding one line of code and a handful of configuration options, we've just enabled a complete login and authentication system for our pyramid app.  Thanks to BrowserID, we didn't need to set up a user database, store passwords or confirm email addresses.  Thanks to Pyramid, we didn't have to weave authentication boilerplate through all of our view functions.  And thanks to repoze.who, we can configure and tweak the authentication stack to precisely suit our needs (for example, you might like to add <a href="http://quantumcore.org/docs/repoze.who.plugins.openid/">OpenID support</a> as well).</p>
+
+<p>To me, that's pretty magic.</p>
+
+<p>By itself this isn't exactly earth-shattering.  It's a couple of neat plugins built on top of existing python libraries.  But this is exactly the sort of thing I hope to see coming out of Project Sagrada as it picks up steam &ndash; a continuous stream of small victories, useful abstractions and simplifying frameworks that, when you add them all together, build up to a compelling development and deployment infrastructure for web services applications.</p>
+
+<p><sup>[<a name="foot1" href="#note1">1</a>]</sup> <span style="font-size: x-small">By the way, there's an existing pyramid plugin called <a href="">pyramid_who</a> that also provides hooks between pyramid and repoze.who; pyramid_whoauth tries to provide more functionality out of the box, and hence makes more decisions for you up front.  This may or may not be what you want.</span></p>
