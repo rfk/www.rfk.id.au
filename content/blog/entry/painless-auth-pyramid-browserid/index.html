@@ -6,7 +6,7 @@ created: !!timestamp '2011-10-20 16:08:00.000000'
 modified: !!timestamp '2011-10-20 16:08:00.000000'
 tags: 
     - technology
-listable: false
+listable: true
 ---
 
 {% mark excerpt %}
@@ -17,7 +17,7 @@ listable: false
 
 <p>The second is <a href="https://wiki.mozilla.org/Services/Sagrada">Project Sagrada</a>, a platform for quickly building secure, scalable web applications from the folks I work with on the <a href="http://blog.mozilla.com/services/">Mozilla Services Team</a>.  While initial development is being driven by Mozilla's internal projects and needs, the hope is that one day developers will be able to just <a href="https://tarekziade.wordpress.com/2011/09/22/sagrada-creation-and-hosting-of-web-services/">write some simple service definitions</a> then deploy their applications across Mozilla's infrastructure.</p>
 
-<p>Of course, we're not there yet, but we're building up to it piece by piece.  One piece I've been working on, and which is coming along quite nicely if I so say so myself, is authentication.  We are building a secure, flexible and efficient authentication stack on top of some key Python web technologies such a <a href="http://www.pylonsproject.org/projects/pyramid/about">Pyramid</a> and <a href="http://pypi.python.org/pypi/repoze.who/">repoze.who</a>.</p>
+<p>Of course, we're not there yet, but we're building up to it piece by piece.  One piece I've been working on, and which is coming along quite nicely if I do say so myself, is authentication.  We are building a secure, flexible and efficient authentication stack on top of some key Python web technologies such a <a href="http://www.pylonsproject.org/projects/pyramid/about">Pyramid</a> and <a href="http://pypi.python.org/pypi/repoze.who/">repoze.who</a>.</p>
 
 <p>So without further ado, here's a glimpse of my first tiny piece of Project Sagrada: adding BrowserID support to a Pyramid app with just a few lines of configuration.</p>
 
@@ -119,7 +119,7 @@ def hello_world(request):
     app = config.make_wsgi_app()
 {% endsyntax %}
 
-<p>The "settings" dict is used to tell repoze.who what authentication plugins it should use, and how to stitch them all together.  In a real application these settings would be read from e.g. a PasteDeploy ini-file.</p>
+<p>The "settings" dict is used to tell repoze.who what authentication plugins it should use, and how to stitch them all together during the various phases of authentication.  In a real application these settings would be read from e.g. a PasteDeploy ini-file.</p>
 
 <p>Restart the script again and you'll finally be greeted by a page telling you to sign in with BrowserID:</p>
 
