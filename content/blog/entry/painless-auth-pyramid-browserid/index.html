@@ -3,7 +3,7 @@ title: >
    Painless Authentication with Pyramid and BrowserID
 slug: painless-auth-pyramid-browserid
 created: !!timestamp '2011-10-20 16:08:00.000000'
-modified: !!timestamp '2011-10-20 16:08:00.000000'
+modified: !!timestamp '2012-07-17 22:07:00.000000'
 tags: 
     - technology
 listable: true
@@ -101,6 +101,7 @@ def hello_world(request):
 
       # The "browserid" plugin lets you login with BrowserID.
       "who.plugin.browserid.use": "repoze.who.plugins.browserid:make_plugin",
+      "who.plugin.browserid.audiences": "localhost:8080",
       "who.plugin.browserid.postback_url": "/login",
 
       # Assign plugins to each phase of the authentication process.
@@ -120,6 +121,9 @@ def hello_world(request):
 {% endsyntax %}
 
 <p>The "settings" dict is used to tell repoze.who what authentication plugins it should use, and how to stitch them all together during the various phases of authentication.  In a real application these settings would be read from e.g. a PasteDeploy ini-file.</p>
+
+<p>Notice that we have used the "audiences" parameter to tell BrowserID the expected URL of the site.  This may seem a little cumbersome but is an <a href="https://developer.mozilla.org/en/BrowserID/Security_Considerations#Specify_the_audience_parameter_explicitly">important security feature</a>.  You can specify a list of addresses and/or use
+wildcards in this setting to make this a little easier during deployment.</p> 
 
 <p>Restart the script again and you'll finally be greeted by a page telling you to sign in with BrowserID:</p>
 
