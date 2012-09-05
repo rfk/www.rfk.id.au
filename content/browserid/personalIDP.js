@@ -1,31 +1,48 @@
 
+
+// This script exposes a single global variable "personalIDP".
+// It is populated by within a closure below to avoid pollution.
+var personalIDP = {};
+
+
+(function() {
+
+
+// Grab some libs from the browserid JS bundle.
+//
 var sjcl = require("/libs/all.js").sjcl;
 var jwcrypto = require("./lib/jwcrypto");
 require("./lib/algs/rs");
+require("./lib/algs/ds");
 
-var localidp = {}
 
-// A placeholder callback function that does nothing.
+// A placeholder callback function, used when no callback is provided.
+// This defaults to logging unhandled callbacks to the console.
 //
-localidp.noop = function() {};
+personalIDP.default_callback = function() {
+  if(window.console) {
+      console.log(["Unhandled callback", arguments]);
+  }
+};
 
 
 // Get the support-document data for the hosting domain.
 // This is retrieved from the .well-known/browserid document
 // and cached in memory for future use.
 //
-localidp.getSupportDocument = function(args) {
-  var onSuccess = args.success || localidp.noop;
-  var onError = args.error || localidp.noop;
-  if(localidp._cachedSupportDocument) {
-      onSuccess(localidp._cachedSupportDocument);
+personalIDP.getSupportDocument = function(args) {
+  var onSuccess = args.success || personalIDP.default_callback;
+  var onError = args.error || personalIDP.default_callback;
+
+  if(personalIDP._cachedSupportDocument) {
+      onSuccess(personalIDP._cachedSupportDocument);
   } else {
       $.ajax("/.well-known/browserid", {
           dataType: "json",
           error: onError,
           success: function(data) {
-              localidp._cachedSupportDocument = data;
-              onSuccess(localidp._cachedSupportDocument);
+              personalIDP._cachedSupportDocument = data;
+              onSuccess(personalIDP._cachedSupportDocument);
           }
       });
   }
@@ -36,13 +53,13 @@ localidp.getSupportDocument = function(args) {
 // This establishes a new private key, encrypts it with the given password
 // and then returns it as a support-document.
 //
-localidp.createSupportDocument = function(args) {
+personalIDP.createSupportDocument = function(args) {
   var password = args.password;
   var template = $.extend({}, args.template || {});
-  var onSuccess = args.success || localidp.noop;
-  var onError = args.error || localidp.noop;
+  var onSuccess = args.success || personalIDP.default_callback;
+  var onError = args.error || personalIDP.default_callback;
 
-  localidp._cachedSupportDocument = null;
+  personalIDP._cachedSupportDocument = null;
 
   if(!password) {
       onError("you must specify a password");
@@ -91,12 +108,12 @@ localidp.createSupportDocument = function(args) {
 //  This grabs the encrypted private-key blob from the support document
 //  and decrypts it with the supplied password.
 //
-localidp.decryptPrivateKeyData = function(args) {
+personalIDP.decryptPrivateKeyData = function(args) {
   var password = args.password || "";
-  var onSuccess = args.success || localidp.noop;
-  var onError = args.error || localidp.noop;
+  var onSuccess = args.success || personalIDP.default_callback;
+  var onError = args.error || personalIDP.default_callback;
 
-  localidp.getSupportDocument({
+  personalIDP.getSupportDocument({
       "error": onError,
       "success": function(supportDoc) {
           try {
@@ -115,20 +132,20 @@ localidp.decryptPrivateKeyData = function(args) {
 // In reality this means checking the password and setting some cookies.
 // They must supply the correct master password for our site's publicKey.
 //
-localidp.authenticate = function(args) {
+personalIDP.authenticate = function(args) {
   var email = args.email;
   var password = args.password;
-  var onSuccess = args.success || localidp.noop;
-  var onError = args.error || localidp.noop;
+  var onSuccess = args.success || personalIDP.default_callback;
+  var onError = args.error || personalIDP.default_callback;
 
   // Try to load the private key data using the given password.
   // If that fails then they're not authenticated.
   // If that succeeds then remember it in a short-lived cookie.
-  localidp.decryptPrivateKeyData({
+  personalIDP.decryptPrivateKeyData({
       "password": password,
       "error": onError,
       "success": function(privKeyData) {
-         var cookie = "localidp_privkey=" + privKeyData;
+         var cookie = "personalIDP_privkey=" + privKeyData;
          var tomorrow = new Date((new Date()).getTime() + (24*60*60*1000));
          cookie += "; expires=" + tomorrow.toString();
          cookie += "; path=/"
@@ -141,17 +158,18 @@ localidp.authenticate = function(args) {
 
 // Load private key data that was previously stored in a cookie.
 //
-localidp.loadPrivateKeyData = function(args) {
-  var onSuccess = args.success || localidp.noop;
-  var onError = args.error || localidp.noop;
+personalIDP.loadPrivateKeyData = function(args) {
+  var onSuccess = args.success || personalIDP.default_callback;
+  var onError = args.error || personalIDP.default_callback;
 
   var privKeyData = null;
   var bits = $.map(document.cookie.split(";"), function(bit) {
       return $.trim(bit);
   });
   for(var i=0; i<bits.length; i++) {
-      if(bits[i].indexOf("localidp_privkey=") == 0) {
-          privKeyData = bits[i].substring(17, bits[i].length);
+      var prefix = "personalIDP_privkey=";
+      if(bits[i].indexOf(prefix) == 0) {
+          privKeyData = bits[i].substring(prefix.length, bits[i].length);
           break;
       }
   }
@@ -167,19 +185,24 @@ localidp.loadPrivateKeyData = function(args) {
 // Check whether the user is currently signed in.
 // This just involves a local cookie check.
 //
-localidp.checkIfAuthenticated = function(args) {
-  localidp.loadPrivateKeyData(args);
+personalIDP.checkIfAuthenticated = function(args) {
+  personalIDP.loadPrivateKeyData(args);
 }
 
 
 // Generate a certificate certifying the user's public key.
 //
-localidp.generateCertificate = function(args) {
+personalIDP.generateCertificate = function(args) {
   var email = args.email;
   var publicKey = args.publicKey;
   var certDuration = args.certDuration;
-  var onSuccess = args.success || localidp.noop;
-  var onError = args.error || localidp.noop;
+  var onSuccess = args.success || personalIDP.default_callback;
+  var onError = args.error || personalIDP.default_callback;
+
+  // Older APIs passed this in as a string.
+  if(typeof publicKey == "string") {
+      publicKey = JSON.parse(publicKey)
+  }
 
   // Don't allow absurdly long certificate duration.
   var maxCertDuration = 24 * 60 * 60;
@@ -189,10 +212,10 @@ localidp.generateCertificate = function(args) {
 
   // Get the signing key by loading the private key data from a cookie,
   // and the public key data from the live support document.
-  localidp.loadPrivateKeyData({
+  personalIDP.loadPrivateKeyData({
     "error": onError,
     "success": function(privKeyData) {
-        localidp.getSupportDocument({
+        personalIDP.getSupportDocument({
             "error": onError,
             "success": function(supportDoc) {
                 var keyData = {};
@@ -205,9 +228,11 @@ localidp.generateCertificate = function(args) {
                 var now = (new Date()).getTime();
                 var exp = now + (certDuration * 1000);
 
+                jwcrypto.addEntropy("lalalalalalala");
+
                 jwcrypto.cert.sign(
                     {publicKey: userKey, principal: {email: email}},
-                    {issuer: 'rfk.id.au', issuedAt: now, expiresAt: exp},
+                    {issuer: document.domain, issuedAt: now, expiresAt: exp},
                     {}, myKey,
                     function(err, certificate) {
                         if(err) {
@@ -222,3 +247,5 @@ localidp.generateCertificate = function(args) {
     }
   });
 }
+
+})();

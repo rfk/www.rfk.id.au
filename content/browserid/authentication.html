@@ -7,7 +7,7 @@
     <script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
     <script src="https://login.persona.org/authentication_api.js"></script>
     <script src="./bidbundle.js"></script>
-    <script src="./localidp.js"></script>
+    <script src="./personalIDP.js"></script>
     <script type="text/javascript">
     var authEmail = null;
 
@@ -15,7 +15,7 @@
     // no need to display the form.
     navigator.id.beginAuthentication(function(email) {
         authEmail = email;
-        localidp.checkIfAuthenticated({
+        personalIDP.checkIfAuthenticated({
             "email": email,
             "success": function() {
                 navigator.id.completeAuthentication();
@@ -31,7 +31,7 @@
     $(function() {
        $("#browserid-auth-form").submit(function(evt) {
            evt.preventDefault();
-           localidp.authenticate({
+           personalIDP.authenticate({
                "email": authEmail,
                "password": $("#browserid-auth-password").val(),
                "error": function(err) {
