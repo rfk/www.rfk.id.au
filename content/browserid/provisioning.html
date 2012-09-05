@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <head>
+    <title>RFK.id.au BrowserID Provisioning</title>
+  </head>
+  <body>
+    <script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
+    <script src="https://login.persona.org/provisioning_api.js"></script>
+    <script src="./bidbundle.js"></script>
+    <script src="./localidp.js"></script>
+    <script type="text/javascript">
+    var email = "ryan@rfk.id.au"
+    var publicKey = "xyz123";
+    var certDuration = 60 * 60;
+//    navigator.id.beginProvisioning(function(email, certDuration) {
+//        navigator.id.genKeyPair(function(publicKey) {
+            localidp.generateCertificate({
+                "email": email,
+                "publicKey": publicKey,
+                "certDuration": certDuration,
+                "success": function (certificate) {
+                    console.log(certificate);
+                    //navigator.id.registerCertificate(certificate);
+                },
+                "error": function(err) {
+                    console.log(err);
+                    //navigator.id.raiseProvisioningFailure(err);
+                }
+            });
+//        });
+//    });
+    </script>
+  </body>
+</html>

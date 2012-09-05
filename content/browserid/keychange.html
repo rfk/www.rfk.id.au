@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head>
+    <title>RFK.id.au BrowserID Key Change</title>
+  </head>
+  <body>
+    <script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
+    <script src="https://login.persona.org/authentication_api.js"></script>
+    <script src="./bidbundle.js"></script>
+    <script src="./localidp.js"></script>
+    <script type="text/javascript">
+    $(function() {
+       $("#browserid-key-form").submit(function(evt) {
+           evt.preventDefault();
+           var password = $("#browserid-key-password").val();
+           localidp.getSupportDocument({
+               "error": function(err) {
+                   alert(err);
+               },
+               "success": function(supportDoc) {
+                   localidp.createSupportDocument({
+                       "password": password,
+                       "template": supportDoc,
+                       "error": function(err) {
+                           alert(err);
+                       },
+                       "success": function(supportDoc) {
+                           $("<div>").text(JSON.stringify(supportDoc))
+                                     .appendTo("body");
+                       }
+                   });
+               }
+           });
+           return false;
+       });
+    });
+    </script>
+    <form id="browserid-key-form">
+    New BrowserID Password: <input type="password" id="browserid-key-password" /></br>
+    <input type="submit" value="Create new Support Document" />
+    </form>
+  </body>
+</html>
