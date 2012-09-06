@@ -66,40 +66,42 @@ personalIDP.createSupportDocument = function(args) {
       return;
   }
 
-  var keyParams = {"algorithm": "RS", "keysize": 128};
-  jwcrypto.generateKeypair(keyParams, function(err, kp) {
-      if(err) {
-          onError(err);
-          return;
-      }
-
-      // Extract the key data into plain JS objects.
-      var pubKey = {"algorithm": kp.algorithm};
-      var privKey = {};
-      kp.publicKey.serializeToObject(pubKey);
-      kp.secretKey.serializeToObject(privKey);
-
-      // Delete any information from privKey that's duplicated in pubKey.
-      // No point bulking up the file with needlessly-encrypted data.
-      var to_delete = [];
-      for(var nm in privKey) {
-          if(privKey.hasOwnProperty(nm) && pubKey.hasOwnProperty(nm)) {
-              to_delete.push(nm);
+  personalIDP.ensureEntropy(function() {
+      var keyParams = {"algorithm": "RS", "keysize": 128};
+      jwcrypto.generateKeypair(keyParams, function(err, kp) {
+          if(err) {
+              onError(err);
+              return;
           }
-      }
-      for(var i=0; i<to_delete.length; i++) {
-          delete privKey[to_delete[i]];
-      }
 
-      // Encrypt the private key data with the given password.
-      var privKeyData = escape(JSON.stringify(privKey));
-      var encPrivKeyData = sjcl.encrypt(password, privKeyData);
+          // Extract the key data into plain JS objects.
+          var pubKey = {"algorithm": kp.algorithm};
+          var privKey = {};
+          kp.publicKey.serializeToObject(pubKey);
+          kp.secretKey.serializeToObject(privKey);
 
-      // Put it all into the support document.
-      var supportDoc = $.extend({}, template);
-      supportDoc["public-key"] = pubKey;
-      supportDoc["encrypted-private-key"] = encPrivKeyData;
-      onSuccess(supportDoc);
+          // Delete any information from privKey that's duplicated in pubKey.
+          // No point bulking up the file with needlessly-encrypted data.
+          var to_delete = [];
+          for(var nm in privKey) {
+              if(privKey.hasOwnProperty(nm) && pubKey.hasOwnProperty(nm)) {
+                  to_delete.push(nm);
+              }
+          }
+          for(var i=0; i<to_delete.length; i++) {
+              delete privKey[to_delete[i]];
+          }
+
+          // Encrypt the private key data with the given password.
+          var privKeyData = escape(JSON.stringify(privKey));
+          var encPrivKeyData = sjcl.encrypt(password, privKeyData);
+
+          // Put it all into the support document.
+          var supportDoc = $.extend({}, template);
+          supportDoc["public-key"] = pubKey;
+          supportDoc["encrypted-private-key"] = encPrivKeyData;
+          onSuccess(supportDoc);
+      });
   });
 }
 
@@ -227,25 +229,89 @@ personalIDP.generateCertificate = function(args) {
 
                 var now = (new Date()).getTime();
                 var exp = now + (certDuration * 1000);
+                var issuer = document.domain;
 
-                jwcrypto.addEntropy("lalalalalalala");
-
-                jwcrypto.cert.sign(
-                    {publicKey: userKey, principal: {email: email}},
-                    {issuer: document.domain, issuedAt: now, expiresAt: exp},
-                    {}, myKey,
-                    function(err, certificate) {
-                        if(err) {
-                            onError(err);
-                        } else {
-                            onSuccess(certificate);
+                personalIDP.ensureEntropy(function() {
+                    jwcrypto.cert.sign(
+                        {publicKey: userKey, principal: {email: email}},
+                        {issuer: issuer, issuedAt: now, expiresAt: exp},
+                        {}, myKey,
+                        function(err, certificate) {
+                            if(err) {
+                                onError(err);
+                            } else {
+                                onSuccess(certificate);
+                            }
                         }
-                    }
-                )
+                    )
+                });
             }
         });
     }
   });
+}
+
+
+// Ensure that we have some entropy, requesting it from an
+// external service if necessary.  This is not ideal, but it
+// seems better than doing nothing.
+//
+personalIDP.ensureEntropy = function(cb) {
+  cb = cb || personalIDP.default_callback;
+
+  if(personalIDP._haveEnsuredEntropy) {
+      cb();
+      return
+  }
+
+  // Start in-browser collectors.
+  // This is *supposed* to be done automatically but doesn't
+  // seem to work for me, and there's no harm in doing it twice.
+  sjcl.random.startCollectors();
+
+  // Request some randomness from random.org.
+  //
+  // This might fail if the serice is down, or if we request too much
+  // data in a single day.  But we'll at least get the timing data to
+  // add into the mix.
+  //
+  // We expect the PRNG to be resistant to malicious sources of entropy.
+
+  var rand_url = "https://www.random.org/cgi-bin/randbyte?nbytes=32&format=h";
+  var rand_data = " WE COULD NOT GET ANY REAL ENTROPY :-( "
+  var tstart = personalIDP.clock();
+  $.ajax(rand_url, {
+      success: function(data) {
+          rand_data = data;
+      },
+      complete: function() {
+          var tdiff = personalIDP.clock() - tstart;
+          jwcrypto.addEntropy(rand_data + tdiff);
+          personalIDP._haveEnsuredEntropy = true;
+          cb();
+      },
+  });
+}
+
+
+// Function giving highest precision clock that we can find.
+// This is good for timing things, not for absolute time.
+//
+personalIDP.clock = function() {
+  return (new Date()).getTime();
+}
+
+var perf = window.performance || {};
+if(perf.now) {
+  personalIDP.clock = perf.now.bind(perf);
+} else if(perf.mozNow) {
+  personalIDP.clock = perf.mozNow.bind(perf);
+} else if(perf.webkitNow) {
+  personalIDP.clock = perf.webkitNow.bind(perf);
+} else if(perf.msNow) {
+  personalIDP.clock = perf.msNow.bind(perf);
+} else if(perf.oNow) {
+  personalIDP.clock = perf.oNow.bind(perf);
 }
 
 })();
