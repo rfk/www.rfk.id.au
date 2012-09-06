@@ -5,11 +5,15 @@
   </head>
   <body>
     <script type="text/javascript">
+      // Load the Persona javascript from whatever domain is accessing
+      // this file.  It might be persona.org or anosrep.org or something
+      // else entirely, and we want to work no matter which.
       var persona_server = "https://login.persona.org/";
       if (document.referrer) {
         persona_server = /^.*?:\/\/[^/]+\//.exec(document.referrer);
       }
-      document.write('<script src="' + persona_server + 'provisioning_api.js"></scr' + 'ipt>');
+      var script_url = persona_server + "provisioning_api.js";
+      document.write('<script src="' + script_url + '"></scr' + 'ipt>');
     </script>
     <script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
     <script src="./bidbundle.js"></script>

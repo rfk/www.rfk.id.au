@@ -1,7 +1,47 @@
+//
+//  Pure-javascript Primary Identity Provider for Mozilla Persona:
+//
+//     https://login.persona.org/
+//     https://developer.mozilla.org/Persona/Identity_Provider_Overview
+//
+//  Inspired by @callahad's MockMyId project, but with at least a semblance
+//  of security:
+//
+//     https://mockmyid.com/
+//
+//  This script provides the ability to run a single-user Primary IdP for
+//  Mozilla Persona, without requiring any server-side support.  It might
+//  be useful for folks who run their own vanity domain using a simple
+//  static hosting setup.  It will definitely *not* be useful for multi-user
+//  scenarios and should not be preferred over a server-side solution.
+//
+//  The trick is to encrypt the BrowserID private key with a master passphrase
+//  and store the encrypted blob as part of the .well-known/browserid document.
+//  When it comes time to generate a certificate, the flow goes like this:
+//
+//     * the authentication page:
+//        * prompts the user for the passphrase,
+//        * fetches the encrypted private key from the well-known file, and
+//        * decrypts the private key and stores it in a session cookie
+//
+//     * the provisioning page:
+//        * reads the private key from the cookie, and
+//        * uses it to sign the certificate.
+//
+//  This setup has some obvious security ramifications:
+//
+//     * anyone who knows the master passphrase can generate BrowserID
+//       assertions for any address at the hosting domain.  So it's really
+//       only useful for single-user vanity domains and the like.
+//
+//     * an attacker could download the encrypted private key and try to
+//       brute-force the encryption.  So you need to use a strong passphrase
+//       and rotate the key regularly.
+//
 
 
-// This script exposes a single global variable "personalIDP".
-// It is populated by within a closure below to avoid pollution.
+// All functions exposed by this code are on the "personalIDP" object.
+//
 var personalIDP = {};
 
 
@@ -9,6 +49,7 @@ var personalIDP = {};
 
 
 // Grab some libs from the browserid JS bundle.
+// This gives us access to decent in-browser crypto.
 //
 var sjcl = require("/libs/all.js").sjcl;
 var jwcrypto = require("./lib/jwcrypto");
@@ -49,9 +90,9 @@ personalIDP.getSupportDocument = function(args) {
 }
 
 
-// Create a new set support-document data for the hosting domain.
+// Create a new support-document data for the hosting domain.
 // This establishes a new private key, encrypts it with the given password
-// and then returns it as a support-document.
+// and then returns it as part of the modified support-document.
 //
 personalIDP.createSupportDocument = function(args) {
   var password = args.password;
@@ -66,6 +107,8 @@ personalIDP.createSupportDocument = function(args) {
       return;
   }
 
+  // We need a salt and IV for encryption,
+  // so we might as well make sure there is good entropy available.
   personalIDP.ensureEntropy(function() {
       var keyParams = {"algorithm": "RS", "keysize": 128};
       jwcrypto.generateKeypair(keyParams, function(err, kp) {
@@ -116,8 +159,8 @@ personalIDP.decryptPrivateKeyData = function(args) {
   var onError = args.error || personalIDP.default_callback;
 
   personalIDP.getSupportDocument({
-      "error": onError,
-      "success": function(supportDoc) {
+      error: onError,
+      success: function(supportDoc) {
           try {
               var encPrivKeyData = supportDoc["encrypted-private-key"];
               var privKeyData = sjcl.decrypt(password, encPrivKeyData);
@@ -130,9 +173,13 @@ personalIDP.decryptPrivateKeyData = function(args) {
 }
 
 
+// The name of the cookie in which we'll store the unlocked private key.
+//
+personalIDP.cookieName = "personalIDP_privkey";
+
 // This function "signs in" as any claimed user.
-// In reality this means checking the password and setting some cookies.
-// They must supply the correct master password for our site's publicKey.
+// In reality this means decrypting the private key and setting some cookies.
+// They must supply the correct master password for our site's private key.
 //
 personalIDP.authenticate = function(args) {
   var email = args.email;
@@ -147,7 +194,7 @@ personalIDP.authenticate = function(args) {
       "password": password,
       "error": onError,
       "success": function(privKeyData) {
-         var cookie = "personalIDP_privkey=" + privKeyData;
+         var cookie = personalIDP.cookieName + "=" + privKeyData;
          cookie += "; path=/; secure"
          document.cookie = cookie;
          onSuccess();
@@ -167,7 +214,7 @@ personalIDP.loadPrivateKeyData = function(args) {
       return $.trim(bit);
   });
   for(var i=0; i<bits.length; i++) {
-      var prefix = "personalIDP_privkey=";
+      var prefix = personalIDP.cookieName + "=";
       if(bits[i].indexOf(prefix) == 0) {
           privKeyData = bits[i].substring(prefix.length, bits[i].length);
           break;
@@ -183,7 +230,7 @@ personalIDP.loadPrivateKeyData = function(args) {
 
 
 // Check whether the user is currently signed in.
-// This just involves a local cookie check.
+// This just checks if the private key can be loaded from cookie.
 //
 personalIDP.checkIfAuthenticated = function(args) {
   personalIDP.loadPrivateKeyData(args);
@@ -199,18 +246,19 @@ personalIDP.generateCertificate = function(args) {
   var onSuccess = args.success || personalIDP.default_callback;
   var onError = args.error || personalIDP.default_callback;
 
-  // Older APIs passed this in as a string.
+  // Older APIs pass this in as a string.
   if(typeof publicKey == "string") {
       publicKey = JSON.parse(publicKey)
   }
 
   // Don't allow absurdly long certificate duration.
+  // According to the developer docs, this must never exceed 24 hours.
   var maxCertDuration = 24 * 60 * 60;
   if(certDuration > maxCertDuration) {
       certDuration = maxCertDuration;
   }
 
-  // Get the signing key by loading the private key data from a cookie,
+  // Get the full signing key by loading the private key data from cookie,
   // and the public key data from the live support document.
   personalIDP.loadPrivateKeyData({
     "error": onError,
@@ -229,6 +277,8 @@ personalIDP.generateCertificate = function(args) {
                 var exp = now + (certDuration * 1000);
                 var issuer = document.domain;
 
+                // We have to ensure that enough entropy is available,
+                // or the signing function will block waiting to collect more.
                 personalIDP.ensureEntropy(function() {
                     jwcrypto.cert.sign(
                         {publicKey: userKey, principal: {email: email}},
@@ -252,7 +302,14 @@ personalIDP.generateCertificate = function(args) {
 
 // Ensure that we have some entropy, requesting it from an
 // external service if necessary.  This is not ideal, but it
-// seems better than doing nothing.
+// seems better than doing nothing or trying to fake it with
+// locally-generated data.
+//
+// Currently random data is obtained from https://www.random.org/
+//
+// Once more browsers get support for crypto.getRandomValues
+// this will no longer be necessary, but will still be safe
+// to do.
 //
 personalIDP.ensureEntropy = function(cb) {
   cb = cb || personalIDP.default_callback;
@@ -262,14 +319,14 @@ personalIDP.ensureEntropy = function(cb) {
       return
   }
 
-  // Start in-browser collectors.
+  // Start SJCL in-browser collectors.
   // This is *supposed* to be done automatically but doesn't
   // seem to work for me, and there's no harm in doing it twice.
   sjcl.random.startCollectors();
 
   // Request some randomness from random.org.
   //
-  // This might fail if the serice is down, or if we request too much
+  // This might fail if the sercice is down, or if we request too much
   // data in a single day.  But we'll at least get the timing data to
   // add into the mix.
   //
@@ -293,7 +350,13 @@ personalIDP.ensureEntropy = function(cb) {
 
 
 // Function giving highest precision clock that we can find.
-// This is good for timing things, not for absolute time.
+//
+// With luck this will give us a microsecond-precision timer
+// from window.performance, but we fall back to millisecond
+// precision from Date() if that's not available.
+//
+// This measures elapsed time, not absolute time.  It's good
+// for timing things and not at all useful for date calculations.
 //
 personalIDP.clock = function() {
   return (new Date()).getTime();

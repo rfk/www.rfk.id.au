@@ -5,20 +5,26 @@
   </head>
   <body>
     <script type="text/javascript">
+      // Load the Persona javascript from whatever domain is accessing
+      // this file.  It might be persona.org or anosrep.org or something
+      // else entirely, and we want to work no matter which.
       var persona_server = "https://login.persona.org/";
       if (document.referrer) {
         persona_server = /^.*?:\/\/[^/]+\//.exec(document.referrer);
       }
-      document.write('<script src="' + persona_server + 'authentication_api.js"></scr' + 'ipt>');
+      var script_url = persona_server + "authentication_api.js";
+      document.write('<script src="' + script_url + '"></scr' + 'ipt>');
     </script>
     <script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
     <script src="./bidbundle.js"></script>
     <script src="./personalIDP.js"></script>
     <script type="text/javascript">
+
+    // This is used to remember what email the user is trying to be.
+    // It's currently not used for anything but it might be in future.
     var authEmail = null;
 
-    // If we're already authenticated then there's
-    // no need to display the form.
+    // If we're already authenticated then there's no need to display the form.
     navigator.id.beginAuthentication(function(email) {
         authEmail = email;
         personalIDP.checkIfAuthenticated({
@@ -32,7 +38,7 @@
         });
     });
 
-    // Otherwise, proceed with the form and set up a
+    // If not, proceed with the form and set up a
     // callback to authenticate when it is submitted.
     $(function() {
        $("#browserid-auth-form").submit(function(evt) {
@@ -52,8 +58,8 @@
     });
     </script>
     <form id="browserid-auth-form" target="#" style="display: none">
-    BrowserID Password: <input type="password" id="browserid-auth-password" />
-    <br/><input type="submit" value="Authenticate" />
+    BrowserID Passphrase: <input type="password" id="browserid-auth-password" />
+    <br/><input type="submit" value="Authenticate for BrowserID" />
     </form>
   </body>
 </html>
