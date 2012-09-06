@@ -1,0 +1,61 @@
+---
+title: >
+ rfk.id.au is now a Persona Identity Provider
+slug: persona-identity-provider
+created: !!timestamp '2012-09-06 15:10:00.000000'
+modified: !!timestamp '2012-09-06 15:10:00.000000'
+tags: 
+    - technology
+listable: false
+---
+
+{% mark excerpt %}<p>After a few days of hacking, "rfk.id.au" now acts as an Identity Provider for the BrowserID protocol, a.k.a <a href="https://login.persona.org/about">Mozilla Persona</a>.  This means I can now log in as <span class="email-addr">&#114;ya&#110;&#64;&#114;&#102;&#107;&#46;&#105;d&#46;&#97;u</span> on any persona-enabled website while retaining complete control over my identity.  I do not have to delegate my details or my credentials to a third party, even one I would trust as much as Mozilla.</p>
+
+<p>Here's the <a href="/.well-known/browserid">BrowserID support document</a> to prove it.</p>
+
+<p>My setup is not typical of what an Identity Provider should look like.  This site is not powered by any sophisticated server-side software, it is just a bunch of static HTML files and some javascript.  So getting this working was an interesting challenge.</p>{% endmark %}
+
+<h3>What?</h3>
+
+<p>Suppose I visit a persona-enabled site like <a href="http://123done.org">123done</a> or <a href="http://crossword.thetimes.co.uk/">The Times Crossword</a> and log in using Persona.  Here's what I will see, and what will happen behind the scenes.</p>
+
+<p>When I enter my email address into the login dialog, it will first check whether my domain ("rfk.id.au" in this case) provides native support for the BrowserID protocol.  To do so it attempts to load a JSON document from <a href="/.well-known/browserid">https://rfk.id.au/.well-known/browserid</a>, which, since I have just set this up, will succeed.</p>
+
+<p>The support document provides three key pieces of information:</p>
+<ul>
+<li>A link to an "authentication" page, which is responsible for prompting me
+for my password and establishing an authenticated session to my domain.</li>
+<li>A link to a "provisioning" page, which is responsible for producing signed
+identity assertions using a private key known only to my domain.</li>
+<li>A cryptographic public key, which is used to verify identity assertions for this domain.</li>
+</ul>
+
+<p>Having loaded this information, the Persona login dialog will show me the authentication page, which in my case is <a href="/browserid/authentication.html">/browserid/authentication.html</a>.  Since this page is hosted on my own domain, I can enter my password safe in the knowledge that it is not being sent to some third-party service.  This page sets a login cookie and instructs Persona that I have been successfully authenticated.</p>
+
+<p>Next the login dialog displays the provisioning page, which in my case is <a href="/browserid/provisioning.html">/browserid/provisioning.html</a>.  This is where the real magic happens.  The provisioning page detects that I have a valid login cookie, and uses the private key to generate a signed certificate verifying my identity.  Again, this page is hosted entirely on my own domain so none of the secrets that it hosts need to leak to third-party services.  The signed certificate is passed back to the login dialog, which stores it securely in the browser's local storage.</p>
+
+<p>Finally, the login dialog uses this certificate to generate an assertion or my identity, and gives that assertion back to the website in question.  It can follow the chain of cryptographic signatures to verify that, yes, this identity has been verified by the domain in question.</p>
+
+<h3>How?</h3>
+
+<p>The security of the BrowserID protocol depends heavily on SSL to authenticate each Identity Provider.  Without it, anyone could set up a spoof "rfk.id.au" site and claim to be providing persona support with their own set of keys.</p>
+
+<p>I had never bothered to set up SSL for this simple domain, and I was worried that the expense of doing so might make this a non-starter.  Fortunately it is possible to obtain <i>free</i> personal SSL certificates from <a href="https://www.startssl.com/">StartCom</a>, which are accepted by the all major browsers and by the persona.org verifier.</p>
+
+<h2>Private Key Handling</h2>
+
+<p>Remember how I said there was no server-side component in my setup?  You should be wondering: how do I keep the private key secure?  The answer, such as it is, is client-side crypto.</p>
+
+<p>If you take a peek at m <a href="/.well-known/browserid">BrowserID support document</a> you'll see it has an additional field called "encrypted-private-key".  That's the private key data, encrypted with a passphrase known only to me.</p>
+
+<p>When I visit the authentication page it will prompt for my passphrase, use it to decrypt the private key data, then store it in a session cookie.</p>
+
+<p>When I visit the provisioning page it will read the decrypted private key data from the session cookie, and use it to sign the necessary certificates.</p>
+
+<p>Doing things this way means does work, but it does have an important security consideration:  You could, if you were so inclined, download the encrypted private key and try to brute-force the encryption.  Assuming I haven't screwed up somewhere along the line, I say to you: good luck!  But I will need to rotate the key regularly to keep it safe from any determined attackers.  I built a handy little <a href="/browserid/keychange.html">Key Change</a> page to assist with this.</p>
+
+<p>Thanks to:</p>
+<ul>
+<li>Dan Callahan, for his work on <a href="http://mockmyid.com">MockMyID</a> which inspired this purely-client-side approach.</li>
+<li>And basically, the entire <a href="http://identity.mozilla.com/">Mozilla Identity Team</a> for their work on this great new way to authenticate.</li>
+</ul>

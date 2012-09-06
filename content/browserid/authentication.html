@@ -9,7 +9,7 @@
       // this file.  It might be persona.org or anosrep.org or something
       // else entirely, and we want to work no matter which.
       var persona_server = "https://login.persona.org/";
-      if (document.referrer) {
+      if (document.referrer && document.referrer.indexOf("persona.org") > 0) {
         persona_server = /^.*?:\/\/[^/]+\//.exec(document.referrer);
       }
       var script_url = persona_server + "authentication_api.js";
