@@ -4,8 +4,14 @@
     <title>RFK.id.au BrowserID Provisioning</title>
   </head>
   <body>
+    <script type="text/javascript">
+      var persona_server = "https://login.persona.org/";
+      if (document.referrer) {
+        persona_server = /^.*?:\/\/[^/]+\//.exec(document.referrer);
+      }
+      document.write('<script src="' + persona_server + 'provisioning_api.js"></scr' + 'ipt>');
+    </script>
     <script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
-    <script src="https://login.persona.org/provisioning_api.js"></script>
     <script src="./bidbundle.js"></script>
     <script src="./personalIDP.js"></script>
     <script type="text/javascript">
