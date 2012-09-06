@@ -142,15 +142,13 @@ personalIDP.authenticate = function(args) {
 
   // Try to load the private key data using the given password.
   // If that fails then they're not authenticated.
-  // If that succeeds then remember it in a short-lived cookie.
+  // If that succeeds then remember it in a session cookie.
   personalIDP.decryptPrivateKeyData({
       "password": password,
       "error": onError,
       "success": function(privKeyData) {
          var cookie = "personalIDP_privkey=" + privKeyData;
-         var tomorrow = new Date((new Date()).getTime() + (24*60*60*1000));
-         cookie += "; expires=" + tomorrow.toString();
-         cookie += "; path=/; Secure"
+         cookie += "; path=/; secure"
          document.cookie = cookie;
          onSuccess();
       }
