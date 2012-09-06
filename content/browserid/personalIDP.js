@@ -150,7 +150,7 @@ personalIDP.authenticate = function(args) {
          var cookie = "personalIDP_privkey=" + privKeyData;
          var tomorrow = new Date((new Date()).getTime() + (24*60*60*1000));
          cookie += "; expires=" + tomorrow.toString();
-         cookie += "; path=/"
+         cookie += "; path=/; Secure"
          document.cookie = cookie;
          onSuccess();
       }
