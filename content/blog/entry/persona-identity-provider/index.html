@@ -9,53 +9,106 @@ tags:
 listable: false
 ---
 
-{% mark excerpt %}<p>After a few days of hacking, "rfk.id.au" now acts as an Identity Provider for the BrowserID protocol, a.k.a <a href="https://login.persona.org/about">Mozilla Persona</a>.  This means I can now log in as <span class="email-addr">&#114;ya&#110;&#64;&#114;&#102;&#107;&#46;&#105;d&#46;&#97;u</span> on any persona-enabled website while retaining complete control over my identity.  I do not have to delegate my details or my credentials to a third party, even one I would trust as much as Mozilla.</p>
+{% mark excerpt %}<p>After a few days of hacking, "rfk.id.au" now acts as an Identity Provider for the BrowserID protocol, a.k.a <a href="https://login.persona.org/about">Mozilla Persona</a>.  This means I can now log in as <span class="email-addr">&#114;ya&#110;&#64;&#114;&#102;&#107;&#46;&#105;d&#46;&#97;u</span> on any persona-enabled website while retaining complete control over my identity.  I do not have to delegate my details or my credentials to a third party, even one that I would trust as much as Mozilla.</p>
 
 <p>Here's the <a href="/.well-known/browserid">BrowserID support document</a> to prove it.</p>
 
-<p>My setup is not typical of what an Identity Provider should look like.  This site is not powered by any sophisticated server-side software, it is just a bunch of static HTML files and some javascript.  So getting this working was an interesting challenge.</p>{% endmark %}
+<p>My setup has some peculiarities, but it's not terribly different to what an email hosting company might construct to provide Identity Provider services for its users.  In this post I will explain the new capabilities that this setup now gives me, and show some of the technical details of the implementation.</p>{% endmark %}
 
 <h3>What?</h3>
 
-<p>Suppose I visit a persona-enabled site like <a href="http://123done.org">123done</a> or <a href="http://crossword.thetimes.co.uk/">The Times Crossword</a> and log in using Persona.  Here's what I will see, and what will happen behind the scenes.</p>
+<p>Suppose I visit a persona-enabled site like <a href="http://crossword.thetimes.co.uk/">The Times Crossword</a> and log in using Persona.  Here's what I will see, and a high-level description of what will happen behind the scenes.  A full definition of the BrowserID protocol and related terminology is available at the <a href="https://github.com/mozilla/id-specs/blob/prod/browserid/index.md#terms">id-specs page on github.</a></p>
 
-<p>When I enter my email address into the login dialog, it will first check whether my domain ("rfk.id.au" in this case) provides native support for the BrowserID protocol.  To do so it attempts to load a JSON document from <a href="/.well-known/browserid">https://rfk.id.au/.well-known/browserid</a>, which, since I have just set this up, will succeed.</p>
+<p>First, I will see a popup dialog into which I enter my email address:</p>
 
-<p>The support document provides three key pieces of information:</p>
+<a href="./login_step1.png"><img src="./login_step1.png" style="padding: 1em; align: center" width="561" height="366"/></a>
+
+<p>When I click next, this dialog will check whether my email domain provides native support for the BrowserID protocol.  It attempts to load a "BrowserID Support Document" from <a href="/.well-known/browserid">https://rfk.id.au/.well-known/browserid</a>, and since I have just set one up this request will succeed.</p>
+
+<p>The dialog informs me that I can sign in with native support from my email provider:</p>
+
+<a href="./login_step2.png"><img src="./login_step2.png" style="padding: 1em; align: center" width="561" height="366"/></a>
+
+<p>Behind the scenes, the support document has provided three pieces of information which will be used to orchestrate the login process:</p>
+
 <ul>
-<li>A link to an "authentication" page, which is responsible for prompting me
-for my password and establishing an authenticated session to my domain.</li>
-<li>A link to a "provisioning" page, which is responsible for producing signed
-identity assertions using a private key known only to my domain.</li>
-<li>A cryptographic public key, which is used to verify identity assertions for this domain.</li>
+<li>A link to an "authentication page".  This page will be responsible for prompting me for my password and establishing an authenticated login session to my domain.</li>
+<li>A link to a "provisioning" page".  This page will be responsible for producing an "Identity Certificate" signed using a cryptographic private key known only to my domain.</li>
+<li>A cryptographic public key.  This key can be used by anyone to verify identity certificates issued by my domain.</li>
 </ul>
 
-<p>Having loaded this information, the Persona login dialog will show me the authentication page, which in my case is <a href="/browserid/authentication.html">/browserid/authentication.html</a>.  Since this page is hosted on my own domain, I can enter my password safe in the knowledge that it is not being sent to some third-party service.  This page sets a login cookie and instructs Persona that I have been successfully authenticated.</p>
+<p>Having loaded this information, the Persona login dialog will now display the authentication page for my domain, which in this case is <a href="/browserid/authentication.html">/browserid/authentication.html</a>:</p>
 
-<p>Next the login dialog displays the provisioning page, which in my case is <a href="/browserid/provisioning.html">/browserid/provisioning.html</a>.  This is where the real magic happens.  The provisioning page detects that I have a valid login cookie, and uses the private key to generate a signed certificate verifying my identity.  Again, this page is hosted entirely on my own domain so none of the secrets that it hosts need to leak to third-party services.  The signed certificate is passed back to the login dialog, which stores it securely in the browser's local storage.</p>
+<a href="./login_step3.png"><img src="./login_step3.png" style="padding: 1em; align: center" width="561" height="366"/></a>
 
-<p>Finally, the login dialog uses this certificate to generate an assertion or my identity, and gives that assertion back to the website in question.  It can follow the chain of cryptographic signatures to verify that, yes, this identity has been verified by the domain in question.</p>
+<p>Clearly I have not put a lot of work into prettying this up, but that's not really the point.</p>
+
+<p>The key point is that the authentication page is hosted on my own domain and I have complete control over it.  The browser's strong cross-domain security model means that when I enter my password on this page, I can be safe in the knowledge that it will not be leaked to some third-party service.  (Although there is one slight, temporary caveat to this bold claim, which I'll discuss below).</p>
+
+<p>Once I enter my password, the page sets up a login cookie and executes a callback to inform the Persona dialog that I have been successfully authenticated.</p>
+
+<p>Next the dialog loads my provisioning page, which in this case is <a href="/browserid/provisioning.html">/browserid/provisioning.html</a>.  If you click through that link you'll see that there's no visible content on that page.  Instead, all of the magic happens in the background via javascript.  The provisioning page detects that I have a valid login cookie, uses my domain's private key to generate a signed certificate verifying my identity, and passes this back to the Persona dialog via a callback.</p>
+
+<p>Again, note that this page is hosted entirely on my own domain and is completely under my control.  No details of the private key or login cookie can be leaked to third-party services.</p>
+
+<p>The dialog stores my identity certificate in the browser for use during future login sessions, then uses it to generate a short-lived "Identity Assertion".  The login process now completes, and passes the identity assertion back to the target website:</p>
+
+<a href="./login_step4.png"><img src="./login_step4.png" style="padding: 1em; align: center" width="561" height="366"/></a>
+
+<p>The target site will validate my identity assertion by following the chain of cryptographic signatures back up to the public key that I have published for my domain.</p>
+
+<p>There's a lot going on behind the scenes here, but the Persona login dialog does a great job of hiding it away.  Behind that slick interface, the use of public-key cryptography gives this login process two important features that bear repeating:</p>
+
+<ul>
+<li>I can login by entering my password on a site that I control.  Neither the target website site nor Mozilla ever need to be trusted with my credentials.  This is an important level of control over my <b>security</b>.</li>
+<li>The target website can verify my credentials by retrieving the public key directly from my domain.  It does not need to pass my details to Mozilla or to any other third-party site, depriving them of an opportunity to track my activities online.  This is an important level of control over my <b>privacy</b>.</li>
+</ul>
+
+<p>However, I must note that there are two temporary caveats to the above, due to Persona still being under heavy development.</p>
+
+<p>First, most persona-enabled sites verify identity assertions by <a href="https://developer.mozilla.org/en-US/docs/Persona/Quick_Setup#Step_4.3A_Verify_the_user.E2.80.99s_credentials">POSTing them to a Mozilla-hosted service</a>.  If Mozilla were so inclined, they could use this data to track my browsing habits.  But once the data formats for the BrowserID protocol have stabilised, it will simple for sites to verify assertions locally and avoid leaking details of my browsing habits.</p>
+
+<p>Second, the authentication and provisioning pages include <a href="https://login.persona.org/authentication_api.js">third-party javascript files</a> that are hosted on persona.org.  If the Persona servers were compromised, someone could potentially inject malicious javascript into my pages in order to steal my credentials.  But once the internal Persona APIs have stabilised, I will be able to host snapshots of these files on my own server and close this slight chink in the armour for good.</p>
+
+<p>All in all, I am very happy with the result.</p>
 
 <h3>How?</h3>
 
+<p>The Persona developer docs have a very good introduction to <a href="https://developer.mozilla.org/en-US/docs/Persona/Implementing_a_Persona_IdP">Implementing an Identity Provider</a>, so I will not repeat all the details here.  Instead I will highlight some of the key aspects of my implementation.</p>
+
+<h4>The Code</h4>
+
+<p>The authentication and provisioning pages I linked to above are very simple HTML documents, and almost all of the heavy-lifting is done in javascript.  The custom code lives in a small javascript file called <a href="/browserid/personalIDP.js">personalIDP.js</a>, which in turn depends on the javascript crypto code like <a href="https://github.com/mozilla/jwcrypto">jwcrypto</a> that is published as part of Mozilla Persona.</p>
+
+<p>It's open-source, so if you're feeling adventurous then feel free to play around with it and re-purpose it for your own site.  But do read on for some important security disclaimers...<p>
+
+<h4>SSL</h4>
+
 <p>The security of the BrowserID protocol depends heavily on SSL to authenticate each Identity Provider.  Without it, anyone could set up a spoof "rfk.id.au" site and claim to be providing persona support with their own set of keys.</p>
 
-<p>I had never bothered to set up SSL for this simple domain, and I was worried that the expense of doing so might make this a non-starter.  Fortunately it is possible to obtain <i>free</i> personal SSL certificates from <a href="https://www.startssl.com/">StartCom</a>, which are accepted by the all major browsers and by the persona.org verifier.</p>
+<p>Being a simple personal website, I had never bothered to set up SSL for this domain, and I was worried that the expense of doing so might make this whole endeavour a non-starter.  Fortunately it is possible to obtain <b>free</b> personal SSL certificates from <a href="https://www.startssl.com/">StartCom</a> without too much hassle.  These certificates are accepted without complaint by the all major browsers and by the persona.org verifier service.</p>
 
-<h2>Private Key Handling</h2>
+<h4>Private Key Security</h4>
 
-<p>Remember how I said there was no server-side component in my setup?  You should be wondering: how do I keep the private key secure?  The answer, such as it is, is client-side crypto.</p>
+<p>Here's where things get tricky: there is no server-side code behind this website.</p>
 
-<p>If you take a peek at m <a href="/.well-known/browserid">BrowserID support document</a> you'll see it has an additional field called "encrypted-private-key".  That's the private key data, encrypted with a passphrase known only to me.</p>
+<p>It's a bunch of static HTML and javascript files, hosted on a cheap VPS and served by nginx, and I feel very strongly about keeping it that way.  But this poses a bit of a problem for any authentication system that depends on keeping data secret.  I can't just squirrel the private key away on my server somewhere and generate identity certificates via an HTTP call.  Instead, I have to be able to generate certificates client-side, in javascript, without compromising my security.</p>
 
-<p>When I visit the authentication page it will prompt for my passphrase, use it to decrypt the private key data, then store it in a session cookie.</p>
+<p>I've come up with a solution which I <b><i>think</i></b> should be secure enough for my purposes.  If any security gurus want to show me how wrong I am, I'm all ears.</p>
 
-<p>When I visit the provisioning page it will read the decrypted private key data from the session cookie, and use it to sign the necessary certificates.</p>
+<p>If you take another peek at my <a href="/.well-known/browserid">BrowserID support document</a>, you'll see it has an additional field called "encrypted-private-key".  That's the private key data, encrypted with a passphrase known only to me.  When I visit the authentication page it will prompt for my passphrase, use it to decrypt the private key data, then store it in an ephemeral session cookie.  When I visit the provisioning page it will read the decrypted private key data from the session cookie and use it to sign the necessary certificates.</p>
 
-<p>Doing things this way means does work, but it does have an important security consideration:  You could, if you were so inclined, download the encrypted private key and try to brute-force the encryption.  Assuming I haven't screwed up somewhere along the line, I say to you: good luck!  But I will need to rotate the key regularly to keep it safe from any determined attackers.  I built a handy little <a href="/browserid/keychange.html">Key Change</a> page to assist with this.</p>
+<p>This works well enough, but it does have some important security considerations:</p>
 
-<p>Thanks to:</p>
 <ul>
-<li>Dan Callahan, for his work on <a href="http://mockmyid.com">MockMyID</a> which inspired this purely-client-side approach.</li>
-<li>And basically, the entire <a href="http://identity.mozilla.com/">Mozilla Identity Team</a> for their work on this great new way to authenticate.</li>
+<li>Anyone so inclined could download the private key data and try to brute-force the encryption.  Assuming I haven't screwed up in my use of the <a href="http://crypto.stanford.edu/sjcl/">Stanford Javascript Crypto Library</a>, I say to you: good luck!  But I will need to rotate the key regularly to keep it safe from any determined attackers, so I built a little <a href="/browserid/keychange.html">Key Change</a> page to make that easy.</li>
+<li>Anyone who can read my cookies could steal the decrypted private key.  The browser protects me somewhat here, but I need to carefully set the properties of the cookie so that can't be read from disk, accidentally sent over the network, or sniffed by third-party javascript widgets like the tweet button over on the side of this page.  It'll be a miracle if I've got this right on my first attempt, but I've tried.</li>
+<li>Anyone who knows my passphrase can authenticate with any address on the "rfk.id.au" domain.  Since I'm the only one who knows it, and the only person with addresses on that domain, this is an acceptable compromise.  Obviously it wouldn't work out so well for domains with multiple users.</li>
 </ul>
+
+<p>A real, multi-user setup would generate certificates by making an authenticated HTTP request, so that the private key never has to leave the server.</p>
+
+<p>If I had any custom server code running already, I would do the certificate signing on the server.  If you have custom server code running already, then <b>you should do the certificate signing on the server</b>.  The above is, frankly, a hack so that I can avoid having to sysadmin anything.</p>
+
+<p>So that's that.  A bit of javascript, a few HTML pages and a JSON blob allow this domain to provide me with simple, secure logins on any persona-enabled website.  I think that's pretty amazing.  Many thanks to the <a href="http://identity.mozilla.com/">Mozilla Identity Team</a> for their work on this great new way to authenticate.</p>
+

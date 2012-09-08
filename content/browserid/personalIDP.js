@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
 //
 //  Pure-javascript Primary Identity Provider for Mozilla Persona:
 //
@@ -41,6 +45,9 @@
 
 
 // All functions exposed by this code are on the "personalIDP" object.
+//
+// From the perspective of implementing an IdP, the most important ones
+// are checkIfAuthenticated(), authenticate(), and generateCertificate().
 //
 var personalIDP = {};
 
