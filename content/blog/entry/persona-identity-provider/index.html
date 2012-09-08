@@ -86,7 +86,7 @@ listable: false
 
 <p>The security of the BrowserID protocol depends heavily on SSL to authenticate each Identity Provider.  Without it, anyone could set up a spoof "rfk.id.au" site and claim to be providing persona support with their own set of keys.</p>
 
-<p>Being a simple personal website, I had never bothered to set up SSL for this domain, and I was worried that the expense of doing so might make this whole endeavour a non-starter.  Fortunately it is possible to obtain <b>free</b> personal SSL certificates from <a href="https://www.startssl.com/">StartCom</a> without too much hassle.  These certificates are accepted without complaint by the all major browsers and by the persona.org verifier service.</p>
+<p>Being a simple personal website, I had never bothered to set up SSL for this domain, and I was worried that the expense of doing so might make this whole endeavour a non-starter.  Fortunately it is possible to obtain <b>free</b> personal SSL certificates from <a href="https://www.startssl.com/">StartCom</a> without too much hassle.  These certificates are accepted without complaint by all major browsers and by the persona.org verifier service.</p>
 
 <h4>Private Key Security</h4>
 
@@ -102,13 +102,13 @@ listable: false
 
 <ul>
 <li>Anyone so inclined could download the private key data and try to brute-force the encryption.  Assuming I haven't screwed up in my use of the <a href="http://crypto.stanford.edu/sjcl/">Stanford Javascript Crypto Library</a>, I say to you: good luck!  But I will need to rotate the key regularly to keep it safe from any determined attackers, so I built a little <a href="/browserid/keychange.html">Key Change</a> page to make that easy.</li>
-<li>Anyone who can read my cookies could steal the decrypted private key.  The browser protects me somewhat here, but I need to carefully set the properties of the cookie so that can't be read from disk, accidentally sent over the network, or sniffed by third-party javascript widgets like the tweet button over on the side of this page.  It'll be a miracle if I've got this right on my first attempt, but I've tried.</li>
+<li>Anyone who can read my cookies could steal the decrypted private key.  The browser protects me somewhat here, but I need to carefully set the properties of the cookie so that can't be read from disk, accidentally sent over the network, or sniffed by third-party javascript widgets like the tweet button over on the side of this page.  It'll be a miracle if I have done this right on my first attempt, but I've tried.</li>
 <li>Anyone who knows my passphrase can authenticate with any address on the "rfk.id.au" domain.  Since I'm the only one who knows it, and the only person with addresses on that domain, this is an acceptable compromise.  Obviously it wouldn't work out so well for domains with multiple users.</li>
 </ul>
 
-<p>A real, multi-user setup would generate certificates by making an authenticated HTTP request, so that the private key never has to leave the server.</p>
+<p><b>To emphasise:</b> a real multi-user setup would generate certificates by making an authenticated HTTP request, so that the private key never has to leave the server.</p>
 
-<p>If I had any custom server code running already, I would do the certificate signing on the server.  If you have custom server code running already, then <b>you should do the certificate signing on the server</b>.  The above is, frankly, a hack so that I can avoid having to sysadmin anything.</p>
+<p>If I had any custom server code running already, I would do the certificate signing on the server.  If you have custom server code running already, then <b>you should do the certificate signing on the server</b>.  The above is, frankly, a hack so that I can avoid the need to sysadmin anything.  It's possible that I will live to regret my <a href="http://xkcd.com/319/">Engineering Hubris</a>.</p>
 
 <p>So that's that.  A bit of javascript, a few HTML pages and a JSON blob allow this domain to provide me with simple, secure logins on any persona-enabled website.  I think that's pretty amazing.  Many thanks to the <a href="http://identity.mozilla.com/">Mozilla Identity Team</a> for their work on this great new way to authenticate.</p>
 
