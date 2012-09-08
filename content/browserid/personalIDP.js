@@ -194,8 +194,9 @@ personalIDP.authenticate = function(args) {
       "password": password,
       "error": onError,
       "success": function(privKeyData) {
+         var path = window.location.pathname.split("/").slice(0, -1).join("/");
          var cookie = personalIDP.cookieName + "=" + privKeyData;
-         cookie += "; path=/; secure"
+         cookie += "; secure; path=" + path
          document.cookie = cookie;
          onSuccess();
       }
