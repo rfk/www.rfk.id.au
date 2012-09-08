@@ -184,6 +184,7 @@ personalIDP.decryptPrivateKeyData = function(args) {
 //
 personalIDP.cookieName = "personalIDP_privkey";
 
+
 // This function "signs in" as any claimed user.
 // In reality this means decrypting the private key and setting some cookies.
 // They must supply the correct master password for our site's private key.
@@ -202,13 +203,16 @@ personalIDP.authenticate = function(args) {
       "error": onError,
       "success": function(privKeyData) {
          var cookie = personalIDP.cookieName + "=" + privKeyData + ";";
+
          // To prevent malicious javascript from stealing this cookie,
          // we path-limit it to the directory with the browserid documents.
          var path = window.location.pathname.split("/").slice(0, -1).join("/");
          cookie += " path=" + path + ";";
+
          // To prevent this cookie being sent out to be sniffed on the network,
          // we set the "secure" flag to restrict it to https connections.
          cookie += " secure;";
+
          // To prevent this cookie being read from disk, we do not set an
          // expiration time.  The browserid could keep it in memory and
          // discard it at the end of the browsing session.
