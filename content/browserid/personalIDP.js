@@ -214,7 +214,7 @@ personalIDP.authenticate = function(args) {
          cookie += " secure;";
 
          // To prevent this cookie being read from disk, we do not set an
-         // expiration time.  The browserid could keep it in memory and
+         // expiration time.  The browserid sould keep it in memory and
          // discard it at the end of the browsing session.
          document.cookie = cookie;
          onSuccess();
