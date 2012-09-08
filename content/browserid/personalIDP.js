@@ -97,7 +97,7 @@ personalIDP.getSupportDocument = function(args) {
 }
 
 
-// Create a new support-document data for the hosting domain.
+// Create data for a new support-document for the hosting domain.
 // This establishes a new private key, encrypts it with the given password
 // and then returns it as part of the modified support-document.
 //
@@ -114,8 +114,8 @@ personalIDP.createSupportDocument = function(args) {
       return;
   }
 
-  // We need a salt and IV for encryption,
-  // so we might as well make sure there is good entropy available.
+  // We need entropy both for the key generation and for
+  // salting/IVing the encryption.
   personalIDP.ensureEntropy(function() {
       var keyParams = {"algorithm": "RS", "keysize": 128};
       jwcrypto.generateKeypair(keyParams, function(err, kp) {
@@ -201,9 +201,17 @@ personalIDP.authenticate = function(args) {
       "password": password,
       "error": onError,
       "success": function(privKeyData) {
+         var cookie = personalIDP.cookieName + "=" + privKeyData + ";";
+         // To prevent malicious javascript from stealing this cookie,
+         // we path-limit it to the directory with the browserid documents.
          var path = window.location.pathname.split("/").slice(0, -1).join("/");
-         var cookie = personalIDP.cookieName + "=" + privKeyData;
-         cookie += "; secure; path=" + path
+         cookie += " path=" + path + ";";
+         // To prevent this cookie being sent out to be sniffed on the network,
+         // we set the "secure" flag to restrict it to https connections.
+         cookie += " secure;";
+         // To prevent this cookie being read from disk, we do not set an
+         // expiration time.  The browserid could keep it in memory and
+         // discard it at the end of the browsing session.
          document.cookie = cookie;
          onSuccess();
       }
@@ -217,6 +225,8 @@ personalIDP.loadPrivateKeyData = function(args) {
   var onSuccess = args.success || personalIDP.default_callback;
   var onError = args.error || personalIDP.default_callback;
 
+  // Ah, the joys of parsing out an individual cookie.
+  // jQuery doesn't seem to have a utility for this.
   var privKeyData = null;
   var bits = $.map(document.cookie.split(";"), function(bit) {
       return $.trim(bit);
@@ -287,6 +297,7 @@ personalIDP.generateCertificate = function(args) {
 
                 // We have to ensure that enough entropy is available,
                 // or the signing function will block waiting to collect more.
+                // Also, you know, it's good for security and all that...
                 personalIDP.ensureEntropy(function() {
                     jwcrypto.cert.sign(
                         {publicKey: userKey, principal: {email: email}},
@@ -315,9 +326,13 @@ personalIDP.generateCertificate = function(args) {
 //
 // Currently random data is obtained from https://www.random.org/
 //
-// Once more browsers get support for crypto.getRandomValues
-// this will no longer be necessary, but will still be safe
-// to do.
+// Once more browsers get support for crypto.getRandomValues this
+// this will no longer be necessary, but will still be safe to do.
+//
+// If the attempt to fetch random data fails, then we still get a small
+// amount of entropy from the network timing data.  Not ideal.  But the
+// alternative is to forbid logins when entropy isn't available, and I
+// think that's acceptable.
 //
 personalIDP.ensureEntropy = function(cb) {
   cb = cb || personalIDP.default_callback;
