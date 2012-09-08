@@ -336,7 +336,7 @@ personalIDP.generateCertificate = function(args) {
 // If the attempt to fetch random data fails, then we still get a small
 // amount of entropy from the network timing data.  Not ideal.  But the
 // alternative is to forbid logins when entropy isn't available, and I
-// think that's acceptable.
+// don't think that's acceptable.
 //
 personalIDP.ensureEntropy = function(cb) {
   cb = cb || personalIDP.default_callback;
