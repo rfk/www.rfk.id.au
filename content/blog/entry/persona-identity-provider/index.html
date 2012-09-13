@@ -102,7 +102,7 @@ listable: false
 
 <ul>
 <li>Anyone so inclined could download the private key data and try to brute-force the encryption.  Assuming I haven't screwed up in my use of the <a href="http://crypto.stanford.edu/sjcl/">Stanford Javascript Crypto Library</a>, I say to you: good luck!  But I will need to rotate the key regularly to keep it safe from any determined attackers, so I built a little <a href="/browserid/keychange.html">Key Change</a> page to make that easy.</li>
-<li>Anyone who can read my sessionStorage data could steal the decrypted private key.  The browser <i>should</i> protect me here, since sessionStorage comes with a strong same-origin security policy and is purged when the login dialog closes.  But bugs do happen.  (Thanks to <a href="http://fmarier.org/">François Marier</a> for suggesting that sessionStorage would be safer than cookies for this data).</li>
+<li>Anyone who can read my sessionStorage data could steal the decrypted private key.  The browser <i>should</i> protect me here, since sessionStorage comes with a strong same-origin security policy and is purged when the login dialog closes.  But bugs do happen.  (Thanks to <a href="http://fmarier.org/">Fran&ccedil;ois Marier</a> for suggesting that sessionStorage would be safer than cookies for this data).</li>
 <li>Anyone who knows my passphrase can authenticate with any address on the "rfk.id.au" domain.  Since I'm the only one who knows it, and the only person with addresses on that domain, this is an acceptable compromise.  Obviously it wouldn't work out so well for domains with multiple users.</li>
 </ul>
 
