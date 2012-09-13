@@ -45,11 +45,11 @@ listable: false
 
 <p>The key point is that the authentication page is hosted on my own domain and I have complete control over it.  The browser's strong cross-domain security model means that when I enter my password on this page, I can be safe in the knowledge that it will not be leaked to some third-party service.  (Although there is one slight, temporary caveat to this bold claim, which I'll discuss below).</p>
 
-<p>Once I enter my password, the page sets up a login cookie and executes a callback to inform the Persona dialog that I have been successfully authenticated.</p>
+<p>Once I enter my password, the page stores some login session data in the browser and executes a callback to inform the Persona dialog that I have been successfully authenticated.</p>
 
-<p>Next the dialog loads my provisioning page, which in this case is <a href="/browserid/provisioning.html">/browserid/provisioning.html</a>.  If you click through that link you'll see that there's no visible content on that page.  Instead, all of the magic happens in the background via javascript.  The provisioning page detects that I have a valid login cookie, uses my domain's private key to generate a signed certificate verifying my identity, and passes this back to the Persona dialog via a callback.</p>
+<p>Next the dialog loads my provisioning page, which in this case is <a href="/browserid/provisioning.html">/browserid/provisioning.html</a>.  If you click through that link you'll see that there's no visible content on that page.  Instead, all of the magic happens in the background via javascript.  The provisioning page detects that I have a valid login session, uses my domain's private key to generate a signed certificate verifying my identity, and passes this back to the Persona dialog via a callback.</p>
 
-<p>Again, note that this page is hosted entirely on my own domain and is completely under my control.  No details of the private key or login cookie can be leaked to third-party services.</p>
+<p>Again, note that this page is hosted entirely on my own domain and is completely under my control.  No details of the private key or login session can be leaked to third-party services.</p>
 
 <p>The dialog stores my identity certificate in the browser for use during future login sessions, then uses it to generate a short-lived "Identity Assertion".  The login process now completes, and passes the identity assertion back to the target website:</p>
 
@@ -66,7 +66,7 @@ listable: false
 
 <p>However, I must note that there are two temporary caveats to the above, due to Persona still being under heavy development.</p>
 
-<p>First, most persona-enabled sites verify identity assertions by <a href="https://developer.mozilla.org/en-US/docs/Persona/Quick_Setup#Step_4.3A_Verify_the_user.E2.80.99s_credentials">POSTing them to a Mozilla-hosted service</a>.  If Mozilla were so inclined, they could use this data to track my browsing habits.  But once the data formats for the BrowserID protocol have stabilised, it will simple for sites to verify assertions locally and avoid leaking details of my browsing habits.</p>
+<p>First, most persona-enabled sites verify identity assertions by <a href="https://developer.mozilla.org/en-US/docs/Persona/Quick_Setup#Step_4.3A_Verify_the_user.E2.80.99s_credentials">POSTing them to a Mozilla-hosted service</a>.  If Mozilla were so inclined, they could use this data to track my browsing habits.  But once the data formats for the BrowserID protocol have stabilised, it will make both moral and economic sense for sites to <a href="https://github.com/mozilla/PyBrowserID">verify assertions locally</a> and avoid leaking details of my browsing habits.</p>
 
 <p>Second, the authentication and provisioning pages include <a href="https://login.persona.org/authentication_api.js">third-party javascript files</a> that are hosted on persona.org.  If the Persona servers were compromised, someone could potentially inject malicious javascript into my pages in order to steal my credentials.  But once the internal Persona APIs have stabilised, I will be able to host snapshots of these files on my own server and close this slight chink in the armour for good.</p>
 
@@ -80,7 +80,7 @@ listable: false
 
 <p>The authentication and provisioning pages I linked to above are very simple HTML documents, and almost all of the heavy-lifting is done in javascript.  The custom code lives in a small javascript file called <a href="/browserid/personalIDP.js">personalIDP.js</a>, which in turn depends on the javascript crypto code like <a href="https://github.com/mozilla/jwcrypto">jwcrypto</a> that is published as part of Mozilla Persona.</p>
 
-<p>It's open-source, so if you're feeling adventurous then feel free to play around with it and re-purpose it for your own site.  But do read on for some important security disclaimers...<p>
+<p>It's open-source and <a href="https://github.com/rfk/www.rfk.id.au/tree/master/content/browserid">available on github</a>, so if you're feeling adventurous then feel free to play around with it and re-purpose it for your own site.  But do read on for some important security disclaimers...<p>
 
 <h4>SSL</h4>
 
@@ -96,13 +96,13 @@ listable: false
 
 <p>I've come up with a solution which I <b><i>think</i></b> should be secure enough for my purposes.  If any security gurus want to show me how wrong I am, I'm all ears.</p>
 
-<p>If you take another peek at my <a href="/.well-known/browserid">BrowserID support document</a>, you'll see it has an additional field called "encrypted-private-key".  That's the private key data, encrypted with a passphrase known only to me.  When I visit the authentication page it will prompt for my passphrase, use it to decrypt the private key data, then store it in an ephemeral session cookie.  When I visit the provisioning page it will read the decrypted private key data from the session cookie and use it to sign the necessary certificates.</p>
+<p>If you take another peek at my <a href="/.well-known/browserid">BrowserID support document</a>, you'll see it has an additional field called "encrypted-private-key".  That's the private key data, encrypted with a passphrase known only to me.  When I visit the authentication page it will prompt for my passphrase, use it to decrypt the private key data, then store it in the browser's <a href="https://developer.mozilla.org/en-US/docs/DOM/Storage#sessionStorage">sessionStorage</a> object.  When I visit the provisioning page it will read the decrypted private key data from sessionStorage and use it to sign the necessary certificates.</p>
 
 <p>This works well enough, but it does have some important security considerations:</p>
 
 <ul>
 <li>Anyone so inclined could download the private key data and try to brute-force the encryption.  Assuming I haven't screwed up in my use of the <a href="http://crypto.stanford.edu/sjcl/">Stanford Javascript Crypto Library</a>, I say to you: good luck!  But I will need to rotate the key regularly to keep it safe from any determined attackers, so I built a little <a href="/browserid/keychange.html">Key Change</a> page to make that easy.</li>
-<li>Anyone who can read my cookies could steal the decrypted private key.  The browser protects me somewhat here, but I need to carefully set the properties of the cookie so that it can't be read from disk, accidentally sent over the network, or sniffed by third-party javascript widgets like the tweet button over on the side of this page.  It'll be a miracle if I have done this right on my first attempt, but I've tried.</li>
+<li>Anyone who can read my sessionStorage data could steal the decrypted private key.  The browser <i>should</i> protect me here, since sessionStorage comes with a strong same-origin security policy and is purged when the login dialog closes.  But bugs do happen.  (Thanks to <a href="http://fmarier.org/">François Marier</a> for suggesting that sessionStorage would be safer than cookies for this data).</li>
 <li>Anyone who knows my passphrase can authenticate with any address on the "rfk.id.au" domain.  Since I'm the only one who knows it, and the only person with addresses on that domain, this is an acceptable compromise.  Obviously it wouldn't work out so well for domains with multiple users.</li>
 </ul>
 

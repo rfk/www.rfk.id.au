@@ -26,10 +26,10 @@
 //     * the authentication page:
 //        * prompts the user for the passphrase,
 //        * fetches the encrypted private key from the well-known file, and
-//        * decrypts the private key and stores it in a session cookie
+//        * decrypts the private key and stores it in sessionStorage
 //
 //     * the provisioning page:
-//        * reads the private key from the cookie, and
+//        * reads the private key from sessionStorage, and
 //        * uses it to sign the certificate.
 //
 //  This setup has some obvious security ramifications:
@@ -143,7 +143,7 @@ personalIDP.createSupportDocument = function(args) {
           }
 
           // Encrypt the private key data with the given password.
-          var privKeyData = escape(JSON.stringify(privKey));
+          var privKeyData = JSON.stringify(privKey);
           var encPrivKeyData = sjcl.encrypt(password, privKeyData);
 
           // Put it all into the support document.
@@ -180,13 +180,14 @@ personalIDP.decryptPrivateKeyData = function(args) {
 }
 
 
-// The name of the cookie in which we'll store the unlocked private key.
+// The name of the sessionStorage key in which
+// we'll store the unlocked private key.
 //
-personalIDP.cookieName = "personalIDP_privkey";
+personalIDP.sessionStorageKey = "personalIDP.privkey";
 
 
 // This function "signs in" as any claimed user.
-// In reality this means decrypting the private key and setting some cookies.
+// In reality this means decrypting the private key and storing in session.
 // They must supply the correct master password for our site's private key.
 //
 personalIDP.authenticate = function(args) {
@@ -197,51 +198,25 @@ personalIDP.authenticate = function(args) {
 
   // Try to load the private key data using the given password.
   // If that fails then they're not authenticated.
-  // If that succeeds then remember it in a session cookie.
+  // If that succeeds then remember it in sessionStorage.
   personalIDP.decryptPrivateKeyData({
       "password": password,
       "error": onError,
       "success": function(privKeyData) {
-         var cookie = personalIDP.cookieName + "=" + privKeyData + ";";
-
-         // To prevent malicious javascript from stealing this cookie,
-         // we path-limit it to the directory with the browserid documents.
-         var path = window.location.pathname.split("/").slice(0, -1).join("/");
-         cookie += " path=" + path + ";";
-
-         // To prevent this cookie being sent out to be sniffed on the network,
-         // we set the "secure" flag to restrict it to https connections.
-         cookie += " secure;";
-
-         // To prevent this cookie being read from disk, we do not set an
-         // expiration time.  The browserid sould keep it in memory and
-         // discard it at the end of the browsing session.
-         document.cookie = cookie;
+         sessionStorage[personalIDP.sessionStorageKey] = privKeyData;
          onSuccess();
       }
   });
 };
 
 
-// Load private key data that was previously stored in a cookie.
+// Load private key data that was previously stored in sessionStorage.
 //
 personalIDP.loadPrivateKeyData = function(args) {
   var onSuccess = args.success || personalIDP.default_callback;
   var onError = args.error || personalIDP.default_callback;
 
-  // Ah, the joys of parsing out an individual cookie.
-  // jQuery doesn't seem to have a utility for this.
-  var privKeyData = null;
-  var bits = $.map(document.cookie.split(";"), function(bit) {
-      return $.trim(bit);
-  });
-  for(var i=0; i<bits.length; i++) {
-      var prefix = personalIDP.cookieName + "=";
-      if(bits[i].indexOf(prefix) == 0) {
-          privKeyData = bits[i].substring(prefix.length, bits[i].length);
-          break;
-      }
-  }
+  var privKeyData = sessionStorage[personalIDP.sessionStorageKey];
 
   if(!privKeyData) {
       onError("user is not authenticated");
@@ -252,7 +227,7 @@ personalIDP.loadPrivateKeyData = function(args) {
 
 
 // Check whether the user is currently signed in.
-// This just checks if the private key can be loaded from cookie.
+// This just checks if the private key can be loaded from sessionStorage.
 //
 personalIDP.checkIfAuthenticated = function(args) {
   personalIDP.loadPrivateKeyData(args);
@@ -280,7 +255,7 @@ personalIDP.generateCertificate = function(args) {
       certDuration = maxCertDuration;
   }
 
-  // Get the full signing key by loading the private key data from cookie,
+  // Get the full signing key by loading the private key data from session,
   // and the public key data from the live support document.
   personalIDP.loadPrivateKeyData({
     "error": onError,
@@ -290,7 +265,7 @@ personalIDP.generateCertificate = function(args) {
             "success": function(supportDoc) {
                 var keyData = {};
                 $.extend(keyData, supportDoc["public-key"]);
-                $.extend(keyData, JSON.parse(unescape(privKeyData)));
+                $.extend(keyData, JSON.parse(privKeyData));
 
                 var myKey = jwcrypto.loadSecretKeyFromObject(keyData);
                 var userKey = jwcrypto.loadPublicKeyFromObject(publicKey);
@@ -353,7 +328,7 @@ personalIDP.ensureEntropy = function(cb) {
 
   // Request some randomness from random.org.
   //
-  // This might fail if the sercice is down, or if we request too much
+  // This might fail if the service is down, or if we request too much
   // data in a single day.  But we'll at least get the timing data to
   // add into the mix.
   //
