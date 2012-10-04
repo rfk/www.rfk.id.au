@@ -71,20 +71,7 @@ Using just the Persona authentication API, you're out of luck - since it's javas
 
 <p><a href="./luckynum_server.py">luckynum_server.py</a></p>
 
-<p>First, we need a page to provision credentials.</p>
-
-{% syntax python %}
-def provision_creds(request):
-    userid = authenticated_userid(request)
-    if userid is None:
-        raise Forbidden()
-    policy = request.registry.getUtility(IAuthenticationPolicy)
-    policy = policy.get_policy(MACAuthenticationPolicy)
-    id, key = policy.encode_mac_id(request, userid)
-    return {"id": id, "key": key}
-{% endsyntax %}
-
-<p>Then we need to hook up multiple authentication methods using pyramid_multiauth</p>
+<p>We can hook up multiple authentication methods using pyramid_multiauth.</p>
 
 
 {% syntax python %}if __name__ == "__main__":
@@ -111,17 +98,39 @@ def provision_creds(request):
     config.include("pyramid_multiauth")
     config.add_forbidden_view("pyramid_persona.views.forbidden")
 
-    # Add a simple view to that you can visit to login with persona,
-    # then generate a macauth id and secret.
-    config.add_route("provision", "/provision")
-    config.add_view(provision_creds, route_name="provision", renderer="json")
-
     app = config.make_wsgi_app()
     server = wsgiref.simple_server.make_server("", 8080, app)
     server.serve_forever()
 {% endsyntax %}
 
 <p>This configures our pyramid app to accept authentication via <i>either</i> interactively via the persona dialog, or automatically using a set of macauth credentials.</p>
+
+<p>But, we need a way to get MACAuth credentials.  We create a simple view like this:</p>
+
+{% syntax python %}
+def provision_creds(request):
+    userid = authenticated_userid(request)
+    if userid is None:
+        raise Forbidden()
+ 
+    # Get the top-level pyramid_multiauth policy, then ask it for
+    # access to the underlying pyramid_macauth policy.
+    policy = request.registry.getUtility(IAuthenticationPolicy)
+    policy = policy.get_policy(MACAuthenticationPolicy)
+
+    # Generate a new MACAuth id and key for the current user.
+    id, key = policy.encode_mac_id(request, userid)
+    return {"id": id, "key": key}
+{% endsyntax %}
+
+<p>And hook it up in the configurator</p>
+
+{% syntax python %}
+    # Add a simple view to that you can visit to login with persona,
+    # then generate a macauth id and secret.
+    config.add_route("provision", "/provision")
+    config.add_view(provision_creds, route_name="provision", renderer="json")
+{% endsyntax %}
 
 <p>Now if you want to script access to this website, you can write something like this:</p>
 
