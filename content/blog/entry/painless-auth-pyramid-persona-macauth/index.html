@@ -1,0 +1,148 @@
+---
+title: >
+   Painless Authentication with Pyramid, Persona and MACAuth
+slug: painless-auth-pyramid-persona-macauth
+created: !!timestamp '2012-10-04 23:07:00.000000'
+modified: !!timestamp '2012-10-04 23:07:00.000000'
+tags: 
+    - technology
+    - python
+listable: false
+---
+
+{% mark excerpt %}
+
+<p>Mozilla Persona went into beta.  People have been writing libraries for it.  Here's a demo of how we tie these things together.</p>
+
+{% endmark %}
+
+<p>Here's an example using pyramid_persona, it lets you log in and tells you a lucky number!</p>
+
+<p><a href="./luckynum_server_orig.py">luckynum_server_orig.py</a></p>
+
+{% syntax python %}import random
+import wsgiref.simple_server
+
+from pyramid.config import Configurator
+from pyramid.response import Response
+from pyramid.security import authenticated_userid
+from pyramid.exceptions import Forbidden
+
+
+TEMPLATE = """
+Hello {userid}!
+Your lucky number for today is {number}.
+"""
+
+
+def lucky_number(request):
+    userid = authenticated_userid(request)
+    if userid is None:
+        raise Forbidden()
+    number = random.randint(1,100)
+    return Response(TEMPLATE.format(**locals()), content_type="text/plain")
+
+
+if __name__ == "__main__":
+    settings = {
+      "persona.secret": "TED KOPPEL IS A ROBOT",
+      "persona.audiences": "localhost:8080",
+    }
+
+    config = Configurator(settings=settings)
+    config.add_route("number", "/")
+    config.add_view(lucky_number, route_name="number")
+
+    config.include("pyramid_persona")
+
+    app = config.make_wsgi_app()
+    server = wsgiref.simple_server.make_server("", 8080, app)
+    server.serve_forever()
+{% endsyntax %}
+
+<p>Run this as a script and you'll get a delightful little webpage that you can log into with persona.</p>
+
+<p>But let's say you're a junkie for this stuff, and you want to write a script to fetch your lukcy number on a regular basis.
+Using just the Persona authentication API, you're out of luck - since it's javascript-driven there is no easy way to automate that login, short of firing up a full-blown browser environment.</p>
+
+<p>Instead, let's combine it with a secondary authentication mechanism based on MACAuth.</p>
+
+<p><a href="./luckynum_server.py">luckynum_server.py</a></p>
+
+<p>First, we need a page to provision credentials.</p>
+
+{% syntax python %}
+def provision_creds(request):
+    userid = authenticated_userid(request)
+    if userid is None:
+        raise Forbidden()
+    policy = request.registry.getUtility(IAuthenticationPolicy)
+    policy = policy.get_policy(MACAuthenticationPolicy)
+    id, key = policy.encode_mac_id(request, userid)
+    return {"id": id, "key": key}
+{% endsyntax %}
+
+<p>Then we need to hook up multiple authentication methods using pyramid_multiauth</p>
+
+
+{% syntax python %}if __name__ == "__main__":
+    settings = {
+      # Include the settings for pyramid_persona as normal
+      "persona.secret": "TED KOPPEL IS A ROBOT",
+      "persona.audiences": "localhost:8080",
+
+      # Also add some settings for pyramid_macauth
+      "macauth.master_secret": "V8 JUICE IS 1/8TH GASOLINE",
+
+      # Tell pyramid_multiauth to load both of those policies
+      "multiauth.policies": "pyramid_persona pyramid_macauth",
+    }
+
+    config = Configurator(settings=settings)
+    config.add_route("number", "/")
+    config.add_view(lucky_number, route_name="number")
+
+    # Install pyramid_multiauth as the authentication policy.
+    # This will load and configure both pyramid_persona and pyramid_macauth.
+    # Since both of those libraries register a forbidden view, we need to
+    # explicitly break the tie to avoid configuration conflict errors.
+    config.include("pyramid_multiauth")
+    config.add_forbidden_view("pyramid_persona.views.forbidden")
+
+    # Add a simple view to that you can visit to login with persona,
+    # then generate a macauth id and secret.
+    config.add_route("provision", "/provision")
+    config.add_view(provision_creds, route_name="provision", renderer="json")
+
+    app = config.make_wsgi_app()
+    server = wsgiref.simple_server.make_server("", 8080, app)
+    server.serve_forever()
+{% endsyntax %}
+
+<p>This configures our pyramid app to accept authentication via <i>either</i> interactively via the persona dialog, or automatically using a set of macauth credentials.</p>
+
+<p>Now if you want to script access to this website, you can write something like this:</p>
+
+<p><a href="./luckynum_client.py">luckynum_client.py</a></p>
+
+{% syntax python %}import requests
+import macauthlib
+
+
+CREDENTIALS = {
+  "id": "eyJzYWx0IjogIjE3MThmMSIsICJleHBpcmVzIjogMTM0OTM1MDIwMC40MDM1NzMsI"
+        "CJ1c2VyaWQiOiAicnlhbkByZmsuaWQuYXUifRCtAtGwIml5Fk6vaL2uvRQchPMC",
+  "key": "p9tYCJ6TGaWbZq9GJq_DalpZmIg="
+}
+
+
+def auth_hook(req):
+    macauthlib.sign_request(req, **CREDENTIALS)
+    return req
+
+
+session = requests.session(hooks={"pre_request": auth_hook})
+print session.get("http://localhost:8080/").content
+{% endsyntax %}
+
+<p>And that's the basics.  You can do a lot more, like tweaking expiration time of credentals.  It's great, check it out.</p>
