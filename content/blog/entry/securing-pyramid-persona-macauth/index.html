@@ -126,20 +126,20 @@ def provision_creds(request):
 <p>And hook it up in the configurator</p>
 
 {% syntax python %}
-    # Add a simple view to that you can visit to login with persona,
-    # then generate a macauth id and secret.
-    config.add_route("provision", "/provision")
-    config.add_view(provision_creds, route_name="provision", renderer="json")
+# Add a simple view to that you can visit to login with persona,
+# then generate a macauth id and secret.
+config.add_route("provision", "/provision")
+config.add_view(provision_creds, route_name="provision", renderer="json")
 {% endsyntax %}
 
-<p>Now if you want to script access to this website, you can write something like this:</p>
+<p>Now if you want to script access to this website from a script, you can first visit this page, log in using persona, and get a fresh set of macauth credentials.  You can then write a little script like this:</p>
 
 <p><a href="./luckynum_client.py">luckynum_client.py</a></p>
 
 {% syntax python %}import requests
 import macauthlib
 
-
+# A previously-provisioned set of credentials.
 CREDENTIALS = {
   "id": "eyJzYWx0IjogIjE3MThmMSIsICJleHBpcmVzIjogMTM0OTM1MDIwMC40MDM1NzMsI"
         "CJ1c2VyaWQiOiAicnlhbkByZmsuaWQuYXUifRCtAtGwIml5Fk6vaL2uvRQchPMC",
@@ -147,12 +147,13 @@ CREDENTIALS = {
 }
 
 
+# Create a requests session with a hook to sign all outgoing requests.
 def auth_hook(req):
     macauthlib.sign_request(req, **CREDENTIALS)
     return req
-
-
 session = requests.session(hooks={"pre_request": auth_hook})
+
+# Then we can easily script access to the service.
 print session.get("http://localhost:8080/").content
 {% endsyntax %}
 
