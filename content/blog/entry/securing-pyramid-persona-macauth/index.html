@@ -1,6 +1,6 @@
 ---
 title: >
-   Securing Pyramid Apps with Persona and MACAuth
+   Securing Pyramid with Persona and MACAuth
 slug: securing-pyramid-persona-macauth
 created: !!timestamp '2012-10-04 23:07:00.000000'
 modified: !!timestamp '2012-10-04 23:07:00.000000'
@@ -12,16 +12,18 @@ listable: false
 
 {% mark excerpt %}
 
-<p><a href="https://login.persona.org/">Mozilla Persona</a> went into beta release last week, and it has been very exciting to see the interest and positive press it has generated.  I particularly liked the release of <a href="http://pypi.python.org/pypi/pyramid_persona">pyramid_persona</a> and the accompanying article <a href="http://compiletoi.net/quick-authentication-on-pyramid-with-persona.html">Quick authentication on pyramid with persona</a> &ndash; it is cleaner, simpler, and more feature-full than <a href="">my attempt at Pyramid/BrowserID integration</a> from last year.  Great stuff!</p>
+<p><a href="https://login.persona.org/">Mozilla Persona</a> went into beta release last week, and it has been very exciting to see the interest and positive press it has generated.  I particularly liked the release of <a href="http://pypi.python.org/pypi/pyramid_persona">pyramid_persona</a> and the accompanying article <a href="http://compiletoi.net/quick-authentication-on-pyramid-with-persona.html">Quick authentication on pyramid with persona</a> &ndash; it is cleaner, simpler, and more feature-full than <a href="/blog/entry/painless-auth-pyramid-browserid/">my attempt at Pyramid/BrowserID integration</a> from last year.  Great stuff!</p>
 
 <p>But there is one weak point to using Persona for authentication: it makes automated access difficult.  The login flow depends heavily on javascript and assumes that authentication will involve a real live user and a full-blown web-browser.  Scripting access to your site via something like <a href="http://docs.python-requests.org/en/latest/">requests</a> would be tricky at best, and downright impossible in the general case.</p>
 
-<p>Most of the services we build at <a href="https://wiki.mozilla.org/Services/">Mozilla Services</a> are meant for machines, not people, so we've had to tackle this problem head-on.  We have found that a <i>combined</i> authentication approach works very nicely &ndash; we provide Persona for live users, and the much more automation-friendly <a href="http://tools.ietf.org/html/draft-hammer-oauth-v2-mac-token">MAC Access Authentication</a> for machines.</p>
+<p>Most of the webapps we build at <a href="https://wiki.mozilla.org/Services/">Mozilla Services</a> are meant for machines, not people, so we've had to tackle this problem head-on.  We have found that a <i>combined</i> authentication approach works very nicely &ndash; we provide Persona for live users, and the much more automation-friendly <a href="http://tools.ietf.org/html/draft-hammer-oauth-v2-mac-token">MAC Access Authentication</a> for machines.</p>
 
 <p>In this post I'll show you how easy it can be to combine the two, using <a href="http://pypi.python.org/pypi/pyramid_persona">pyramid_persona</a> and <a href="http://pypi.python.org/pypi/pyramid_macauth">pyramid_macauth</a> for the heavy lifting, and <a href="http://pypi.python.org/pypi/pyramid_multiauth">pyramid_multiauth</a> to tie them both together.</p>
 
 {% endmark %}
 
+
+<br />
 <h3>Example: The Lucky Number Service</h3>
 
 <p>To begin, let's take a very silly example service that you might build with pyramid.  It's authenticated using Mozilla Persona, and you can log in to generate a lucky number.  Using <a href="http://pypi.python.org/pypi/pyramid_persona">pyramid_persona</a> makes this a breeze:</p>
@@ -49,7 +51,7 @@ def lucky_number(request):
     if userid is None:
         raise Forbidden()
 
-    # Generate and return the lucky numbe.
+    # Generate and return the lucky number.
     number = random.randint(1,100)
     return Response(TEMPLATE.format(**locals()), content_type="text/plain")
 
@@ -58,7 +60,7 @@ def main():
     """Construct and return a WSGI app for the luckynumber service."""
 
     settings = {
-      # The pyramid_persona plugin needs as master secret to use for
+      # The pyramid_persona plugin needs a master secret to use for
       # signing login cookies, and the expected hostname of your website
       # to prevent fradulent login attempts.
       "persona.secret": "TED KOPPEL IS A ROBOT",
@@ -81,36 +83,38 @@ if __name__ == "__main__":
     server.serve_forever()
 {% endsyntax %}
 
-<p>Full runnable source-code is here: <a href="./luckynum_server_orig.py">luckynum_server_orig.py</a>.  Run it as a script and you'll get a delightful little webpage that asks you to login with persona:</p>
+<p>Full runnable source-code is here: <a href="./luckynum_server_orig.py">luckynum_server_orig.py</a>.  Run it as a script and you'll get a delightful little webpage that asks you to login with Persona:</p>
 
 <img src="./images/luckynum1.png" style="padding: 1em; align: center"/>
 
-<p>Click through the <a href="https://www.rfk.id.au/blob/entry/persona-identity-provider/">slick Persona login flow</a> and you'll get your luck number!</a>
+<p>Click through the <a href="https://www.rfk.id.au/blob/entry/persona-identity-provider/">slick Persona login flow</a> and you'll get your lucky number!</a>
 
 <img src="./images/luckynum2.png" style="padding: 1em; align: center"/>
 
-<p>But let's say you're a junkie for this stuff (or a compulsive gambler...) and you want to write a script to fetch your lucky number on a regular basis.  Using just the Persona authentication API, you're out of luck &nbsp; it's entirely javascript-driven so there is no easy way to automate that login.</p>
+<p>But let's say you're a junkie for this kinda of stuff (or a compulsive gambler...) and you want to write a script to fetch your lucky number on a regular basis.  Using just the Persona authentication API, you're out of luck &ndash; it's entirely javascript-driven so there is no easy way to automate the login step from above.</p>
 
-<p>You could script something against the <a href="https://github.com/mozilla/browserid/tree/dev/lib/wsapi">persona.org web-service API</a>, but that's an internal implementation detail that might change without notice.  You could drive a full-blown browser using something like <a href="http://seleniumhq.org/">Selenium</a> or <a href="http://sikuli.org/">Sikuli</a>, but that's pretty fragile and not exactly user-friendly.  It would be better if the web service itself support a machine-drivable authentication mechanism in addition Persona.</p>
+<p>You could script something against the <a href="https://github.com/mozilla/browserid/tree/dev/lib/wsapi">persona.org web-service API</a>, but that's an internal implementation detail so it might change without notice.  You could drive a full-blown browser using something like <a href="http://seleniumhq.org/">Selenium</a> or <a href="http://sikuli.org/">Sikuli</a>, but that's pretty fragile and not exactly user-friendly.  It would be better if the web service itself support a machine-drivable authentication mechanism in addition to Persona.</p>
 
 <p>Enter <a href="http://tools.ietf.org/html/draft-hammer-oauth-v2-mac-token">MAC Access Authentication</a>.</p>
 
+
+<br />
 <h3>MACAuth on the Server</h3>
 
-<p>MAC Access Auth is a simple request-signing scheme, originally designed as part of <a href="http://oauth.net/2/">OAuth 2</a> but eminently usable as a stand-alone specification.  Each client gets a unique id and secret key, which are roughly analogous to a username and password.  Authentication is performed by constructing a <a href="http://en.wikipedia.org/wiki/HMAC">HMAC signature</a> of the request using the secret key, and including it in the Authorization header:</p>
+<p>MAC Access Auth is a simple request-signing scheme, originally designed as part of <a href="http://oauth.net/2/">OAuth 2</a> but eminently usable as a stand-alone specification.  Each client gets a unique id and secret key, which are roughly analogous to a username and password.  Authentication is performed by constructing a <a href="http://en.wikipedia.org/wiki/HMAC">HMAC signature</a> of the request using the secret key, and including it in the Authorization header like this:</p>
 
 <pre>
-GET /protected_resource HTTP/1.1
-Host: example.com
-Authorization: MAC id="h480djs93hd8",
-                   ts="1336363200",
-                   nonce="dj83hs9s",
-                   mac="bhCQXTVyfj5cmA9uKkPFx1zeOXM="
+    GET /protected_resource HTTP/1.1
+    Host: example.com
+    Authorization: MAC id="h480djs93hd8",
+                       ts="1336363200",
+                       nonce="dj83hs9s",
+                       mac="bhCQXTVyfj5cmA9uKkPFx1zeOXM="
 </pre>
 
-<p>Note that the secret key itself is not included in the request.  Instead, the server authenticates the request by looking up its own copy of the secret key, and checking that the "mac" signature from the request was correctly generated using that key.</p>
+<p>Note that the secret key itself is not sent over the wire.  Instead, the server authenticates the request by looking up its own copy of the secret key for the given id, and checking that the "mac" signature from the request was correctly generated using that key.</p>
 
-<p>If you know about <a href="">HTTP Digest Auth</a> then this should look familiar but more secure.  If you've ever had the misfortune of dealing with <a href="http://cakebaker.42dh.com/2011/01/10/2-legged-vs-3-legged-oauth/">Two-Legged OAuth</a>, MAC Access Auth will be a breath of fresh air.</p>
+<p>If you know about <a href="">HTTP Digest Auth</a> then this should look familiar, but is substantially more secure.  If you've ever had the misfortune of dealing with <a href="http://cakebaker.42dh.com/2011/01/10/2-legged-vs-3-legged-oauth/">Two-Legged OAuth</a>, MAC Access Auth will be a breath of fresh air.</p>
 
 <p>To add MACAuth support into our lucky-number service, we can use the <a href="http://pypi.python.org/pypi/pyramid_macauth">pyramid_macauth</a> library.</p>
 
@@ -122,7 +126,7 @@ Authorization: MAC id="h480djs93hd8",
     """Construct and return a WSGI app for the luckynumber service."""
 
     settings = {
-      # The pyramid_persona plugin needs as master secret to use for
+      # The pyramid_persona plugin needs a master secret to use for
       # signing login cookies, and the expected hostname of your website
       # to prevent fradulent login attempts.
       "persona.secret": "TED KOPPEL IS A ROBOT",
@@ -155,9 +159,9 @@ Authorization: MAC id="h480djs93hd8",
 {% endsyntax %}
 
 
-<p>This configures our pyramid app to accept authentication <i>either</i> interactively via the persona dialog, or automatically using a set of MACAuth credentials.</p>
+<p>This configures our pyramid app to accept authentication <i>either</i> interactively via the persona dialog, or automatically using a set of MACAuth credentials.  Note that there have been no changes to the application code itself, we have just tweaked the configuration and settings to enable the additional authentication mechanism.</p>
 
-<p>But, how do we get a set of MACAuth credentials in the first place?  We will need to define another view to the application, where a user can login with Persona and generate a fresh set of credentials:</p>
+<p>There's one final piece needed: how do we get a set of MACAuth credentials in the first place?  We will define another view for the application, where a user can login with Persona and generate a fresh set of credentials:</p>
 
 {% syntax python %}def provision_creds(request):
     """Pyramid view to provision MACAuth credentials."""
@@ -176,7 +180,7 @@ Authorization: MAC id="h480djs93hd8",
     return {"id": id, "key": key}
 {% endsyntax %}
 
-<p>And hook it up in the configurator:</p>
+<p>And hook it up in the configurator like this:</p>
 
 {% syntax python %}
 config.add_route("provision", "/provision")
@@ -184,14 +188,15 @@ config.add_view(provision_creds, route_name="provision", renderer="json")
 {% endsyntax %}
 
 
-<p>Full runnable source-code is here: <a href="./luckynum_server.py">luckynum_server.py</a>.  Run it as a script and, in addition to the luck-number-generating page from before, you will be able to access "/provision" and obtain some MACAuth credentials for your account:</p>
+<p>Full runnable source-code is here: <a href="./luckynum_server.py">luckynum_server.py</a>.  Run it as a script and, in addition to the lucky-number-generating page from before, you will be able to access "/provision" and obtain some MACAuth credentials for your account:</p>
 
 <img src="./images/luckynum3.png" style="padding: 1em; align: center"/>
 
 
+<br />
 <h3>MACAuth on the Client</h3>
 
-<p>We can now use the <a href="http://docs.python-requests.org/en/latest/">requests</a> library to script up an automated client for this service, along with the <a href="http://pypi.python.org/pypi/macauthlib">macauthlib</p> package for constructing the request signatures.</p>
+<p>We can now use the <a href="http://docs.python-requests.org/en/latest/">requests</a> library to script up an automated client for this service, using the with the <a href="http://pypi.python.org/pypi/macauthlib">macauthlib</a> package to generate the signatures.</p>
 
 
 {% syntax python %}import requests
@@ -215,8 +220,10 @@ session = requests.session(hooks={"pre_request": auth_hook})
 print session.get("http://localhost:8080/").content
 {% endsyntax %}
 
-<p>Full runnable source-code is here: <a href="./luckynum_client.py">luckynum_client.py</a>.  If you fill in your own set of credentials and run it against the server, you should see something like this:</p>
+<p>Full runnable source-code is here: <a href="./luckynum_client.py">luckynum_client.py</a>.  If you fill in your own set of credentials and run it against your server, you should see something like this:</p>
 
 <img src="./images/luckynum4.png" style="padding: 1em; align: center"/>
 
-<p>And that's the basics.  You can do a lot more, like tweaking expiration time of credentals.  It's great, check it out.</p>
+<p>And that's that &ndash; a very basic Persona-enabled application that is usable by both humans and machines.  There is obviously a lot more than you could tweak here, from configuring the expiration time of the MACAuth tokens to using different secrets for different parts of your website.  To get an idea of what this might look like at scale, check out the <a href=https://wiki.mozilla.org/Services/NodeAssignment2">tokenserver system</a> which will underlie the next generation of Mozilla Services products.</p>
+
+<p>I am really excited to see how the ecosystem around Persona will grow over the coming months, as people try to use it in more and different settings.</p>

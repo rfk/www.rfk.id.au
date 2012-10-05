@@ -27,7 +27,7 @@ def lucky_number(request):
     if userid is None:
         raise Forbidden()
 
-    # Generate and return the lucky numbe.
+    # Generate and return the lucky number.
     number = random.randint(1,100)
     return Response(TEMPLATE.format(**locals()), content_type="text/plain")
 
@@ -53,7 +53,7 @@ def main():
     """Construct and return a WSGI app for the luckynumber service."""
 
     settings = {
-      # The pyramid_persona plugin needs as master secret to use for
+      # The pyramid_persona plugin needs a master secret to use for
       # signing login cookies, and the expected hostname of your website
       # to prevent fradulent login attempts.
       "persona.secret": "TED KOPPEL IS A ROBOT",
