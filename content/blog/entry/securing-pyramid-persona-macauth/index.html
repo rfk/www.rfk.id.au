@@ -7,7 +7,7 @@ modified: !!timestamp '2012-10-04 23:07:00.000000'
 tags: 
     - technology
     - python
-listable: false
+listable: true
 ---
 
 {% mark excerpt %}
@@ -26,7 +26,7 @@ listable: false
 <br />
 <h3>Example: The Lucky Number Service</h3>
 
-<p>To begin, let's take a very silly example service that you might build with pyramid.  It's authenticated using Mozilla Persona, and you can log in to generate a lucky number.  Using <a href="http://pypi.python.org/pypi/pyramid_persona">pyramid_persona</a> makes this a breeze:</p>
+<p>To begin, let's take a very silly example service that you might build with pyramid.  It's authenticated using Mozilla Persona, and you can login to generate a lucky number.  Using <a href="http://pypi.python.org/pypi/pyramid_persona">pyramid_persona</a> makes this a breeze:</p>
 
 {% syntax python %}import random
 import wsgiref.simple_server
@@ -93,7 +93,7 @@ if __name__ == "__main__":
 
 <p>But let's say you're a junkie for this kinda of stuff (or a compulsive gambler...) and you want to write a script to fetch your lucky number on a regular basis.  Using just the Persona authentication API, you're out of luck &ndash; it's entirely javascript-driven so there is no easy way to automate the login step from above.</p>
 
-<p>You could script something against the <a href="https://github.com/mozilla/browserid/tree/dev/lib/wsapi">persona.org web-service API</a>, but that's an internal implementation detail so it might change without notice.  You could drive a full-blown browser using something like <a href="http://seleniumhq.org/">Selenium</a> or <a href="http://sikuli.org/">Sikuli</a>, but that's pretty fragile and not exactly user-friendly.  It would be better if the web service itself support a machine-drivable authentication mechanism in addition to Persona.</p>
+<p>You could script something against the <a href="https://github.com/mozilla/browserid/tree/dev/lib/wsapi">persona.org web-service API</a>, but that's an internal implementation detail so it might change without notice.  You could launch and drive a full-blown browser using something like <a href="http://seleniumhq.org/">Selenium</a> or <a href="http://sikuli.org/">Sikuli</a>, but that's pretty fragile and not exactly user-friendly.  It would be better if the web service itself supported a machine-drivable authentication mechanism in addition to Persona.</p>
 
 <p>Enter <a href="http://tools.ietf.org/html/draft-hammer-oauth-v2-mac-token">MAC Access Authentication</a>.</p>
 
@@ -112,7 +112,7 @@ if __name__ == "__main__":
                        mac="bhCQXTVyfj5cmA9uKkPFx1zeOXM="
 </pre>
 
-<p>Note that the secret key itself is not sent over the wire.  Instead, the server authenticates the request by looking up its own copy of the secret key for the given id, and checking that the "mac" signature from the request was correctly generated using that key.</p>
+<p>Note that the secret key itself is not sent over the wire.  Instead, the server authenticates the request by looking up its own copy of the secret key for the given id, and checking that the "mac" signature from the request was correctly generated using that key.  From a security standpoint this is a <a href="http://benlog.com/articles/2009/12/22/its-a-wrap/">very</a> <a href="http://hueniverse.com/2010/09/oauth-bearer-tokens-are-a-terrible-idea/">good</a> <a href="http://benlog.com/articles/2010/09/07/defending-against-your-own-stupidity/">idea</a>.</p>
 
 <p>If you know about <a href="">HTTP Digest Auth</a> then this should look familiar, but is substantially more secure.  If you've ever had the misfortune of dealing with <a href="http://cakebaker.42dh.com/2011/01/10/2-legged-vs-3-legged-oauth/">Two-Legged OAuth</a>, MAC Access Auth will be a breath of fresh air.</p>
 
@@ -163,7 +163,10 @@ if __name__ == "__main__":
 
 <p>There's one final piece needed: how do we get a set of MACAuth credentials in the first place?  We will define another view for the application, where a user can login with Persona and generate a fresh set of credentials:</p>
 
-{% syntax python %}def provision_creds(request):
+{% syntax python %}from pyramid.interfaces import IAuthenticationPolicy
+from pyramid_macauth import MACAuthenticationPolicy
+
+def provision_creds(request):
     """Pyramid view to provision MACAuth credentials."""
 
     # Check that the user is authenticated.
@@ -192,17 +195,18 @@ config.add_view(provision_creds, route_name="provision", renderer="json")
 
 <img src="./images/luckynum3.png" style="padding: 1em; align: center"/>
 
+<p>&nbsp;</p>
 
 <br />
 <h3>MACAuth on the Client</h3>
 
-<p>We can now use the <a href="http://docs.python-requests.org/en/latest/">requests</a> library to script up an automated client for this service, using the with the <a href="http://pypi.python.org/pypi/macauthlib">macauthlib</a> package to generate the signatures.</p>
+<p>We can now use the <a href="http://docs.python-requests.org/en/latest/">requests</a> library to script up an automated client for this service, using the <a href="http://pypi.python.org/pypi/macauthlib">macauthlib</a> package to generate the signatures.</p>
 
 
 {% syntax python %}import requests
 import macauthlib
 
-# A set or previously-provisioned MACAuth credentials.
+# A set of previously-provisioned MACAuth credentials.
 CREDENTIALS = {
   "id": "eyJzYWx0IjogImNlMWM4YyIsICJleHBpcmVzIjogMTM0OTM5NDQ2My43OTIyOTUs"
         "ICJ1c2VyaWQiOiAicnlhbkByZmsuaWQuYXUifWyyOtRhUCI9D4I9Oz0Tho7f4-FK",
@@ -224,6 +228,8 @@ print session.get("http://localhost:8080/").content
 
 <img src="./images/luckynum4.png" style="padding: 1em; align: center"/>
 
-<p>And that's that &ndash; a very basic Persona-enabled application that is usable by both humans and machines.  There is obviously a lot more than you could tweak here, from configuring the expiration time of the MACAuth tokens to using different secrets for different parts of your website.  To get an idea of what this might look like at scale, check out the <a href=https://wiki.mozilla.org/Services/NodeAssignment2">tokenserver system</a> which will underlie the next generation of Mozilla Services products.</p>
+<p>And that's that &ndash; a very basic Persona-enabled application that is usable by both humans and machines.</p>
+
+<p>There is obviously a lot more that you could tweak here, from configuring the expiration time of the MACAuth tokens to using different secrets for different parts of your website.  To get an idea of what this might look like at scale, check out the <a href=https://wiki.mozilla.org/Services/NodeAssignment2">tokenserver system</a> which will underlie the next generation of Mozilla Services products.</p>
 
 <p>I am really excited to see how the ecosystem around Persona will grow over the coming months, as people try to use it in more and different settings.</p>
