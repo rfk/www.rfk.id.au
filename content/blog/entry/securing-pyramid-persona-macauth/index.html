@@ -16,7 +16,7 @@ listable: true
 
 <p>But there is one weak point to using Persona for authentication: it makes automated access difficult.  The login flow depends heavily on javascript and assumes that authentication will involve a real live user and a full-blown web-browser.  Scripting access to your site via something like <a href="http://docs.python-requests.org/en/latest/">requests</a> would be tricky at best, and downright impossible in the general case.</p>
 
-<p>Most of the webapps we build at <a href="https://wiki.mozilla.org/Services/">Mozilla Services</a> are meant for machines, not people, so we've had to tackle this problem head-on.  We have found that a <i>combined</i> authentication approach works very nicely &ndash; we provide Persona for live users, and the much more automation-friendly <a href="http://tools.ietf.org/html/draft-hammer-oauth-v2-mac-token">MAC Access Authentication</a> for machines.</p>
+<p>Most of the webapps we build at <a href="https://wiki.mozilla.org/Services/">Mozilla Services</a> are meant for machines, not people, so we've had to tackle this problem head-on.  We have found that a <i>combined</i> authentication approach works very nicely &ndash; we provide Persona for live users, and the much more automation-friendly <a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac">MAC Access Authentication</a> for machines.</p>
 
 <p>In this post I'll show you how easy it can be to combine the two, using <a href="http://pypi.python.org/pypi/pyramid_persona">pyramid_persona</a> and <a href="http://pypi.python.org/pypi/pyramid_macauth">pyramid_macauth</a> for the heavy lifting, and <a href="http://pypi.python.org/pypi/pyramid_multiauth">pyramid_multiauth</a> to tie them both together.</p>
 
@@ -95,7 +95,7 @@ if __name__ == "__main__":
 
 <p>You could script something against the <a href="https://github.com/mozilla/browserid/tree/dev/lib/wsapi">persona.org web-service API</a>, but that's an internal implementation detail so it might change without notice.  You could launch and drive a full-blown browser using something like <a href="http://seleniumhq.org/">Selenium</a> or <a href="http://sikuli.org/">Sikuli</a>, but that's pretty fragile and not exactly user-friendly.  It would be better if the web service itself supported a machine-drivable authentication mechanism in addition to Persona.</p>
 
-<p>Enter <a href="http://tools.ietf.org/html/draft-hammer-oauth-v2-mac-token">MAC Access Authentication</a>.</p>
+<p>Enter <a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac">MAC Access Authentication</a>.</p>
 
 
 <br />
