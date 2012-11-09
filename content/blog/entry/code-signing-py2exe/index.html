@@ -1,0 +1,110 @@
+---
+title: >
+ Code-Signing for py2exe
+slug: code-signing-py2exe
+created: !!timestamp '2012-11-09 21:20:54.016299'
+modified: !!timestamp '2012-11-09 21:20:54.016299'
+listable: false
+tags: 
+    - python
+---
+
+{% mark excerpt %}
+
+<p>The received wisdom of the interwebs seems to be that code-signing and py2exe do not mix, and that you need to use another program like PyInstaller if you want to code-sign your frozen python executables.</p>
+
+<p>Not so.</p>
+
+<p>It <i>is</i> possible to code-sign a py2exe application, it's just a bit fiddly.  This post will show you how.</p>
+
+{% endmark %}
+
+<p>First, let's take a look at the source of the apparent incompatibility.</p>
+
+<p>When you use signtool to sign an executable, it basically appends a digital signature to the end of the file.  So you wind up with something like this:</p>
+
+<pre>
++----------------------+-------------+
+|  executable program  |  signature  |
++----------------------+-------------+
+</pre>
+
+<p>Windows has some special logic to check the signature for you at runtime.  For normal executables this will "just work".</p>
+
+<p>Now consider py2exe.  It produces a frozen python program by bundling all of your python code up into a zipfile, and appending to the end of a stub "launcher" executable, like this:</p>
+
+<pre>
++-------------------+------------------------+
+|  py2exe launcher  |  zipfile of your code  |
++-------------------+------------------------+
+</pre>
+
+<p>(We're assuming bundle_files=1 here, since you need to have everything as part of the executable for code signing to be worthwhile.)</p>
+
+<p>This trick works because zipfiles store their control data at the <i>end</i> of the file.  So you can prepend whatever junk you like, such as an executable program, and the result will still be a valid zipfile.</p>
+
+<p>When you run this, the launcher basically inserts itself into sys.path and then uses python's builtin zipimport functionality to bootstrap into the bundled code.</p>
+
+<p>So if you run signtool over a py2exe executable, you'll wind up with a file that looks like this:</p>
+
+<pre>
++-------------------+------------------------+-------------+
+|  py2exe launcher  |  zipfile of your code  |  signature  |
++-------------------+------------------------+-------------+
+</pre>
+
+<p>If you try to run this, it will error out.  It appears that appending the signature has somehow corrupted the zipfile.  Why?<p>
+
+<p>Zipfiles are technically allowed to have an "appended comment", extra data at the end of the file that is not interpreted as part of the archive.  But the zipfile format spec requires that you say <i>how big</i> this comment is, like this:</p>
+
+<pre>
++-------------------+--------------------+-------------------+-------------------+-----------+
+|  prepended junk   |  zipfile contents  |  control records  |  size of comment  |  comment  |
++-------------------+--------------------+-------------------+-------------------+-----------+
+</pre>
+
+<p>When py2exe produces a zipfile, it correctly writes a comment-size record of zero.  But when you then append a signature with signtool, you wind up with this:</p>
+
+<pre>
++-------------------+------------------------+---+-------------+
+|  py2exe launcher  |  zipfile of your code  | 0 |  signature  |
++-------------------+------------------------+---+-------------+
+</pre>
+
+<p>This zipfile is, technically, invalid.  It claims that there are zero bytes of comment data appended to the file, but there is actually some non-zero amount.  Many zipfile-handling programs will still read the file, but python's zipimport module will not.</p>
+
+<p>The solution, then, is to update this size record with the size of the signature.  Like this:</p>
+
+<pre>
++-------------------+------------------------+----------------+-------------+
+|  py2exe launcher  |  zipfile of your code  | len(signature) |  signature  |
++-------------------+------------------------+----------------+-------------+
+</pre>
+
+<p>The only trick is that you have to write the new size record <b>before</b> generating the signature &ndash; - otherwise you would be changing the contents of the exe and invalidating the signature!</p>
+
+<p>Here's how I do it:</p>
+
+{% syntax python %}
+
+def sign_py2exe(exepath):
+    # First, sign a *copy* of the file so that we know its final size.
+    execopy = os.path.join(os.path.dirname(exepath), "temp-" + os.path.basename(exepath))
+    shutil.copy2(exepath, execopy)
+    subprocess.check_call("signtool", "sign", ..., execopy)
+
+    # Figure out the size of the appended signature.
+    comment_size = os.stat(execopy).st_size - os.stat(exepath).st_size
+    os.unlink(execopy)
+
+    # Write the correct comment size as the last two bytes of the file.
+    with open(exepath, "r+") as f:
+        f.seek(-2, os.SEEK_END)
+        f.write(struct.pack("&lt;H", comment_size))
+
+    # Now we can sign the file for real.
+    subprocess.check_call("signtool", "sign", ..., exepath)
+
+{% endsyntax %}
+
+<p>With that, you can use py2exe to bundle all your python files and secure them with a digital signature.</p>
