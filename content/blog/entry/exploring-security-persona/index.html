@@ -9,7 +9,7 @@ tags:
     - mozilla
 ---
 
-{% mark excerpt %}<p>A few weeks ago, I was involved in the discovery of a security flaw in <a href="https://login.persona.org">login.persona.org</a>,  the hosted account manager that drives <a href="https://login.persona.org/about">Mozilla Persona</a>.  It was fixed quickly, but was not publicly disclosed until the team could conduct a full review of any potential impact.  It is public now, and I wanted to share my take on the experience.</p>
+{% mark excerpt %}<p>A few weeks ago, I was involved in the discovery of a security flaw in <a href="https://login.persona.org">login.persona.org</a>,  the hosted account manager that drives <a href="https://login.persona.org/about">Mozilla Persona</a>.  It was fixed quickly, but was not publicly disclosed until the team could conduct a full review of any potential impact.  It is public now, and we're confident that no users were affected, so I wanted to share my take on the experience.</p>
 
 <p>The underlying bug I discovered was <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=793579">Bug 793579</a>, and on the surface it was quite unremarkable &ndash; an input validation routine that didn't cover all the edge cases, the kind of bug that every working programmer has committed to code at least once<sup><a id="footlink-personal-worst" href="/blog/entry/exploring-security-persona/#footnote-personal-worst" style="text-decoration: none">1</a></sup>.  But I found the process of discovering, exploring, and finally escalating the bug into a security breach to be a remarkable learning experience.</p>
 
