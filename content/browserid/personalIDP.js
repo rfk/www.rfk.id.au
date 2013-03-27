@@ -255,6 +255,13 @@ personalIDP.generateCertificate = function(args) {
       certDuration = maxCertDuration;
   }
 
+  // Don't allow absurdly short certificate duration.
+  // We provide a 10s window on either side of the current date.
+  var minCertDuration = 20;
+  if(certDuration < minCertDuration) {
+      certDuration = minCertDuration;
+  }
+
   // Get the full signing key by loading the private key data from session,
   // and the public key data from the live support document.
   personalIDP.loadPrivateKeyData({
@@ -270,7 +277,10 @@ personalIDP.generateCertificate = function(args) {
                 var myKey = jwcrypto.loadSecretKeyFromObject(keyData);
                 var userKey = jwcrypto.loadPublicKeyFromObject(publicKey);
 
-                var now = (new Date()).getTime();
+                // Make the issue time of the certificate a few seconds
+                // in the past, as persona.org currently has problems with
+                // dates that are in the future wrt its local time.
+                var now = (new Date()).getTime() - 10000;
                 var exp = now + (certDuration * 1000);
                 var issuer = document.domain;
 
