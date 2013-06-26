@@ -89,8 +89,8 @@
 
 
   <!--  use google-CDNed jQuery if possible, fall back to local if necessary -->
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
-  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.5.1.min.js">\x3C/script>')</script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.js"></script>
+  <script>window.jQuery || document.write('<script src="//media/js/libs/jquery-1.10.1.min.js"><' + '/script>')</script>
 
   <!-- activate google analytics -->
    <script type="text/javascript">
@@ -118,7 +118,7 @@
               query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
           }
       }
-      document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/rfkelly/get_num_replies.js' + query + '"></' + 'script>');
+      document.write('<script charset="utf-8" type="text/javascript" src="//disqus.com/forums/rfkelly/get_num_replies.js' + query + '"></' + 'script>');
   })();
   //]]>
   </script>
