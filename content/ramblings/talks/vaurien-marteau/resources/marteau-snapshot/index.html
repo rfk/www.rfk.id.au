@@ -1,0 +1,220 @@
+<!doctype html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href='media/marteau.css' rel='stylesheet' type='text/css'/>
+  <link rel="shortcut icon" href="media/small-logo.png">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+  <script src="https://login.persona.org/include.js" type="text/javascript"></script>
+  <script type="text/javascript">$(function() {
+    $('#signin').click(function() { navigator.id.request({"siteName": "Marteau"}); return false;});
+
+    $('#signout').click(function() { navigator.id.logout(); return false;});
+
+    var currentUser = null;
+
+    navigator.id.watch({
+        loggedInUser: currentUser,
+        onlogin: function(assertion) {
+            if (assertion) {
+                var $form = $("<form method=POST "+
+                    "      action='http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/login'>" +
+                    "  <input type='hidden' " +
+                    "         name='assertion' " +
+                    "         value='" + assertion + "' />" +
+                    "  <input type='hidden' " +
+                    "         name='came_from' "+
+                    "         value='http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/' />" +
+                    "  <input type='hidden' " +
+                    "         name='csrf_token' "+
+                    "         value='20854977ed1caa29cb20ebcab498210013160b21' />" +
+                    "</form>").appendTo($("body"));
+                $form.submit();
+            }
+        },
+        onlogout: function() {
+            var $form = $("<form method=POST "+
+                "      action='http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/logout'>" +
+                "  <input type='hidden' " +
+                "         name='came_from' "+
+                "         value='http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/' />" +
+                "  <input type='hidden' " +
+                "         name='csrf_token' "+
+                "         value='20854977ed1caa29cb20ebcab498210013160b21' />" +
+                "</form>").appendTo($("body"));
+            $form.submit();
+        }
+    });
+});
+</script>
+  <title>Marteau</title>
+</head>
+  <body>
+    <div id="header">
+        <img src="media/logo.png"/>
+        <a href="index.html" id="title">Marteau</a>
+        <span id="subtitle">Hammering your web services since 2012</span>
+        <a href="media/marteau.kar">don't</a>
+      <div class="login">
+         <img src='https://login.persona.org/i/sign_in_blue.png' id='signin' alt='sign-in button'/>
+      </div>
+
+    </div>
+    <div style="clear:both"></div>
+     <div id="body">
+       
+
+<div id="right">
+<div class="resource">
+<span>Help</span>
+<a href="docs">Learn how to write a Marteau test</a>
+</div>
+
+
+<div id="form" class="resource">
+<form action="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test" method="POST">
+ <input type="hidden" name="redirect_url" value="/"/>
+
+ <span>Add a job</span>
+ <a href="addjob">More options</a>
+ <table>
+    <tr>
+      <td>Repo</td>
+      <td><input type="text" name="repo"/></td>
+    </tr>
+    </table>
+    <input type="submit"/>
+ </table>
+
+</form>
+</div>
+
+
+<div id="workers" class="resource">
+<span>Workers</span>
+<div>PID : 4501</div>
+<div>PID : 4500</div>
+</div>
+
+<div id="nodes" class="resource">
+<span>Nodes</span> <a href="nodes">manage</a>
+<div> 
+  <img src="media/ec2-small.png"/><br/> Powered by AWS.
+</div>
+</div>
+
+</div>
+
+
+<div id="pending">
+<h2>Pending jobs</h2>
+<table>
+</table>
+Nothing in my pile.
+</div>
+
+<div id="running">
+<h2>Running jobs</h2>
+<table>
+</table>
+I am bored !
+</div>
+
+<div id="failures">
+<h2>Failures</h2>
+
+<table>
+</table>
+
+None, congrats! &mdash; although that's suspicious.
+</div>
+
+<div id="successes">
+<h2>Successes</h2>
+<table>
+<tr>
+  <td>https://github.com/mozilla-services/server-storage ended at 2013-06-13 04:33:55</td>
+  <td><a class="label" href="test/4b2f4a1de7654f5c9f0b906a0c22646f">Console</a></td>
+  <td><a class="label" href="report/4b2f4a1de7654f5c9f0b906a0c22646f/index.html">Report</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/4b2f4a1de7654f5c9f0b906a0c22646f/delete">Delete</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/4b2f4a1de7654f5c9f0b906a0c22646f/replay">Replay</a></td>
+</tr>
+<tr>
+  <td>https://github.com/mozilla/picl-server ended at 2013-05-01 03:46:40</td>
+  <td><a class="label" href="test/33652b8940824362aaa1ecb8b2b3f7cc">Console</a></td>
+  <td><a class="label" href="report/33652b8940824362aaa1ecb8b2b3f7cc/index.html">Report</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/33652b8940824362aaa1ecb8b2b3f7cc/delete">Delete</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/33652b8940824362aaa1ecb8b2b3f7cc/replay">Replay</a></td>
+</tr>
+<tr>
+  <td>https://github.com/mozilla/marketplace-loadtest ended at 2013-04-21 09:00:37</td>
+  <td><a class="label" href="test/0a7bc98291d147be8d8501d67998c626">Console</a></td>
+  <td><a class="label" href="report/0a7bc98291d147be8d8501d67998c626/index.html">Report</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/0a7bc98291d147be8d8501d67998c626/delete">Delete</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/0a7bc98291d147be8d8501d67998c626/replay">Replay</a></td>
+</tr>
+<tr>
+  <td>https://github.com/mozilla/picl-server ended at 2013-04-18 23:09:51</td>
+  <td><a class="label" href="test/d6f0ad4fbef64571abc59c6760bbf3e3">Console</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/report/d6f0ad4fbef64571abc59c6760bbf3e3/index.html">Report</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/d6f0ad4fbef64571abc59c6760bbf3e3/delete">Delete</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/d6f0ad4fbef64571abc59c6760bbf3e3/replay">Replay</a></td>
+</tr>
+<tr>
+  <td>https://github.com/mozilla/picl-server ended at 2013-04-17 03:47:47</td>
+  <td><a class="label" href="test/a07782de36554b2fbe063cf6c065d9d0">Console</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/report/a07782de36554b2fbe063cf6c065d9d0/index.html">Report</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/a07782de36554b2fbe063cf6c065d9d0/delete">Delete</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/a07782de36554b2fbe063cf6c065d9d0/replay">Replay</a></td>
+</tr>
+<tr>
+  <td>https://github.com/mozilla/picl-server ended at 2013-04-17 03:30:27</td>
+  <td><a class="label" href="test/10de3e6f8ceb4aec9f124d2b969e72b7">Console</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/report/10de3e6f8ceb4aec9f124d2b969e72b7/index.html">Report</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/10de3e6f8ceb4aec9f124d2b969e72b7/delete">Delete</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/10de3e6f8ceb4aec9f124d2b969e72b7/replay">Replay</a></td>
+</tr>
+<tr>
+  <td>https://github.com/mozilla/picl-server ended at 2013-04-16 07:56:07</td>
+  <td><a class="label" href="test/ae086b121bc940bfa79ee7527dfd7891">Console</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/report/ae086b121bc940bfa79ee7527dfd7891/index.html">Report</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/ae086b121bc940bfa79ee7527dfd7891/delete">Delete</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/ae086b121bc940bfa79ee7527dfd7891/replay">Replay</a></td>
+</tr>
+<tr>
+  <td>https://github.com/mozilla/marketplace-loadtest ended at 2013-04-08 09:24:57</td>
+  <td><a class="label" href="test/e8e6b22f53784729a58d912601b59e9f">Console</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/report/e8e6b22f53784729a58d912601b59e9f/index.html">Report</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/e8e6b22f53784729a58d912601b59e9f/delete">Delete</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/e8e6b22f53784729a58d912601b59e9f/replay">Replay</a></td>
+</tr>
+<tr>
+  <td>https://github.com/mozilla/marketplace-loadtest ended at 2013-04-08 09:20:22</td>
+  <td><a class="label" href="test/469aff09d1734093b1747de85b171d68">Console</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/report/469aff09d1734093b1747de85b171d68/index.html">Report</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/469aff09d1734093b1747de85b171d68/delete">Delete</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/469aff09d1734093b1747de85b171d68/replay">Replay</a></td>
+</tr>
+<tr>
+  <td>https://github.com/mozilla/marketplace-loadtest ended at 2013-04-08 09:09:17</td>
+  <td><a class="label" href="test/3d6e2897ad41465cb226f282498fcd8f">Console</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/report/3d6e2897ad41465cb226f282498fcd8f/index.html">Report</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/3d6e2897ad41465cb226f282498fcd8f/delete">Delete</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/3d6e2897ad41465cb226f282498fcd8f/replay">Replay</a></td>
+</tr>
+<tr>
+  <td>https://github.com/mozilla/marketplace-loadtest ended at 2013-04-08 08:28:20</td>
+  <td><a class="label" href="test/8971650ac23349388a7017caa6cabd80">Console</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/report/8971650ac23349388a7017caa6cabd80/index.html">Report</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/8971650ac23349388a7017caa6cabd80/delete">Delete</a></td>
+  <td><a class="label" href="http://ec2-54-245-158-26.us-west-2.compute.amazonaws.com/test/8971650ac23349388a7017caa6cabd80/replay">Replay</a></td>
+</tr>
+</table>
+
+</div>
+
+
+   </div>
+
+  </body>
+</html>

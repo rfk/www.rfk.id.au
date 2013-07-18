@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=1024, user-scalable=no">
+
+  <title>Testing for Graceful Failure with Vaurien and Marteau</title>
+
+  <link rel="stylesheet" href="./resources/deck-js/core/deck.core.css">
+  <link rel="stylesheet" href="./resources/deck-js/extensions/hash/deck.hash.css">
+  <link rel="stylesheet" href="./resources/deck-js/themes/style/rfkelly.css">
+
+  <link rel="stylesheet" href="./resources/playitagainsam-js/playitagainsam.css">
+
+  <style type="text/css">
+  body .pias-container iframe {
+    margin: 1em;
+  }
+  .deck-container table {
+    border-collapse: collapse;
+  }
+  .deck-container table td {
+    padding: 0.5em;
+  }
+  .deck-container .slide iframe {
+    max-width: none;
+    margin-bottom: 10px;
+  }
+  .deck-container div.run-timer {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background: black;
+    height: 5px;
+    width: 20px;
+  }
+  .deck-container div.run-timer-toofast {
+    background: blue;
+  }
+  .deck-container div.run-timer-ontrack {
+    background: green;
+  }
+  .deck-container div.run-timer-hurryup {
+    background: orange;
+  }
+  .deck-container div.run-timer-tooslow {
+    background: red;
+  }
+  .deck-container {
+    color: #222222;
+  }
+  </style>
+
+  <script src="./resources/deck-js/modernizr.custom.js"></script>
+  <script src="./resources/deck-js/jquery-1.7.2.min.js"></script>
+  <script src="./resources/deck-js/core/deck.core.js"></script>
+  <script src="./resources/deck-js/extensions/hash/deck.hash.js"></script>
+  <script src="./resources/playitagainsam-js/playitagainsam.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+      $.deck('.slide');
+  });
+
+  var onEnterSlideCallbacks = {}
+  var onEnterSlide = function(selector, cb) {
+      var slide_id = $(selector).attr("id");
+      if(typeof onEnterSlideCallbacks[slide_id] == "undefined") {
+          onEnterSlideCallbacks[slide_id] = [];
+      }
+      onEnterSlideCallbacks[slide_id].push(cb)
+  }
+  $(document).bind("deck.change", function(event, from, to) {
+      var $slide = $.deck("getSlide", to);
+      var slide_id = $slide.attr("id");
+      if(showStartTime == null && slide_id != "title") {
+          $slide.find(".run-timer").each(function() {
+              showStartTime = Math.round((new Date()).getTime() / 1000);
+              var times = $(this).attr("id").split("-").slice(1,3);
+              showStartTime -= parseRunTime(times[0], 10);
+              updateShowTimers();
+          });
+      }
+      var callbacks = onEnterSlideCallbacks[slide_id];
+      if(typeof callbacks !== "undefined") {
+          for(var i=0; i<callbacks.length; i++) {
+              callbacks[i]();
+          }
+      }
+  });
+
+  function parseRunTime(val) {
+    var t = parseFloat(val, 10);
+    var units = val.charAt(val.length - 1);
+    if (units === 'm') {
+        t = t * 60;
+    }
+    return t
+  }
+
+  var showStartTime = null;
+  var updateShowTimers = function() {
+      if(showStartTime != null) {
+          var now = Math.round((new Date()).getTime() / 1000);
+          var runtime = now - showStartTime
+          $(".run-timer").each(function() {
+              var $this = $(this);
+              var times = $this.attr("id").split("-").slice(1,3);
+              times[0] = parseRunTime(times[0]);
+              times[1] = parseRunTime(times[1]);
+              var hurryUpTime = times[1] - 30;
+              var span = times[1] - times[0];
+              if (span < 60) {
+                  hurryUpTime = times[1] - (span / 3);
+              }
+              if(runtime < times[0]) {
+                  $this.removeClass("run-timer-tooslow");
+                  $this.removeClass("run-timer-ontrack");
+                  $this.removeClass("run-timer-hurryup");
+                  $this.addClass("run-timer-toofast");
+              } else if(runtime > times[1]) {
+                  $this.removeClass("run-timer-toofast");
+                  $this.removeClass("run-timer-ontrack");
+                  $this.removeClass("run-timer-hurryup");
+                  $this.addClass("run-timer-tooslow");
+              } else if(runtime > hurryUpTime) {
+                  $this.removeClass("run-timer-toofast");
+                  $this.removeClass("run-timer-ontrack");
+                  $this.removeClass("run-timer-tooslow");
+                  $this.addClass("run-timer-hurryup");
+              } else {
+                  $this.removeClass("run-timer-toofast");
+                  $this.removeClass("run-timer-tooslow");
+                  $this.removeClass("run-timer-hurryup");
+                  $this.addClass("run-timer-ontrack");
+              }
+          });
+      }
+      setTimeout(updateShowTimers, 5 * 1000);
+  }
+  </script>
+
+</head>
+<body class="deck-container">
+
+
+<section class="slide" id="title">
+  <h2>Testing for Graceful Failure with</h2>
+  <h1>Vaurien &amp; Marteau</h1>
+</section>
+
+
+<section class="slide">
+  <h1>Testing</h1>
+  <div class="run-timer" id="runtime-10s-1m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>Starting Point</h2>
+  <ul>
+   <li>You have a web application</li>
+   <li>You are confident that it <i>works</i></li>
+   <li>You have a solid deployment and monitoring setup</li>
+  </ul>
+  <div class="run-timer" id="runtime-1m-2m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>Starting Point</h2>
+  <ul>
+   <li>You have a web application</li>
+   <li>You are confident that it <i>works</i></li>
+   <li>You have a solid deployment setup</li>
+   <li>Now...what happens when things start to break?</li>
+  </ul>
+  <div class="run-timer" id="runtime-1m-2m"></div>
+</section>
+
+
+<section class="slide">
+ <h2>What do I know anyway?</h2>
+ <ul>
+   <li>Mozilla Services</li>
+       <ul><li>Firefox Sync Server</li>
+           <li>FirefoxOS Marketplace</li>
+           <li>More coming...</li>
+       </ul>
+   <li>Organic process and tooling</li>
+   <li>This will be a demo, not a tutorial</li>
+ </ul>
+  <div class="run-timer" id="runtime-2m-2.5m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>A Real-Life Bug</h2>
+  <img src="./resources/example-bug/part1.svg" >
+  <div class="run-timer" id="runtime-2.5m-4.5m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>A Real-Life Bug</h2>
+  <img src="./resources/example-bug/part2.svg" >
+  <div class="run-timer" id="runtime-2.5m-4.5m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>A Real-Life Bug</h2>
+  <img src="./resources/example-bug/part3.svg" >
+  <div class="run-timer" id="runtime-2.5m-4.5m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>A Real-Life Bug</h2>
+  <img src="./resources/example-bug/part4.svg" >
+  <div class="run-timer" id="runtime-2.5m-4.5m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>A Real-Life Bug</h2>
+  <img src="./resources/example-bug/part5.svg" >
+  <div class="run-timer" id="runtime-2.5m-4.5m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>A Real-Life Bug</h2>
+  <img src="./resources/example-bug/part6.svg" >
+  <div class="run-timer" id="runtime-2.5m-4.5m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>A Real-Life Bug</h2>
+  <img src="./resources/example-bug/part7.svg" >
+  <div class="run-timer" id="runtime-2.5m-4.5m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>A Real-Life Bug</h2>
+  <img src="./resources/example-bug/part8.svg" >
+  <div class="run-timer" id="runtime-2.5m-4.5m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>A Real-Life Bug</h2>
+  <img src="./resources/example-bug/part9.svg" >
+  <div class="run-timer" id="runtime-2.5m-4.5m"></div>
+</section>
+
+
+<section class="slide">
+  <h1>How do you<br/>find these bugs?</h1>
+  <div class="run-timer" id="runtime-4.5m-5m"></div>
+</section>
+
+
+<section class="slide">
+  <img style="padding: 1em;" src="./resources/do-it-live.jpg" />
+  <p style="width: 100%; text-align: center; font-size: 5em; font-style: bold; font-color: black">Do it Live!</p>
+  <div class="run-timer" id="runtime-4.5m-5m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>Doing it live:</h2>
+  <ol>
+    <li>Deploy it</li>
+    <li>Stress it</li>
+    <li>Break it</li>
+  </ol>
+  <div class="run-timer" id="runtime-4.5m-5m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>Doing it live:</h2>
+  <ol>
+    <li>Deploy it</li>
+    <li>Stress it</li>
+    <li>Break it</li>
+    <li>???</li>
+  </ol>
+  <div class="run-timer" id="runtime-4.5m-5m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>Doing it live:</h2>
+  <ol>
+    <li>Deploy it</li>
+    <li>Stress it</li>
+    <li>Break it</li>
+    <li>???</li>
+    <li>Profit</li>
+  </ol>
+  <div class="run-timer" id="runtime-4.5m-5m"></div>
+</section>
+
+
+<section class="slide">
+  <h1>Deploy it</h1>
+  <div class="run-timer" id="runtime-5m-6m"></div>
+</section>
+
+
+<section class="slide" id="pias-deployit-slide">
+  <div id="pias-deployit-player"></div>
+  <script type="text/javascript" src="./resources/pias-deployit.js"></script>
+  <script type="text/javascript">
+      $(function() {
+          onEnterSlide("#pias-deployit-slide", function() {
+              var player = new PIAS.Player($("#pias-deployit-player"))
+              player.play(window.pias_deployit_data, function() {
+                  player.destroy();
+              });
+          });
+      });
+  </script>
+  <div class="run-timer" id="runtime-5m-6m"></div>
+</section>
+
+
+<section class="slide">
+  <h1>Stress it</h1>
+  <div class="run-timer" id="runtime-5m-6m"></div>
+</section>
+
+
+<section class="slide">
+  <h1>FunkLoad</h1>
+  <div class="run-timer" id="runtime-6m-6.5m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>FunkLoad is:</h2>
+  <ul>
+    <li>A functional- and load-testing tool</li>
+    <li>A report generator</li>
+    <li>A bit clunky to be quite honest...</li>
+  </ul>
+  <div class="run-timer" id="runtime-6.5m-7m"></div>
+</section>
+
+
+<section class="slide" id="pias-funkload-slide">
+  <div id="pias-funkload-player"></div>
+  <script type="text/javascript" src="./resources/pias-funkload.js"></script>
+  <script type="text/javascript">
+      $(function() {
+          onEnterSlide("#pias-funkload-slide", function() {
+              var player = new PIAS.Player($("#pias-funkload-player"))
+              player.play(window.pias_funkload_data, function() {
+                  player.destroy();
+              });
+          });
+      });
+  </script>
+  <div class="run-timer" id="runtime-7m-10m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>FunkLoad Report</h2>
+  <p><a href="./resources/funkload-report/index.html" target="_blank">(opens in new tab)</a></p>
+  <div class="run-timer" id="runtime-7m-10m"></div>
+</section>
+
+
+<section class="slide">
+  <h1>Marteau</h1>
+  <div class="run-timer" id="runtime-10m-10.5m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>Marteau is:</h2>
+  <ul>
+    <li>A front-end for FunkLoad:</li>
+    <ul><li>Create worker nodes in AWS</li>
+        <li>Manage job queue</li>
+        <li>Generate and save reports</li>
+    </ul>
+    <li>French for "hammer"</li>
+  </ul>
+  <div class="run-timer" id="runtime-10.5m-12m"></div>
+</section>
+
+
+<section class="slide" id="pias-marteau-slide">
+  <div id="pias-marteau-player"></div>
+  <script type="text/javascript" src="./resources/pias-marteau.js"></script>
+  <script type="text/javascript">
+      $(function() {
+          onEnterSlide("#pias-marteau-slide", function() {
+              var player = new PIAS.Player($("#pias-marteau-player"))
+              player.play(window.pias_marteau_data, function() {
+                  player.destroy();
+              });
+          });
+      });
+  </script>
+  <div class="run-timer" id="runtime-12m-13m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>Marteau Web Interface</h2>
+    <a href="./resources/marteau-snapshot/index.html" target="_blank">(opens in new tab...)</a>
+  </ul>
+  <div class="run-timer" id="runtime-13m-14m"></div>
+</section>
+
+
+<section class="slide">
+  <h1>Break it</h1>
+  <div class="run-timer" id="runtime-14m-15m"></div>
+</section>
+
+
+<section class="slide">
+  <h1>Vaurien</h1>
+  <div class="run-timer" id="runtime-15m-15.5m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>Vaurien is:</h2>
+  <ul>
+    <li>A misbehaving TCP proxy:</li>
+    <ul><li>Behaviours: delay, hang, error, ...</li>
+        <li>Protocols: raw tcp, http, memcached, mysql, ...</li>
+        <li>Easily extensible for your needs</li>
+    </ul>
+    <li>French for "rapscallion"</li>
+  </ul>
+  <div class="run-timer" id="runtime-15m-16m"></div>
+</section>
+
+
+<section class="slide" id="pias-vaurien-slide">
+  <div id="pias-vaurien-player"></div>
+  <script type="text/javascript" src="./resources/pias-vaurien.js"></script>
+  <script type="text/javascript">
+      $(function() {
+          onEnterSlide("#pias-vaurien-slide", function() {
+              var player = new PIAS.Player($("#pias-vaurien-player"))
+              player.play(window.pias_vaurien_data, function() {
+                  player.destroy();
+              });
+          });
+      });
+  </script>
+  <div class="run-timer" id="runtime-16m-20m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>Ideas for Use</h2>
+  <ul><li>Combine with loadtests to check for cascading failures</li>
+      <li>Integrate into functional tests, for specific error sequences</li>
+  </ul>
+  <div class="run-timer" id="runtime-20m-21m"></div>
+</section>
+
+
+<section class="slide">
+  <h1>Summing Up</h1>
+  <div class="run-timer" id="runtime-21m-22m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>Take Home Thoughts:</h2>
+  <ul><li>How does your app interact with the outside world?</li>
+      <li>What happens when the outside world misbehaves?</li>
+      <li>How can you simulate that under controlled conditions?</li>
+      <li class="slide">Come hack with us!<ul><li>"Continuous Stress Testing"</li></ul></li>
+  </ul>
+  <div class="run-timer" id="runtime-21m-22m"></div>
+</section>
+
+
+<section class="slide">
+  <h1>one more thing...</h1>
+  <div class="run-timer" id="runtime-22m-23m"></div>
+</section>
+
+
+<section class="slide">
+  <h1>FunkLoad</h1>
+  <div class="run-timer" id="runtime-22m-23m"></div>
+</section>
+
+
+<section class="slide">
+  <h1 style="text-decoration: line-through">FunkLoad</h1>
+  <div class="run-timer" id="runtime-22m-23m"></div>
+</section>
+
+
+<section class="slide">
+  <h1>loads</h1>
+  <div class="run-timer" id="runtime-22m-23m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>loads is:</h2>
+  <ul><li>A better FunkLoad:</li>
+      <ul><li>Easier to write tests</li>
+          <li>Much more concurrency per node</li>
+          <li>More real-time feedback, stats, etc</li>
+      </ul>
+      <li>Not ready yet, but stay tuned!</li>
+      <li>Not French for anything AFAICT...</li>
+  </ul>
+  <div class="run-timer" id="runtime-22m-23m"></div>
+</section>
+
+
+<section class="slide">
+  <h1>Thanks</h1>
+  <div class="run-timer" id="runtime-23m-25m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>Thanks</h2>
+  <ul>
+   <li>Tarek Ziade</li>
+   <li>Alexis Metaireau</li>
+   <li>James Bonacci</li>
+  </ul>
+  <div class="run-timer" id="runtime-23m-25m"></div>
+</section>
+
+
+<section class="slide">
+  <h2>More Info</h2>
+  <div style="text-align: center">
+  <p>ryan@rfk.id.au</p>
+  <br /><br />
+  <p>http://funkload.nuxeo.org/</p>
+  <p>http://marteau.readthedocs.org</p>
+  <p>http://vaurien.readthedocs.org</p>
+  <p>http://loads.readthedocs.org</p>
+  </div>
+  <div class="run-timer" id="runtime-23m-25m"></div>
+</section>
+
+</body>
+</html>
