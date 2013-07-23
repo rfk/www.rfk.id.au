@@ -136,7 +136,7 @@ $>
 
 <p>Unsurprisingly, the speed king here is a native build of PyPy with its JIT-compilation features enabled.</p>
 
-<p>It would be easy to compare pypy.js to the native JIT-enabled PyPy and conclude that this experiment was a bust.  There is a <i>two orders or magnitude</i> speed difference right now!  But this is just a first attempt, and the JavaScript version was running without the benefit of PyPy's special speed sauce.  If we could successfully translate PyPy's JIT functionality into JavaScript, we should be able to claw back a substantial chunk of that performance gap.  It's a pretty big "if", to be sure, but an interesting possibility.</p>
+<p>It would be easy to compare pypy.js to the native JIT-enabled PyPy and conclude that this experiment was a bust.  There is a <i>two orders of magnitude</i> speed difference right now!  But this is just a first attempt, and the JavaScript version was running without the benefit of PyPy's special speed sauce.  If we could successfully translate PyPy's JIT functionality into JavaScript, we should be able to claw back a substantial chunk of that performance gap.  It's a pretty big "if", to be sure, but an interesting possibility.</p>
 
 <p>As a preview of what might be possible, consider the <a href="https://github.com/rfk/pypy/blob/master/rpython/translator/test/rpystone.py">stand-alone RPython version of pystone</a> that's available in the PyPy repo.  If we compile that from RPython down to native code, it will give us a rough upper limit on the capabilities of the machine.  And if we compile that from RPython down to JavaScript, it will give us a rough upper limit on what the possibilities of a JIT-enabled-PyPy-in-JavaScript might be:
 
