@@ -25,7 +25,7 @@ tags:
 
 <p>It's certainly not a full Python interpreter, and it comes with many caveats and question-marks and todos, but I <i>have</i> been able to produce a simple demo interpreter, with JIT, that approaches the theoretical factor-of-two comparison to native code under some circumstances.  There's a long way to go, but this seems like a very promising start.</p>
 
-<p>TL;DR?  Feel free to jump straight to <a href="#graph">the important graph.</a>
+<p>TL;DR?  Feel free to jump straight to <a href="/blog/entry/pypy-js-poc-jit/#graph">the important graph.</a>
 
 {% endmark %}
 
@@ -76,7 +76,7 @@ $>
 
 <p>To speed things up, I implemented a very basic <a href="http://asmjs.org">asm.js</a> JIT backend for RPython.  The code is on my <a href="https://github.com/rfk/pypy/tree/f62f64e314bd089e0227b9a03310e6a7059eb48b/rpython/jit/backend/asmjs">github fork of PyPy</a> and is far from complete &ndash; it implements just enough of the RPython JIT functionality to successfully run this example.</p>
 
-<p>From the point-of-view of our regex interpreter, we need only add a couple of hints to enable the JIT compiler.  Specifically, we have to have to mark the entry-point of its main loop, like so:</p>
+<p>From the point-of-view of our regex interpreter, we need only add a couple of hints to enable the JIT compiler.  Specifically, we have to mark the entry-point of its main loop, like so:</p>
 
 <p class="code lang-python">jitdriver = jit.JitDriver(reds="auto", greens=["re"])
 
@@ -122,7 +122,7 @@ $>
 
 <p>Notice two additional lines about "successfully compiled asm.js code" when compared to the non-JIT version.  This is the JIT machinery generating and compiling additional asm.js code at run-time.</p>
 
-<p>This JIT-compilation does indeed result in a speedup for this test, but frankly it's pretty modest.</p>
+<p>The JIT-compilation does indeed result in a speedup for this test, but frankly it's pretty modest.</p>
 
 <p>For comparison, here is the output produced by the non-JIT version when compiled into native code rather than JavaScript:</p>
 
@@ -185,7 +185,7 @@ $>
 <li>The JIT-compilation overheads are <i>significantly</i> higher in the JavaScript version, as this limit is reached only after many iterations.</li>
 </ul>
 
-<p>It's a very promising start.  Compilation overheads I can work on and chip away at over time; raw performance of the generated code I can't do much about.</p>
+<p>It's a promising start.  Compilation overheads I can work on and chip away at over time; raw performance of the generated code I can't do much about.</p>
 
 <p>To round out the comparison, here is a similar graph showing the SpiderMonkey JavaScript shell against the current release version of <a href="http://nodejs.org/">node-js</a>:</p>
 
@@ -196,7 +196,7 @@ $>
 <p>It's really pretty neat to consider the kind of nested interpretation and optimization that is taking place here:</p>
 
 <ul>
-<li>The host JavaScript interpreter is running the code for another interpreter, to which is applying its usual host-level JIT tracing and optimization routines</li>
+<li>The host JavaScript interpreter is running the code for another interpreter, to which it is applying its usual host-level JIT tracing and optimization routines</li>
 <li>The hosted interpreter is in turn running its own "program" in the form of a regular expression, and is tracing and monitoring its execution.</li>
 <li>When the hosted interpreter detects a hot loop, it triggers a JIT compilation to produce new JavaScript and feeds it up into the host interpreter.</li>
 <li>The host interpreter in turn will recognize this as hot code and JIT-compile it down to optimized machine code.</li>
