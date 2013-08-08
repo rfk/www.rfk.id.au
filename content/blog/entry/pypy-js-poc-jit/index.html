@@ -1,0 +1,222 @@
+---
+title: >
+ PyPy.js Update: A Proof-of-Concept JIT
+slug: pypy-js-poc-jit
+created: !!timestamp '2013-08-08 23:51:00.000000'
+modified: !!timestamp '2013-08-08 23:51:00.000000'
+tags: 
+    - technology
+    - mozilla
+    - python
+    - javascript
+
+---
+
+{% mark excerpt %}<p>Two weeks ago I hatched a plan to <a href="/blob/entry/pypy-js-first-steps/">port Python to the Web Platform</a> by using <a href="http://emscripten.org">Emscripten</a> to translate <a href="http://pypy.org/">PyPy</a> into JavaScript.  My hope is to produce something than can run in the browser with performance comparable to a standard Python interpreter, a hope which hinges on two key ingredients:</p>
+
+<ul>
+<li>PyPy's powerful <a href="http://doc.pypy.org/en/latest/jit/index.html">just-in-time compiler</a>, which can optimize the hot loops of your program into efficient native code.</li>
+<li>The recent work on <a href="http://asmjs.org/">asm.js</a>, a low-level subset of JavaScript that can act like an efficient virtual machine in the browser.</li>
+</ul>
+
+<p>By translating the PyPy interpreter into asm.js code, and by having its JIT backend emit specialized asm.js code at runtime, it should theoretically be possible to have an in-browser Python implementation whose hot loops perform within a factor of two of native code.</p>
+
+<p>I'm excited to report a small but important milestone on the road to making this a reality.</p>
+
+<p>It's certainly not a full Python interpreter, and it comes with many caveats and question-marks and todos, but I <i>have</i> been able to produce a simple demo interpreter, with JIT, that approaches the theoretical factor-of-two comparison to native code under some circumstances.  There's a long way to go, but this seems like a very promising start.</p>
+
+<p>TL;DR?  Feel free to jump straight to <a href="#graph">the important graph.</a>
+
+{% endmark %}
+
+<p>The inspiration for this project was the article <a href="http://morepypy.blogspot.com.au/2010/06/jit-for-regular-expression-matching.html">A JIT for Regular Expression Matching</a> by PyPy developer <a href="http://cfbolz.de/">Carl Friedrich Bolz</a>.  It demonstrates how to use the PyPy interpreter-building toolchain to generate a simple regular-expression matcher, and how to plug in PyPy's JIT compiler to give it a free speed boost.</p>
+
+<p>My test code, adapted from that article, is available here: <a href="./resources/rematcher.py">rematcher.py</a>.
+
+<p>Essentially this file is a small "interpreter" for regular expressions, written using the same <a href="https://rpython.readthedocs.org">RPython</a> toolchain as the full PyPy interpreter.  I will highlight a couple of details below, but please see the linked article for a full explanation, it is well worth the read.
+
+<p>The program's internal state is a tree of objects that represent a particular regular expression, and it matches input strings by feeding them into this tree one character at a time.  The main loop of the "interpreter" looks like this:</p>
+
+<p class="code lang-python">def match(re, s):
+    """Match input string 's' against the given Regex object."""
+
+    # Empty strings only match empty regexes.
+    if not s:
+        return re.empty
+
+    # Feed each character into the regex.
+    result = re.shift(s[0], 1)
+    i = 1
+    while i < len(s):
+        result = re.shift(s[i], 0)
+        i += 1
+
+    # Reset the regex to be used on the next string.
+    re.reset()
+    return result
+</p>
+
+
+<p>For benchmarking purposes, I wrapped this in a little test harness that creates a fixed regex object, generates 1000 random input strings, and runs them all through the match() function.  Using the <a href="/blog/entry/pypy-js-first-steps">JavaScript backend for RPython</a> from my previous post, this can be translated into JavaScript and run under the <a href="https://developer.mozilla.org/en-US/docs/SpiderMonkey">SpiderMonkey</a> command-line shell like so:</p>
+
+<p class="code">$> rpython --backend=js --opt=2 ./rematcher.py
+[...lots and lots of compiler output...]
+$>
+$> js ./rematcher-js
+warning: successfully compiled asm.js code (total compilation time 203ms)
+Generating 1000 strings of length 50 ...
+Matching all strings against the regex...
+Done!
+Matching time for 1000 strings: 0.083000
+Performed 12048.200800 matches per second.
+$>
+</p>
+
+<p>The key output here is "matches per second", which gives the mean time taken to match a string against the regex.  Higher numbers are better, and we'll be looking at this metric a lot.</p>
+
+<p>To speed things up, I implemented a very basic <a href="http://asmjs.org">asm.js</a> JIT backend for RPython.  The code is on my <a href="https://github.com/rfk/pypy/tree/f62f64e314bd089e0227b9a03310e6a7059eb48b/rpython/jit/backend/asmjs">github fork of PyPy</a> and is far from complete &ndash; it implements just enough of the RPython JIT functionality to successfully run this example.</p>
+
+<p>From the point-of-view of our regex interpreter, we need only add a couple of hints to enable the JIT compiler.  Specifically, we have to have to mark the entry-point of its main loop, like so:</p>
+
+<p class="code lang-python">jitdriver = jit.JitDriver(reds="auto", greens=["re"])
+
+def match(re, s):
+    if not s:
+        return re.empty
+    result = re.shift(s[0], 1)
+    i = 1
+    while i < len(s):
+        jitdriver.jit_merge_point(re=re)  # <-- like this
+        result = re.shift(s[i], 0)
+        i += 1
+    re.reset()
+    return result
+</p>
+
+<p>This annotation does not affect the semantics of the code, but it tells RPython to generate all the extra hooks and control-flow to enable just-in-time compilation over this loop.  Again, please see <a href="http://morepypy.blogspot.com.au/2010/06/jit-for-regular-expression-matching.html">the original article</a> for all the details.  When compiled with this JIT backend enabled, the following will happen:</p>
+
+<ul>
+<li>The matcher will start running normally, but the JIT machinery will keep track of how many times the marked loop is executed.</li>
+<li>Once the execution count passes a certain threshold, the matcher will run for a single iteration in "tracing mode" to record each low-level operation that it performs.</li>
+<li>The JIT machinery analyzes and optimizes the trace, and passes it into my new asm.js JIT backend.</li>
+<li>The JIT backend renders the trace into a string of asm.js source code and invokes "new Function()" to compile it.</li>
+<li>Subsequent iterations of the loop execute the new specialized function rather than the generic matcher code.</li>
+</ul>
+
+<p>Here's the result:</p>
+
+<p class="code">$> rpython --backend=js --opt=jit ./rematcher.py
+[...even MORE compiler output...]
+$>
+$> js rematcher-js 
+warning: successfully compiled asm.js code (total compilation time 1450ms)
+Generating 1000 strings of length 50 ...
+Matching all strings against the regex...
+rematcher-jit.js:1827:0 warning: successfully compiled asm.js code (total compilation time 2ms)
+rematcher-jit.js:1827:0 warning: successfully compiled asm.js code (total compilation time 0ms)
+Done!
+Matching time for 1000 strings: 0.078000
+Performed 14705.865441 matches per second.
+$>
+</p>
+
+<p>Notice two additional lines about "successfully compiled asm.js code" when compared to the non-JIT version.  This is the JIT machinery generating and compiling additional asm.js code at run-time.</p>
+
+<p>This JIT-compilation does indeed result in a speedup for this test, but frankly it's pretty modest.</p>
+
+<p>For comparison, here is the output produced by the non-JIT version when compiled into native code rather than JavaScript:</p>
+
+<p class="code">$> rpython --backend=c --opt=2 ./rematcher.py
+[...yet more compiler output...]
+$>
+$> ./rematcher-c
+Generating 1000 strings of length 50 ...
+Matching all strings against the regex...
+Done!
+Matching time for 1000 strings: 0.036899
+Performed 27100.939483 matches per second.
+$>
+</p>
+
+<p>And the JIT-enabled version:</p>
+
+<p class="code">$> rpython --backend=c --opt=jit ./rematcher.py
+[...yet more compiler output...]
+$>
+$> ./rematcher-c
+Generating 1000 strings of length 50 ...
+Matching all strings against the regex...
+Done!
+Matching time for 1000 strings: 0.008123
+Performed 123108.423833 matches per second.
+$>
+</p>
+
+<p>Yikes!  The JIT-enabled native version produces 123,000 matches per second, compared to a measly 14,000 for the JIT-enabled JavaScript version.  It might seem like the asm.js JIT backend is not living up to its promise.  But these individual numbers are not the whole story.</p>
+
+<p>JIT compilation can be a delicate tradeoff in practice.  The code spends more time up-front in order to monitor, trace, and compile frequently-executed loops, but we expect that this time will be more than compensated for by the increased performance of the compiled code.  How much of the performance difference here is due to JIT compilation overhead, and how much to the performance of the generated code itself?</p>
+
+<p>One simple way to determine this is to just run the program for longer.  The performance cost of the JIT compilation is fixed, and doing more iterations of the loop lets you extract proportionally more benefit from that cost.  Here is how the matches/second numbers look for a range of different running times:</p>
+
+<img src="./resources/jitbench-js-v-c-50.png" />
+
+<p>As expected, the performance of the non-JIT versions is essentially constant regardless of the number of iterations.  Both JIT-enabled versions start off performing <i>worse</i> than their respective counterparts, since they don't run for long enough to pay back the costs of compilation.  But the matches/second figure steadily improves as the cost of compilation is amortized over more and more iterations.</p>
+
+<p>The JavaScript version still lags mightily behind the native one here, but there is a bright point on this graph &ndash; if it runs for long enough to pay back the warmup costs, the JIT-enabled JavaScript version runs faster than the non-JIT native version.</p>
+
+<p>(By the way, the code for running and graphing these benchmarks is here: <a href="./resources/jitbench.py">jitbench.py</a>)
+
+<p>There's a second knob we can twist on this particular test: the length of each individual string that is fed into the matcher.  When the input strings are longer, the program will spend proportionally more of its time inside the main loop, rather than in the test hardness or other supporting code.</p>
+
+<p>Increasing the string length from 50 to 100 gives the following:</p>
+
+<img src="./resources/jitbench-js-v-c-100.png" />
+
+<p>The number of matches/second has decreased, simply because it's now matching against longer strings.  But the decrease is not proportional to the increase in string length.  In both native and JavaScript versions, the program is spending proportionally more of its time inside JIT-compiled code, and so extracting proportionally more value out of its fixed compilation overheads.</p>
+
+<p>If we go all-out and try it on strings of length 1000, we get the following very exciting graph:</p>
+
+<a name="graph"><img src="./resources/jitbench-js-v-c-1000.png" /></a>
+
+<p>The right-hand side of this graph has flatlined, indicating that almost all of the program's runtime is spent in the JIT-compiled code.  It is essentially comparing the raw performance of the generated code between the native and JavaScript versions.  We can conclude two interesting things from this graph:</p>
+
+<ul>
+<li>The JIT-compiled asm.js code is indeed within a factor of two of the performance of native code.</li>
+<li>The JIT-compilation overheads are <i>significantly</i> higher in the JavaScript version, as this limit is reached only after many iterations.</li>
+</ul>
+
+<p>It's a very promising start.  Compilation overheads I can work on and chip away at over time; raw performance of the generated code I can't do much about.</p>
+
+<p>To round out the comparison, here is a similar graph showing the SpiderMonkey JavaScript shell against the current release version of <a href="http://nodejs.org/">node-js</a>:</p>
+
+<img src="./resources/jitbench-js-v-node-1000.png" />
+
+<p>This really highlights the difference made by SpiderMonkey paying special attention to asm.js code.  The node-js version still sees a performance improvement, but it is much less and grows at a much slower rate.  It would be interesting to compare the latest version of <a href="https://code.google.com/p/v8/">V8</a> here as well; I simply haven't got around to that yet.</p>
+
+<p>It's really pretty neat to consider the kind of nested interpretation and optimization that is taking place here:</p>
+
+<ul>
+<li>The host JavaScript interpreter is running the code for another interpreter, to which is applying its usual host-level JIT tracing and optimization routines</li>
+<li>The hosted interpreter is in turn running its own "program" in the form of a regular expression, and is tracing and monitoring its execution.</li>
+<li>When the hosted interpreter detects a hot loop, it triggers a JIT compilation to produce new JavaScript and feeds it up into the host interpreter.</li>
+<li>The host interpreter in turn will recognize this as hot code and JIT-compile it down to optimized machine code.</li>
+</ul>
+
+<p>You'll pardon me if I can't resist a bit of a meme:</p>
+
+<img style="align: center" src="./resources/yo-dawg-jit.png" />
+
+<p>&nbsp;</p>
+
+<p>So where to from here?</p>
+
+<p>There's certainly a long road still to travel before these preliminary results can apply to a full python interpreter.  In roughly the order I plan to work on them, the next steps for PyPy.js will be:</p>
+
+<ul>
+<li>Implementing support for more JIT opcodes.  This includes a lot of trickier things like garbage-collection, guard invalidation, and calling back into functions in the interpreter.</li>
+<li>Improving the performance of non-JIT code.  I suspect there's low-hanging fruit here, especially with regards to memory-management.</li>
+<li>Making it run in the browser.  Hopefully I can lean on the awesome work done by projects like  <a href="http://www.skulpt.org/">Skulpt</a> and <a href="http://www.brython.info/tests/console.html">Brython</a> in producing a friendly and familiar interpreter interface.</li>
+</ul>
+
+<p>All that said, I'm feeling pretty optimistic about the possibilities here.  There's a lot of interesting performance work being done in the JavaScript world at the moment, and the PyPy developers continue to churn out new features and speedups.  If I can keep plugging away at the intersection of the two, a highly-performant in-browser Python doesn't seem too far-fetched.</p>
+
