@@ -19,7 +19,7 @@
 
     <id>{{ content_url(resource.url) }}/</id>
 
-    {% for res in resource.node.parent.walk_resources_sorted_by_time()[:30] %}
+    {% for res in walker() %}
         <entry>
             <title type="html">{{ res.meta.title }}</title>
             <author><name>{{ res.meta.author }}</name></author>
