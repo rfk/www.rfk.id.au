@@ -1,6 +1,6 @@
 ---
 title: >
- PyPy.js: Faster than CPython
+ PyPy.js: Now faster than CPython
 slug: pypy-js-faster-than-cpython
 created: !!timestamp '2014-04-28 23:51:00.000000'
 modified: !!timestamp '2014-04-28 23:51:00.000000'
@@ -12,92 +12,107 @@ tags:
 
 ---
 
-{% mark excerpt %}<p>OK OK, that's a fun title but it probably goes a bit far.  Let me try for a little more nuance:</p>
+{% mark excerpt %}<p>OK OK, I couldn't resist that title but it probably goes a bit far.  Let me try for a little more nuance:</p>
 
-<p style="text-align: center"><b>PyPy.js: Faster than CPython, on a single carefully-tuned benchmark, after JIT warmup.</b></p>
+<p style="text-align: center"><b>PyPy.js: Now faster than CPython, on a single carefully-tuned benchmark, after JIT warmup.</b></p>
 
 <p>It has been the better part of a year since I first started hacking on <a href="/blog/entry/pypy-js-first-steps/">PyPy.js</a>, an experiment in bringing a fast and compliant python interpreter to the web.  I've been pretty quiet during that time but have certainly been keeping busy.  Some of the big changes since my <a href="/blog/entry/pypy-js-poc-jit/">previous update</a> include:</p>
 
 <ul>
-<li>An <a href="https://github.com/rfk/pypy/blob/master/rpython/jit/backend/asmjs/support.py">asmjs-to-python converter</a>, so PyPy's comprehensive JIT testsuite can be run on the asmjs backend.</li>
+<li>An <a href="https://github.com/rfk/pypy/blob/master/rpython/jit/backend/asmjs/support.py">asmjs-to-python converter</a>, so that PyPy's comprehensive JIT testsuite can be run on the asmjs backend.</li>
 <li>Some <a href="https://github.com/kripken/emscripten/blob/master/tools/js-optimizer.js#L1878">new optimizations</a> in the emscripten compiler, which greatly reduce compiled code size.</li>
-<li>A basic interactive console, so you can <a href="/static/pypyjs/">try PyPy.js straight from your browser</a>.</li>
+<li>A basic interactive console, so you can <a href="http://pypyjs.org/demo/">try PyPy.js straight from your browser</a>.</li>
+<li>And even uncovering an apparent <a href="http://llvm.org/bugs/show_bug.cgi?id=19580">bug in an LLVM optimization pass</a>.</li>
 </ul>
 
-<p>The result, while still rough in a lot of places, is an exciting milestone: the full <a href="http://pypy.org/">PyPy</a> interpreter, compiled down to javascript and re-targeted to emit <a href="http://asmjs.org/">asmjs</a> from its JIT, doing more pystones-per-second <i>in a browser</i> than the native CPython interpreter running on bare metal.</p>
+<p>The result, while still rough in a lot of places, is nonetheless an exciting milestone: the full <a href="http://pypy.org/">PyPy</a> interpreter, compiled down to javascript and re-targeted to emit <a href="http://asmjs.org/">asmjs</a> from its JIT, running the pystone benchmark faster <i>in a browser</i> than the native CPython interpreter runs it on bare metal.</p>
 
 {% endmark %}
 
-<p>I encourage you to try the comparison on your own machine &ndash; do the following in a native python shell and in the <a href="/static/pypyjs/">PyPy.js demo shell</a> and see how they compare:</p>
+<p>I encourage you to try the comparison on your own machine &ndash; do the following in a native python shell and in the <a href="http://pypyjs.org/demo/">PyPy.js demo shell</a> and see how they compare:</p>
 
 <p class="code">&gt;&gt;&gt; from test import pystone
+&gt;&gt;&gt; 
 &gt;&gt;&gt; # An initial run, which will warm up the JIT for this function.
 &gt;&gt;&gt; pystone.main()
+Pystone(1.1) time for 50000 passes = 1.657
+This machine benchmarks at 30175 pystones/second
+&gt;&gt;&gt; 
 &gt;&gt;&gt; # Subsequent runs should be much faster under PyPy.
 &gt;&gt;&gt; pystone.main()
-&gt;&gt;&gt; # Chrome users may want to run this a few more times to prime both the PyPy and v8 JIT.
+Pystone(1.1) time for 50000 passes = 0.386
+This machine benchmarks at 129534 pystones/second
+&gt;&gt;&gt; 
+&gt;&gt;&gt; # Although Chrome users may need to run it a few times to prime both the PyPy and v8 JIT.
 &gt;&gt;&gt; pystone.main()
+Pystone(1.1) time for 50000 passes = 0.362
+This machine benchmarks at 138122 pystones/second
 </p>
 
-<p>If all goes well then you should see the in-browser version benchmarking at more pystones-per-second than the standard python shell.  My machine produced the following results:</p>
+<p>If all goes well then you should see the in-browser version benchmarking at more pystones/second than the standard python shell.  My machine produced the following results (larger numbers are better):</p>
 
 <table style="border: 1px solid; width: 50%; white-space: nowrap;">
 <tbody><tr><th style="width: 100%">Interpreter</th><th>pystones/sec (cold)</th><th>pystones/sec (warm)</th></tr>
-<tr><td>native cpython</td><td style="text-align: right">TODO</td><td style="text-align: right">TODO</td></tr>
-<tr><td>pypy.js in firefox</td><td style="text-align: right">TODO</td><td style="text-align: right">TODO</td></tr>
+<tr><td>native cpython</td><td style="text-align: right">76923</td><td style="text-align: right">76923</td></tr>
+<tr><td>pypy.js in firefox</td><td style="text-align: right">29446</td><td style="text-align: right">129870</td></tr>
 </tbody></table>
 
-<p>As I had hoped when starting out on this little adventure, the combination of PyPy's just-in-time compiler and the near-native-speed capabilities of asmjs allow this in-browser python interpreter to run its hot loops faster than the native system python.  All the usual caveats about benchmarking and performance apply here, of course, but it is still a very gratifying result.</p>
+<p>Here it is in graph form for easier comparison, showing the pystone rating for each of twelve successive invocations of "pystone.main()" on CPython 2.7.5 and on PyPy.js in Firefox 28:</p>
 
-<p>Digging a little deeper, it's interesting to compare the performance of Firefox and Chrome on this benchmark.  The following graph shows how the pystone rating grows after each successive run of the benchmark for both browsers:
+<img src="./resources/pystone-cpy-ff.png" />
 
-<img src="./resources/pystone-firefox-vs-chrome.png" />
+<p>You can see that PyPy.js starts of substantially slower on the first invocation, as it runs the python code for this benchmark via an interpreter and as it generates specialized javascript from that code at runtime.  After that, the combination of PyPy's just-in-time compiler and the near-native-speed capabilities of asmjs allow this in-browser python shell to run its hot loops faster than the native system python.</p>
 
-<p>While it takes many more iterations to reach steady-state performance, Chrome turns out to be significantly <i>faster</i> than Firefox on this benchmark. The reason for this lies in their different handling of asmjs-style javascript code.</p>
+<p>Now, just to be clear: all the usual caveats about benchmarking and performance apply here.  This isn't a particularly scientific comparison, and I am being <i><b>extremely</b></i> cheeky in disregarding the JIT warmup time.  But as a milestone, it is still a very gratifying result.</p>
 
-<p>Firefox treats asmjs code specially &nbsp; when it encounters an asmjs module declaration, it <a href="https://blog.mozilla.org/luke/2014/01/14/asm-js-aot-compilation-and-startup-performance/">ahead-of-time compiles</a> the entire thing down to machine code before executing any of it.  This allows it to offer consistent and predictable performance without having to wonder whether the regular JIT machinery will correctly detect, profile, and optimize the code.</p>
+<p>Digging a little deeper, it's interesting to compare performance between Firefox and Chrome on this benchmark.  Here is the same graph with Chrome (specifically, version 34) thrown into the mix:</p>
 
-<p>By contrast, Chrome has no special handling of asmjs code &nbsp; it just treats it like ordinary javascript, executing it via v8's various levels of compilation and profiling, and eventually detecting and fully optimizing the hot paths at runtime.  This can produce less predictable performance and might miss some opportunities for optimization, but can also allow for better optimization based on runtime behavior.</p>
+<img src="./resources/pystone-cpy-ff-chrome.png" />
 
-<p>The PyPy.js JIT works by generating a secondary asmjs module at runtime to contain the generated code, so our benchmark winds up making frequent calls from the main interpreter module into the jitted code module, then back into the interpreter again.  With Firefox's ahead-of-time compilation strategy, it must treat these as generic function calls and route them through a general-purpose code path.  Chrome's runtime analysis is able to profile and optimize and possibly even inline these calls to produce better steady-state performance.</p>
+<p>Three interesting points stand out in this comparison:</p>
 
-<p>On one hand, this performance difference highlights one of the points made in <a href="http://mrale.ph/">mraleph's</a> excellent article <a href="http://mrale.ph/blog/2013/03/28/why-asmjs-bothers-me.html">Why asm.js bothers me</a>: that JIT compilers should be able to speed up asmjs-style javascript without giving it special treatment, and without the risk of falling off a "performance cliff" when you step slightly outside of the highly optimized sweet-spot.  Inter-module asmjs calls are outside of Firefox's asmjs sweet-spot, and it hits this benchmark hard.</p>
+<ul>
+<li>Chrome starts off running things much slower than Firefox, even after the initial run has warmed up the PyPy JIT.</li>
+<li>Chrome shows a marked performance increase, then an equally marked decrease, before settling into its steady-state behaviour.</li>
+<li>Chrome's steady-state performance on this test is significantly <i>faster</i> than Firefox.</li>
+</ul>
 
-<p>On the other hand, there is no fundamental reason why Firefox <i>can't</i> optimize such calls.  It has all the information it needs, and it's simply a matter of implementing the additional specialized code-paths.  Ultimately this is just a bug in Firefox's asmjs support &nbsp; in fact I <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=982036">filed it as such</a> and have submitted some preliminary fixes which bring performance on this benchmark up to parity with Chrome.</p>
+<p>Lest you think that this "dip" is some artifact of my testing environment, I am able to reproduce it consistently and on two different machines.  Rather, the explanation for all three of these points lies in the different ways that Firefox and Chrome handle asmjs-style javascript code.</p>
 
-<p>To be completely fair, we should also compare PyPy.js to a native PyPy interpreter.  Can JITing to asmjs compete with JITing to native code?  My machine produced the following, much more humbling results:</p>
+<p>Firefox treats asmjs code specially &ndash; when it encounters an asmjs module declaration, it <a href="https://blog.mozilla.org/luke/2014/01/14/asm-js-aot-compilation-and-startup-performance/">ahead-of-time compiles</a> the entire thing down to machine code before executing any of it.  This allows Firefox to offer consistent and predictable performance, without having to wonder whether the regular JIT machinery will correctly detect, profile, and optimize the code.  So in Firefox we see a single warmup phase as PyPy.js emits its specialized asmjs code, followed by fairly stable performance.</p>
 
-<table style="border: 1px solid; width: 50%;">
-<tbody><tr><th style="width: 100%">Interpreter</th><th>pystones/sec&nbsp;(cold)</th><th>pystones/sec&nbsp;(warm)</th></tr>
-<tr><td>pypy.js, in firefox</td><td style="text-align: right">TODO</td><td style="text-align: right">TODO</td></tr>
-<tr><td>native pypy</td><td style="text-align: right">TODO</td><td style="text-align: right">TODO</td></tr>
-</tbody></table>
+<p>By contrast, Chrome has no special handling of asmjs code &ndash; it treats it like any other javascript, executing it via v8's various levels of compilation and profiling, eventually detecting and optimizing the relevant hot code paths at runtime.  This typically means slower initial performance for asmjs code, and can also lead to less predictable performance as parts of the code move into and out of various states of optimization.  Both of these characteristics are on display in the above graph. (It would be interesting to use v8's legendarily powerful JIT debugging tools to investigate the performance "dip" here; alas, there are only so many hours in the day).</p>
 
-<p>That's a slowdown of TODO times over the performance of native code.
+<p>However, Chrome's approach also means that it can optimize based on the actual runtime behaviour of the code.</p>
 
-<p>So that's the fun part.  As a proof of concept this has been a very interesting, very entertaining project.  But I don't want to pretend that it's all sunshine and roses, that this is clearly the way forward for python on the web.  There are many ways in which PyPy.js is less than ideal, and frankly, kinda sucks.</p>
+<p>The PyPy.js JIT works by generating a secondary asmjs module at runtime to contain the generated code.  This code needs to call functions from the main interpreter module to do things like write barriers, garbage collection and so-on, and the pystone benchmark happens to call these functions a lot.  Since Firefox compiles each asmjs module ahead-of-time independently, it must treat these as generic function calls and route them through a general-purpose code path.  By contrast, Chrome is able to optimize the two modules as a single unit and potentially do clever things like inline these calls (again, the v8 introspection tools could probably pinpoint the precise optimizations that it does here, but I haven't dug in that deep).</p>
 
+<p>The result is a pretty convincing win for Chrome in this comparison.</p>
 
-<h3>Code Size</h3>
+<p>On one hand, this highlights a points made in <a href="http://mrale.ph/">mraleph's</a> well-worth-reading-even-if-you-disagree article <a href="http://mrale.ph/blog/2013/03/28/why-asmjs-bothers-me.html">Why asm.js bothers me</a>: that a good javascript JIT engine should be able to speed up asmjs-style javascript without giving it special treatment, and without the risk of falling off a "performance cliff" when you step outside of a small highly-optimized sweet-spot.</p>
 
-<p>The current version of PyPy.js weighs in at 25M of javascript, plus another 6.7M of global data initializers.  This is a lot better than the <a href="">12XXXM that it started as</a>, but it still qualifies as <b>huge</b>.  There's some low-hanging fruit left to pursue here, but I suspect that the download size will be measures in megabytes for a long time to come.  That makes this a non-starter for some applications, although it may not be a big deal for others</p>
+<p>It turns out that cross-asmjs-module function calls are outside of Firefox's current sweet-spot, and that costs it dearly in this benchmark.</p>
 
+<p>On the other hand, there is no fundamental reason why Firefox <i>can't</i> optimize such calls.  It has all the information it needs, and it's simply a matter of implementing the additional specialized code-paths, of adding a little bit of "JIT" back into the ahead-of-time compilation.  Ultimately this is just a bug in Firefox's asmjs support &ndash; in fact I <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=982036">filed it as such</a> and have submitted some preliminary fixes which bring performance on this benchmark back up to being competitive with Chrome:</p>
 
-<h3>JIT warmup overhad</h3>
+<img src="./resources/pystone-cpy-ff-chrome-ff2.png" />
 
+<p>I'm sure the landscape here will change as more asmjs code shows up in the wild, and as asmjs-style code makes its way into in more <a href="https://developers.google.com/octane/benchmark">javascript</a> <a href="http://kripken.github.io/Massive/">benchmark</a> suites.</p>
 
-<h3>DOM Integration</h3>
+<p>Finally, to address the elephant in the room: a completely fair comparison would pit PyPy.js against a native PyPy interpreter, not just a native CPython.  Can JITing to asmjs compete with JITing to native code?  My machine produced the following, much more humbling results:</p>
 
-<p>Simply put, there isn't any.  In theory it's not hard, but it's a lot of work</p>
+<img src="./resources/pystone-cpy-ff-chrome-ff2-pypy.png" />
 
+<p>That's an order of magnitude difference, from around 300-thousand to around 2-million pystones/second.</p>
 
-<h3>JS Integration</h3>
+<p>For most code we expect a slowdown of between 2 to 3 times when going from native code to asmjs-in-firefox, so being 10 times slower here is a little disappointing.  But I believe at least some of the difference can be made up by continuing improvements in function call overheads, such as <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=982036">Bug 982036</a> and <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=962641">Bug 962641</a>.  This will be an interesting metric to track as improvements continue in both the PyPy.js codebase itself and in browser support for asmjs.</p>
 
-<p>The big question here is cross-language reference cycles.</p>
+<p>So, that's the fun part.  As a proof of concept this has been a very interesting, very entertaining project.  But I don't want to pretend that it's "done", or that this is clearly the way forward for python on the web.  There are many ways in which PyPy.js is still far from ideal. My ongoing hit-list includes:</p>
 
-<h3>Tracking Upstream</h3>
+<ul>
+<li><b>Code Size:</b>  If you clicked through to the live demo, you might have noticed that PyPy.js weighs in at 25M of javascript, plus around 7M of global data initializers.  Even compressed, that's <i>huge</i> &ndash; maybe not as bad as the <a href="/blog/entry/pypy-js-first-steps/">several hundred meg it started out at</a>, but still big enough to be a deal-breaker for many applications.  There's some low-hanging fruit left to pursue here, but it will be a big challenge.</li>
+<li><b>JIT warmup overhad:</b>  There's a reason I focused on steady-state performance in the above graphs.  To generate its specialized javascript code, the PyPy.js JIT has to build up a javascript sourcecode string in the asmjs memory buffer, copy that out into a regular javascript string one character at a time, then call "new Function()" to compile it.  That's never going to compete with the "write these bytes into executable memory" of a native JIT engine, although it could definitely be faster than it is right now.</li>
+<li><b>DOM Integration:</b>  Simply put, there isn't any.  It will have to be coded up as an asmjs foreign-function interface and exposed to python in some sensible way.  Alon did some work on this for a <a href="http://kripken.github.io/lua.vm.js/lua.vm.js.html">Lua VM in the browser</a> that can integrate with the host javascript environment, but it's very preliminary. And that's not even getting into the issue of calling python callbacks from DOM event handlers, which can create cross-language reference cycles that are impossible to detect or break.</li>
+</ul>
 
-<p>I'm behind upstream and I haven't been merging.  A new PyPy release is imminent, including changes to the JIT.  Can the new changes be implemented as efficiently on top of asmjs?  This will perenially be an open question, and it's not right for the PyPy team to pressimise the native JIT in order to better support asmjs.</p>
-
-
-<p>Turned out it was a horrible idea: http://morepypy.blogspot.com.au/2013/02/10-years-of-pypy.html</p>
+<p>Still, the web-as-a-platform has come a long way since the PyPy developers abandoned their original javascript backend because <a href="http://morepypy.blogspot.com.au/2013/02/10-years-of-pypy.html">it was a horrible idea</a>.  It may still be a horrible idea!  But it's been a fun adventure so far, with encouraging results lie this along the way, so I plan to keep pushing it forward.</p>
