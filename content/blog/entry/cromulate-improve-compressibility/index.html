@@ -3,7 +3,7 @@ title: >
  An Experiment in Improving Compressiblity
 slug: cromulate-improve-compressibility
 created: !!timestamp '2014-07-17 22:01:00.000000'
-modified: !!timestamp '2014-07-17 22:01:00.000000'
+modified: !!timestamp '2014-07-18 17:14:00.000000'
 tags: 
     - technology
     - mozilla
@@ -74,4 +74,6 @@ tags:
 <p>The ratios have changed a little, but the overall shape of the graph is similar. My final compressed file size after cromulation and zoplification is 2.6M, a saving of more than 15 percent over the initial 3.1M we started with.  It's now almost a full second faster for me to fetch from across the Pacific.</p>
 
 <p>Will this ultimately be useful in practice?  I'm not sure.  It's possible that as I get around to reducing and optimizing the code generated for PyPy.js, the relative benefit of this approach will grow smaller and smaller.  But based on the results for other codebases shown above, it seems unlikely to go to zero.</p>
+
+<p><b>Update:</b> My colleague <a href="http://fmarier.org/">Francois</a> mentioned that a similar technique could be used to improve compression of CSS files, and I found <a href="http://mainroach.blogspot.com.au/2013/08/css-compression-block-sorting.html">this interesting article</a> about one attempt to do so, including a <a href="http://en.wikipedia.org/wiki/Kullback–Leibler_divergence">statistical technique</a> that might be useful for improving the running time of my script.</p> 
 
