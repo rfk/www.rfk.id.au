@@ -4,45 +4,40 @@ title: RFK | Software
 
 <h1>Software</h1>
 
-<p>I develop quite a few open-source software projects &ndash; some because I use them in my work, and some just for fun.  You can get directly at most of my code through my <a href="http://github.com/rfk">github profile page</a>.</p>
+<p>I've written quite a bit of open-source code over the years &ndash; sometimes because I use it for work, and sometimes just for fun.</p>
 
-<h2>Libraries</h2>
-<ul class="projects">
-<li><a href="http://github.com/rfk/esky">Esky</a> is an auto-update framework for frozen Python applications.  It provides
-a simple API through which apps can find, fetch and install updates, and a
-bootstrapping mechanism that keeps the app safe in the face of failed or
-partial updates.</li>
+<p>A few of my favourite projects are listed below, or you can find pretty much all my code on my <a href="http://github.com/rfk">github profile page</a>.</p>
+
+<p>The more serious stuff:</p>
+
+<ul>
+<li><a href="https://github.com/rfk/pypyjs">PyPyJS</a> is an experimental python environment for the web platform, built by compiling the <a href="http://pypy.org/">PyPy interpreter</a> into javascript via <a href=http://emscripten.org">emscripten</a>, and re-targetting its JIT compiler to emit specialized <a href="http://asmjs.org">asmjs</a> code at runtime.</li>
+
+<li><a href="http://github.com/rfk/esky">Esky</a> is an  auto-update framework for frozen python applications.  It provides a simple API through which apps can find, fetch and install updates, and a bootstrapping mechanism that keeps the app safe in the face of failed or partial updates.</li>
+
+<li><a href="http://github.com/rfk/playitagainsam">playitagainsam</a> is a python program for recording and re-playing live terminal sessions, which I have used for several technical presetnations.  It comes with a <a href="http://github.com/rfk/playitagainsam-js">web-based player</a> for easily embedding the sessions into HTML slide decks.</li>
+
 <li><a href="http://packages.python.org/pyenchant/">PyEnchant</a> is a spellchecking module for Python.  It wraps the excellent <a href="http://www.abisource.com/projects/enchant/">Enchant</a> spellchecking library and provides a nice "Pythonic" object-oriented interface.</li>
+
 <li><a href="http://code.google.com/p/pyfilesystem/">FS</a> is a filesystem abstraction for Python, providing uniform access to ordinary filesystems, zipfiles, Amazon S3 and more; spearheaded by <a href="http://www.willmcgugan.com/">Will McGugan</a>.</li>
-<li><a href="./filelike/">filelike</a> is a Python module for building and manipulating file-like objects.  It makes it easy to implement things such as transparent compression or encryption using simple wrapper classes.</li>
+
 <li><a href="http://pypi.python.org/pypi/dexml/">dexml</a> is a simple Object-XML mapper for Python, loosely inspired by the Django Object-Relational mapper.</li>
+
 <li><a href="http://pypi.python/org/pypy/django-supervisor/">django-supervisor</a> aims to combine the process-management awesomeness of <a href="http://supervisord.org/">supervisord</a> with the convenience of <a href="http://djangoproject.com/">Django's</a> mangement scripts.</li>
-<li><a href="http://pypi.python.org/pypi/extprot/">extprot</a> is a compact, efficient, extensible binary protocol for messaging and data serialisation; this module is a Python implementation of a spec from <a href="http://eigenclass.org/R2/writings/extprot-extensible-protocols-intro">Mauricio Fernández</a></li>
-<li><a href="./XRCWidgets/">XRCWidgets</a> is a rapid GUI development module for Python. It uses the <a href="http://www.wxpython.org/">wxPython</a> toolkit and is designed to work well with visual GUI builders such as <a href="http://wxglade.sourceforge.net/">wxGlade</a>.</li>
-<li><a href="http://github.com/rfk/withrestart">withrestart</a> is Pythonisation of the restart-based condition system from Common List.  It's designed to make error recovery simpler and easier by removing the assumption that unhandled errors must be fatal.</li>
-<li><a href="http://github.com/rfk/threading2">threading2</a> is a drop-in replacement for the standard Python "threading" module, providing extended functionality such as thread priority and CPU affinity.</li>
-<li><a href="http://github.com/rfk/myppy">myppy</a> is a framework for building portable python distributions, currently targetting both Linux and Mac OS X.</li>
-<li><a href="http://github.com/rfk/m2wsgi">m2wsgi</a> is a WSGI gateway for the <a href="http://www.mongrel2.org/">Mongrel2</a> webserver.</li>
-<li><a href="http://github.com/rfk/pysidekick">PySideKick</a> is a collection of helpful utilities for building applications with <a href="http://www.pyside.org/">PySide</a></li>
+
 <li><a href="http://github.com/rfk/signedimp">signedimp</a> is a python <a href="http://www.python.org/dev/peps/pep-0302/">import hook</a> for secure loading of cryptographically-signed code.</a></li>
-<li><a href="http://github.com/rfk/django-paranoid-sessions">django-paranoid-sessions</a> is a Django plugin that makes login sessions work harder at preventing session-stealing attacks.</li>
+
 </ul>
 
-<h2>Programs</h2>
 
-<ul class="projects">
-<li><a href="http://pypi.python.org/pypi/proxylet/">proxylet</a> is a lightweight reverse proxy for HTTP, using non-blocking IO courtesy of <a href="http://wiki.secondlife.com/wiki/Eventlet">eventlet</a>.  It also features enough smarts to proxy to a subversion HTTP server at an arbitrary location, something which is surprisingly difficult to achieve since subversion uses absolute URLs in its HTTP-based protocol.
-</ul>
+<p>The fun hacks:</p>
 
-<h2>Miscellanea</h2>
-
-<ul class="projects">
+<ul>
+<li><a href="http://github.com/rfk/withrestart">withrestart</a> is Pythonisation of the restart-based condition system from Common Lisp.  It's designed to make error recovery simpler and easier by removing the assumption that unhandled errors must be fatal.</li>
 <li><a href="https://github.com/rfk/withhacks">withhacks</a> is a suite of building blocks for hacking Python's "with" statement.</li>
 <li><a href="https://github.com/rfk/promise">promise</a> is a set of bytecode hacks to optimize Python code based on staticness assertions.</li>
 <li><a href="http://pypi.python.org/pypi/magicsuper/">magicsuper</a> backports Python3's zero-argument super() function to Python2, using a little frame-walking trickery.</li>
-<li><a href="http://rfk.github.com/jquery-loadinline/">jquery-loadinline</a> is a <a href="http://www.jquery.com/">jQuery</a> plugin that makes links and forms load their contents into an existing page element.  Since it automatically applies itself recursively to any loaded content, the overall effect is like a little mini browser window contained within an element of the current page.</li>
 <li><a href="http://pypi.python.org/pypi/autoself/">autoself</a> is a Python module that uses bytecode hackery to automagically insert the "self" argument in method definitions.  It's just a technology exercise and should never be used by anyone...</li>
-<li><a href="http://pypi.python.org/pypi/wxAnyThread/">wxAnyThread</a> is a simple decorator for use with <a href="http://www.wxpython.org/">wxPython</a>, that allows functions and methods to be safely called from any thread.  It is basically a convenient wrapper around PostEvent that transparently dispatches the function call to the main thread.</li>
 </ul>
 
 <ul>
