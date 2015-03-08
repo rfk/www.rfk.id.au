@@ -1,0 +1,117 @@
+---
+title: >
+ PyPy.js: A Host Environment Bridge
+slug: pypy-js-host-bridge
+created: !!timestamp '2015-02-08 15:00:00.000000'
+modified: !!timestamp '2015-02-08 15:00:00.000000'
+tags: 
+    - technology
+    - mozilla
+    - python
+    - javascript
+
+---
+
+{% mark excerpt %}<p>For PyPy.js to be a serious thing, it has to do more than run python code in a sandbox on the web.  It needs to provide a way to interact with the host javascript environment - call javascript libraries, interact with the dom, etc.</p>
+
+<p>Given the way we generate the PyPy.js interpreter, this was always going to be a challenge.  I've got a solution that works well for an initial prototype but it'll be interesting to see whether it works out long-term.</p>
+
+{% endmark %}
+
+<p>At the python level, basic interaction with the host javascript environment is a nice clean experience.  There is a "js" module that exposes the host environment in an unsurprising way, so that the following will be exactly what you'd expect:</p>
+
+<p class="code">
+import js
+js.globals.alert("hello world!")
+</p>
+
+<p>Javascript objects are reflected as python objects, their properties accessible by normal python attribute lookup.</p>
+
+<p>The details of how this works, however, are not exactly elegant.</p>
+
+<p>Since PyPy.js is produces by emitting C code and compiling it for the web via emscripten, the simplest way to expose the host environment is via a C level API.  I <a href="">made one</a> in what I hope is a fairly generic way that may be useful to other projects.</p>
+
+<p>Using the C API, the above example would be equivalent to:</p>
+
+<p class="code">
+emjs_handle alert, args, val;
+
+// Copy bytes out of asmjs memory into a native js string.
+val = emjs_make_str("hello world!");
+
+// Make an array of arguments for the call.
+args = emjs_make_array(1);
+emjs_prop_set_int(args, 0, val);
+
+// Look up the function in global scope.
+alert = emjs_prop_get_str(emjs_globals(), "alert");
+
+// Call it with null context.
+emjs_apply(alert, EMJS_NULL, args);
+
+// Release resource handles.
+emjs_free(val);
+emjs_free(args);
+emjs_free(alert);
+</p>
+
+<p>As you can imagine, this is not a terribly efficient approach!</p>
+
+<p>To explore the overhead involved in going via this low-level API, here's
+a simple micro-benchmark that just calls Math.log repeatedly in a loop:</p>
+
+<p class="code">
+function sum_log(iterations) {
+  var total = 0
+  for (var i = 1; i &lt;= iterations; i++) {
+    total += Math.log(i)
+  }
+  return total
+}
+
+t1 = +Date.now()
+sum_log(3000000)
+t2 = +Date.now()
+print((t2 - t1) / 1000)
+</p>
+
+<p>Running this natively in javascript, I get XXX seconds on my browser, a pretty respectable time.  Most of this is spent in evaluating Math.log.  Now consider the equivalent written in python, but calling into Math.log via the javascript bridge:</p>
+
+<p class="code">
+import js
+import time
+
+Math = js.globals["Math"]
+
+def sum_log(iterations):
+    total = 0
+    i = 1
+    while i &lt;= iterations:
+        total += float(Math.log(i))
+        i += 1
+    return total
+
+
+t1 = time.time()
+sum_log(3000000)
+t2 = time.time()
+print t2 - t1
+</p>
+
+<p>Running this in PyPy.js I get XXX OMG its much slower!</p>
+
+<p>On each iteration of the loop, this code will:</p>
+
+<ul>
+<li>Convert "i" from a python integer to a native javascript number</li>
+<li>Build a javascript array for the call arguments and push this number into i</li>
+<li>Copy the string "log" from the asmjs heap into a native javascript string</li>
+<li>Use this string in a property lookup on the "Math" object</li>
+<li>Call the obtained function with the argument array</li>
+<li>Convert the result from a native javascript number into a python float</li>
+</ul>
+
+<p>Moreover, each of these operations is performed via a relatively-expensive function call out of the asmjs module.</p>
+
+
+
