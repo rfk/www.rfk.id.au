@@ -70,7 +70,7 @@ tagger:
             archive_extension: html
 
 less:
-    app: /home/rfk/.opt/bin/lessc
+    app: /usr/local/bin/lessc
 
 
 urlcleaner:
