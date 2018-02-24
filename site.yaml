@@ -75,15 +75,6 @@ urlcleaner:
         - index.html
     append_slash: true
 
-publisher:
-    github:
-        type: hyde.ext.publishers.dvcs.Git
-        path: ../rfk.github.com
-        url:  git@github.com:rfk/rfk.github.com.git
-    fastmail:
-        type: hyde.ext.publishers.pyfs.PyFS
-        url:  dav:https://rfkelly=fastmail.fm:%(password)s@myfiles.messagingengine.com/www.rfk.id.au
-        check_mtime: true
 
 syntax:
     use_figure: false
