@@ -40,43 +40,10 @@
 
 </div>
 
-<hr />
-<div class="blog-entry-comments" id="disqus_thread"></div>
-<script type="text/javascript">
-  /**
-    * var disqus_identifier; [Optional but recommended: Define a unique identifier (e.g. post id or slug) for this thread] 
-    */
-  if(window && window.location && window.location.hostname !== 'localhost') {
-    var disqus_identifier = "{{ resource.meta.slug }}";
-    (function() {
-     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-     dsq.src = '//rfkelly.disqus.com/embed.js';
-     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-  }
-</script>
-<noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript=rfkelly">comments powered by Disqus.</a></noscript>
-<a href="//disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
-
-
 {%- endblock %}
 
 {% block page_sidebar_extra %}
-
-<br /><hr /><br />
-
-<div id="reddit_share">
-<script type="text/javascript" src="//www.reddit.com/static/button/button1.js"></script>
-</div>
-
-<div id="twitter_share">
-<a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="rfkelly">Tweet</a><script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
-</div>
-
-
 {%- endblock %}
 
-
 {%- block page_js_extra %}
-
 {%- endblock %}
