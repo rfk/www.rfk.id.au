@@ -69,9 +69,6 @@ tagger:
             template: tagged_posts.j2
             archive_extension: html
 
-less:
-    app: /usr/local/bin/lessc
-
 
 urlcleaner:
     index_file_names:
