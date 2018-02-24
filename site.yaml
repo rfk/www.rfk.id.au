@@ -29,11 +29,6 @@ context:
                 type: page
                 url: about/
             -
-                name: Software
-                description: Software
-                type: node
-                url: software/
-            -
                 name: Ramblings
                 description: Ramblings
                 type: node
