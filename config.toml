@@ -1,0 +1,14 @@
+base_url = "https://rfk.id.au"
+compile_sass = true
+build_search_index = false
+
+theme = "simple-dev-blog"
+taxonomies = [ { name = "tags" } ]
+
+title = "Ryan's Ramblings"
+twitter = "rfkelly"
+
+[markdown]
+highlight_code = true
+
+[extra]

@@ -1,8 +1,0 @@
-===
-title: RFK | Blog
-extends: atom.j2
-listable: false
-===
-
-{% set source = site.content.node_from_relative_path('blog') %}
-{% set walker = source['walk_resources_sorted_by_time'] %}
