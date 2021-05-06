@@ -162,7 +162,7 @@ SLOC	Directory	SLOC-by-Language (Sorted)
 
 <p>At this point, dexml was well tested on python2.6 for Linux.  Fine and good, but that might not give much comfort to folks on python2.5, on python3.2, or on Windows.  I have access to other machines and other versions of python, but I don't have the patience to run through every combination by hand.</p>
 
-<p>Enter <a href="">tox</a>.</p>
+<p>Enter <a href="https://tox.readthedocs.io">tox</a>.</p>
 
 <p>Tox is a simple idea implemented extremely well.  You tell it how to run your test suite.  You tell it what versions of python you're targeting.  It then spins up an isolated <a href="http://www.virtualenv.org">virtualenv</a> for each target, installs your package into it, runs the tests and aggregates the results.  Genius.</p>
 

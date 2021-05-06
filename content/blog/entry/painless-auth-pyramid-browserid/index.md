@@ -85,7 +85,7 @@ def hello_world(request):
 
 <img src="./images/hello3.png" style="padding: 1em; align: center"/>
 
-<p>Almost.  The final piece of the puzzle is configuring the authentication system.  For that, we're going to use the <a href="https://github.com/mozilla-services/pyramid_whoauth">pyramid_whoauth</a><sup>[<a name="note1" href="#foot1">1</a>]</sup> package to set up a <a href="http://pypi.python.org/pypi/repoze.who/">repoze.who</a> authentication stack, and the <a href="https://github.com/mozilla-services/repoze.who.plugins.browserid">repoze.who browserid plugin</a> to activate support for BrowserID.</p>
+<p>Almost.  The final piece of the puzzle is configuring the authentication system.  For that, we're going to use the <a href="https://github.com/mozilla-services/pyramid_whoauth">pyramid_whoauth</a>[^1] package to set up a <a href="http://pypi.python.org/pypi/repoze.who/">repoze.who</a> authentication stack, and the <a href="https://github.com/mozilla-services/repoze.who.plugins.browserid">repoze.who browserid plugin</a> to activate support for BrowserID.</p>
 
 <p>Sounds complicated?  There are a few moving parts, but the end result is really quite simple and elegant.</p>
 
@@ -139,4 +139,4 @@ wildcards in this setting to make this a little easier during deployment.</p>
 
 <p>By itself this isn't exactly earth-shattering.  It's a couple of neat plugins built on top of existing python libraries.  But this is exactly the sort of thing I hope to see coming out of Project Sagrada as it picks up steam &ndash; a continuous stream of small victories, useful abstractions and simplifying frameworks that, when you add them all together, build up to a compelling development and deployment infrastructure for web services applications.</p>
 
-<p><sup>[<a name="foot1" href="#note1">1</a>]</sup> <span style="font-size: x-small">By the way, there's an existing pyramid plugin called <a href="">pyramid_who</a> that also provides hooks between pyramid and repoze.who; pyramid_whoauth tries to provide more functionality out of the box, and hence makes more decisions for you up front.  This may or may not be what you want.</span></p>
+<p>[^1]By the way, there's an existing pyramid plugin called <a href="https://pypi.org/project/pyramid_who/">pyramid_who</a> that also provides hooks between pyramid and repoze.who; pyramid_whoauth tries to provide more functionality out of the box, and hence makes more decisions for you up front.  This may or may not be what you want.</p>

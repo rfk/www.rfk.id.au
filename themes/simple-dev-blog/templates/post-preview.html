@@ -6,7 +6,7 @@
     </small>
     <div class="summary">
       {% if post.summary -%}
-        {{ post.summary }}
+        {{ post.summary | safe }}
       {% else %}
         {{ post.content | safe | striptags | truncate(length=300) }}
       {%- endif %}

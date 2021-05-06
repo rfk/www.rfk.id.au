@@ -114,7 +114,7 @@ if __name__ == "__main__":
 
 <p>Note that the secret key itself is not sent over the wire.  Instead, the server authenticates the request by looking up its own copy of the secret key for the given id, and checking that the "mac" signature from the request was correctly generated using that key.  From a security standpoint this is a <a href="http://benlog.com/articles/2009/12/22/its-a-wrap/">very</a> <a href="http://hueniverse.com/2010/09/oauth-bearer-tokens-are-a-terrible-idea/">good</a> <a href="http://benlog.com/articles/2010/09/07/defending-against-your-own-stupidity/">idea</a>.</p>
 
-<p>If you know about <a href="">HTTP Digest Auth</a> then this should look familiar, but is substantially more secure.  If you've ever had the misfortune of dealing with <a href="http://cakebaker.42dh.com/2011/01/10/2-legged-vs-3-legged-oauth/">Two-Legged OAuth</a>, MAC Access Auth will be a breath of fresh air.</p>
+<p>If you know about <a href="https://tools.ietf.org/html/rfc2617#section-3">HTTP Digest Auth</a> then this should look familiar, but is substantially more secure.  If you've ever had the misfortune of dealing with <a href="http://cakebaker.42dh.com/2011/01/10/2-legged-vs-3-legged-oauth/">Two-Legged OAuth</a>, MAC Access Auth will be a breath of fresh air.</p>
 
 <p>To add MACAuth support into our lucky-number service, we can use the <a href="http://pypi.python.org/pypi/pyramid_macauth">pyramid_macauth</a> library.</p>
 

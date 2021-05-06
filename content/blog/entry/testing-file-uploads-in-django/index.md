@@ -34,19 +34,19 @@ tags:
 
 <p>Internally, the middleware manages fake uploads by inserting additional fields into any forms being sent to the client.  Suppose we have this simple form:</p>
 
-{% syntax html %}<form method='POST' enctype='multipart/form-data'>
-  <input type='file' name='myfile' />
-  <input type='submit' name='upload' value='upload' />
-</form>
+{% syntax html %}&lt;form method='POST' enctype='multipart/form-data'>
+  &lt;input type='file' name='myfile' />
+  &lt;input type='submit' name='upload' value='upload' />
+&lt;/form>
 {% endsyntax %}
 
 <p>As it passes through FakeFileUploadMiddleware on its way to the client, it will be re-written to:
 
-{% syntax html %}<form method='POST' enctype='multipart/form-data'>
-  <input type='hidden' name='fakefile_myfile' />
-  <input type='file' name='myfile' />
-  <input type='submit' name='upload' value='upload' />
-</form>
+{% syntax html %}&lt;form method='POST' enctype='multipart/form-data'>
+  &lt;input type='hidden' name='fakefile_myfile' />
+  &lt;input type='file' name='myfile' />
+  &lt;input type='submit' name='upload' value='upload' />
+&lt;/form>
 {% endsyntax %}
 
 <p>In-browser test scripts can then set the value of this hidden form field to the id of a fake file ("smallfile" or "slowfile" in the example specification above).  When these fields are received by the middleware, they are translated into raw file upload data which is then passed through the standard Django file upload mechanism.  The resulting request object is just about indistinguishable from a real file upload.</p>

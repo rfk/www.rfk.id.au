@@ -6,7 +6,6 @@ created: !!timestamp '2011-09-30 14:08:00.000000'
 modified: !!timestamp '2011-09-30 14:08:00.000000'
 tags: 
     - technology
-listable: false
 ---
 
 {% mark excerpt %}

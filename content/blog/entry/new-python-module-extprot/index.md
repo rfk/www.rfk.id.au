@@ -51,25 +51,25 @@ a tuple, list or union.</p>
 
 <p>I can load and use it in python with this much work:</p>
 
-{% syntax pycon %}>>> import extprot
->>> extprot.import_protocol("mydefs.proto",globals())
->>> print person
-<class '<extprot.dynamic>.person'>
+{% syntax pycon %}&gt&gt&gt import extprot
+&gt&gt&gt extprot.import_protocol("mydefs.proto",globals())
+&gt&gt&gt print person
+&lt;class '&lt;extprot.dynamic&gt;.person'&gt;
 {% endsyntax %}
 
 <p>And I can work with the resulting classes without any knowledge of extprot:</p>
 
-{% syntax pycon %}>>> p1 = person(1,"Guido")    # kwd args would also work
->>> print p1.emails    # fields use a sensible default if possible
+{% syntax pycon %}&gt&gt&gt p1 = person(1,"Guido")    # kwd args would also work
+&gt&gt&gt print p1.emails    # fields use a sensible default if possible
 []
->>> p1.emails.append("guido@python.org")
->>> p1.emails.append(7)    # all fields are dynamically typechecked
+&gt&gt&gt p1.emails.append("guido@python.org")
+&gt&gt&gt p1.emails.append(7)    # all fields are dynamically typechecked
 Traceback (mosts recent call last):
     ...
 ValueError: not a valid String: 7
->>> print repr(p1.to_string())    # look at that compact binary string!
+&gt&gt&gt print repr(p1.to_string())    # look at that compact binary string!
 '\x01\x1f\x03\x00\x02\x03\x05Guido\x05\x13\x01\x03\x10guido@python.org'
->>> print person.from_string(p1.to_string()).name
+&gt&gt&gt print person.from_string(p1.to_string()).name
 'Guido'
 {% endsyntax %}
 

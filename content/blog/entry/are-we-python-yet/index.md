@@ -1,11 +1,10 @@
-+++
-title = "Are we Python yet?"
-date = "2015-01-28 21:17:00.000000"
-updated = "2015-01-28 21:17:00.000000"
-
-[taxonomies]
-tags = ["are-we-python-yet", "mozilla", "python", "javascript"]
-+++
+---
+title: >
+ Are we Python yet?
+created: !!timestamp "2015-01-28 21:17:00.000000"
+modified: !!timestamp "2015-01-28 21:17:00.000000"
+tags: ["are-we-python-yet", "mozilla", "python", "javascript"]
+---
 
 <p>While it was a lot of fun to see <a href="/blog/entry/pypy-js-faster-than-cpython">a web-based python interpreter beat my system python on a single carefully-tuned benchmark</a>, that result obviously didn't say much about the usefulness of <a href="http://pypyjs.org">PyPy.js</a> for any real-world applications.  I'm keen to find out whether the web can support dynamic language interpreters for general-purpose use in a way that's truly competitive with a native environment.</p>
 
@@ -20,13 +19,7 @@ tags = ["are-we-python-yet", "mozilla", "python", "javascript"]
 <p>There are a lot of different ways to look at the data on this site, but here are a few highlights from my own explorations:</p>
 
 
-<style>
-#spaced-out-list li {
-  margin: 0.6em;
-}
-</style>
-
-<ul id="spaced-out-list">
+<ul>
 
 <li>While the front page of the <a href="http://speed.pypy.org/">PyPy speed center</a> features twenty python benchmarks that exercise a variety of workloads, the PyPy.js suite currently contains <a href="http://arewepythonyet.com/performance.html#view=breakdown">a mere eight of them</a>.  These are the ones that were easiest for me to get up and running, and they therefore tend to skew towards synthetic-benchmark-style tests rather than real-world code.  I hope to get at least the Django and Spitfire tests ported over sometime soon.</li>
 

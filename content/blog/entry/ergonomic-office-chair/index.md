@@ -10,7 +10,7 @@ tags:
 
 {% mark excerpt %}<p>Following up on the previous post about <a href="/blog/entry/ergonomic-office-keyboard">my newly ergonomic office</a>, it's about time I shared all the details of my spiffy new chair. I've had it in heavy use for over a month now so I figure I can give a fair and unbiased opinion.</p>
 
-<a href="http://www.steelcase.com/na/filmstrip.aspx?f=11852" target="_new"><img src="http://cdn.www.steelcase.com/images/dyn/eb8269fd33aeecaac8e0ac9c703f943f.jpg" style="float: left; height: 200px; padding-right: 10px;" alt="Steelcase Leap Chair" title="Steelcase Leap Chair"/></a>
+<a href="http://www.steelcase.com/na/filmstrip.aspx?f=11852"><img src="http://cdn.www.steelcase.com/images/dyn/eb8269fd33aeecaac8e0ac9c703f943f.jpg" style="float: left; height: 200px; padding-right: 10px;" alt="Steelcase Leap Chair" title="Steelcase Leap Chair"/></a>
 
 <p>The short story: it's the <a href="http://www.steelcase.com/na/leap_products.aspx?f=11852">Steelcase Leap Chair</a> and it is made from pure awesomeness.</p>
 
