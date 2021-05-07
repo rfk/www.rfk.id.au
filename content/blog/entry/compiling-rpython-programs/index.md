@@ -1,18 +1,17 @@
----
-title: >
- Compiling RPython Programs
-slug: compiling-rpython-programs
-created: !!timestamp '2010-08-09 15:45:36.194366'
-modified: !!timestamp '2010-08-09 16:44:24.776465'
-tags: 
-    - python
----
++++
+title = "Compiling RPython Programs"
+date = 2010-08-09T15:45:36.194366
+updated = 2010-08-09T16:44:24.776465
+[taxonomies]
+tags = ['python']
++++
 
-{% mark excerpt %}<p>Inspired by a recent <a href="http://www.reddit.com/r/programming/comments/cytcx/shed_skin_05_released_an_optimizing_pythontoc/">discussion on Reddit</a> about a Python-to-C++ compiler called <a href="http://shed-skin.blogspot.com/2010/08/shed-skin-05.html">Shed Skin</a>, I decided to write up my own experiences on compiling (a restricted subset of) Python to a stand-alone executable.  My tool of choice is the translation toolchain from the <a href="http://pypy.org/">PyPy</a> project &ndash; a project, by the way, that every Python programmer should take a look at.</p>
+Inspired by a recent [discussion on Reddit](http://www.reddit.com/r/programming/comments/cytcx/shed_skin_05_released_an_optimizing_pythontoc/) about a Python-to-C++ compiler called [Shed Skin](http://shed-skin.blogspot.com/2010/08/shed-skin-05.html), I decided to write up my own experiences on compiling (a restricted subset of) Python to a stand-alone executable.  My tool of choice is the translation toolchain from the [PyPy](http://pypy.org/) project – a project, by the way, that every Python programmer should take a look at.
 
-<p>Take this very exciting (<b>EDIT:</b> and <a href="http://www.reddit.com/r/Python/comments/cyyzz/compiling_rpython_programs/c0wbopq">needlessly inefficient</a>) python script, which we'll assume is in a file "factors.py":</p>
+Take this very exciting (**EDIT:** and [needlessly inefficient](http://www.reddit.com/r/Python/comments/cyyzz/compiling_rpython_programs/c0wbopq)) python script, which we'll assume is in a file "factors.py":
 
-{% syntax python %}def factors(n):
+```python 
+def factors(n):
     """Calculate all the factors of n."""
     for i in xrange(2,n / 2 + 1):
        if n % i == 0:
@@ -26,27 +25,30 @@ def main(argv):
 if __name__ == "__main__":
     import sys
     main(sys.argv)
-{% endsyntax %}
+```
 
-<p>We can of course run this from the command-line using the python interpreter, but gosh that's boring:</p>
+We can of course run this from the command-line using the python interpreter, but gosh that's boring:
 
-{% syntax console %}$> python factors.py 987654321
+```console 
+$> python factors.py 987654321
 factors of 987654321 are [3, 3, 17, 17, 379721]
-{% endsyntax %}
+```
 
-<p>Instead, let's compile it into a stand-alone executable!  Grab the latest source tarball from the <a href="http://pypy.org/download.html#building-from-source">PyPy downloads page</a> and unzip it in your work directory:</p>{% endmark %}
+Instead, let's compile it into a stand-alone executable!  Grab the latest source tarball from the [PyPy downloads page](http://pypy.org/download.html#building-from-source) and unzip it in your work directory:<!-- more -->
 
-<p class="code">$> ls
+```
+$> ls
 pypy-1.3  factors.py
-</p>
+```
 
-<p>To compile this script using the PyPy translator, it will need to be in a restricted subset of Python known as "RPython".  Among other things this means no generators, no runtime function definitions, and no changing the type of a variable.  Unfortunately there is no complete definition of what RPython is &ndash; it's basically whatever subset of Python the PyPy developers have managed to make work.  A good reference for getting started is the <a href="http://codespeak.net/pypy/dist/pypy/doc/coding-guide.html#restricted-python">PyPy coding guide</a>.</p>
+To compile this script using the PyPy translator, it will need to be in a restricted subset of Python known as "RPython".  Among other things this means no generators, no runtime function definitions, and no changing the type of a variable.  Unfortunately there is no complete definition of what RPython is – it's basically whatever subset of Python the PyPy developers have managed to make work.  A good reference for getting started is the [PyPy coding guide](http://codespeak.net/pypy/dist/pypy/doc/coding-guide.html#restricted-python).
 
-<p>Fortunately, our simple script is already valid RPython :-)</p>
+Fortunately, our simple script is already valid RPython :-)
 
-<p>Next we need to add a hook telling the PyPy compiler where execution of our script begins.  Rather than the classic __name__ == "__main__" block, PyPy loads and executes a special function named "target" to find the entry point for the script:</p>
+Next we need to add a hook telling the PyPy compiler where execution of our script begins.  Rather than the classic __name__ == "__main__" block, PyPy loads and executes a special function named "target" to find the entry point for the script:
 
-{% syntax python %}def factors(n):
+```python 
+def factors(n):
     """Calculate all the factors of n."""
     for i in xrange(2,n / 2):
        if n % i == 0:
@@ -60,13 +62,14 @@ def main(argv):
 
 def target(driver,args):
     return main,None
-{% endsyntax %}
+```
 
-<p>Note that the "target" function returns the desired entry-point for the script as a function object.  I've no idea why it has to return a tuple &ndash; perhaps one of the PyPy devs will stumble past and enlighten us.  Also note that the main routine is required to return an integer status code.</p>
+Note that the "target" function returns the desired entry-point for the script as a function object.  I've no idea why it has to return a tuple – perhaps one of the PyPy devs will stumble past and enlighten us.  Also note that the main routine is required to return an integer status code.
 
-<p>Now, we can simply invoke the PyPy translation toolchain on our script:</p>
+Now, we can simply invoke the PyPy translation toolchain on our script:
 
-<p class="code">$> python pypy-1.3/pypy/translator/goal/translate.py --batch --output factors.exe factors.py
+```
+$> python pypy-1.3/pypy/translator/goal/translate.py --batch --output factors.exe factors.py
 ...
 ...lots and lots of output
 ...
@@ -74,38 +77,41 @@ def target(driver,args):
 $>
 $> ls
 pypy-1.3  factors.exe  factors.py
-</p>
+```
 
-<p>Yep, it takes almost 20 seconds to compile on my machine.  That should give you some idea of how much work PyPy is doing behind the scenes.</p>
+Yep, it takes almost 20 seconds to compile on my machine.  That should give you some idea of how much work PyPy is doing behind the scenes.
 
-<p>The --output option lets you specify the name of the output file, and the --batch option prevents the compiler from trying to open an interactive debug window.  You can of course pass --help to get a list of available options, but most of them are specific to building PyPy's standlone python interpreter (e.g. they select the GC engine to use, whether to include stackless extensions, etc) and are not relevant for a generic RPython program.</p>
+The `--output` option lets you specify the name of the output file, and the `--batch` option prevents the compiler from trying to open an interactive debug window.  You can of course pass `--help` to get a list of available options, but most of them are specific to building PyPy's standlone python interpreter (e.g. they select the GC engine to use, whether to include stackless extensions, etc) and are not relevant for a generic RPython program.
 
-<p>The resulting executable does just what you'd expect:</p>
+The resulting executable does just what you'd expect:
 
-<p class="code">$> ./factors.exe 987654321
+```
+$> ./factors.exe 987654321
 factors of 987654321 are [3, 3, 17, 17, 379721]
-</p>
+```
 
-<p>Neat.</p>
+Neat.
 
-<p>For a real-life example of this toolchain in action, check out the experimental <a href="http://github.com/rfk/esky/tree/pypy-compile">"pypy-compile" branch of esky</a>.  The script <a class="api-ref" href="http://github.com/rfk/esky/blob/pypy-compile/esky/bootstrap.py">esky/bootstrap.py</a> is valid RPython, while the function "compile_to_bootstrap_exe" in <a class="api-ref" href="http://github.com/rfk/esky/blob/pypy-compile/esky/bdist_esky/__init__.py">esky/bdist_esky/__init__.py</a> automates the process shown here, calling out to PyPy to compile this bootstrapping script into a stand-alone executable.</p>
+For a real-life example of this toolchain in action, check out the experimental ["pypy-compile" branch of esky](http://github.com/rfk/esky/tree/pypy-compile).  The script [esky/bootstrap.py](http://github.com/rfk/esky/blob/pypy-compile/esky/bootstrap.py) is valid RPython, while the function `compile_to_bootstrap_exe` in [esky/bdist_esky/__init__.py](http://github.com/rfk/esky/blob/pypy-compile/esky/bdist_esky/__init__.py) automates the process shown here, calling out to PyPy to compile this bootstrapping script into a stand-alone executable.
 
-<p>As for why you might want to go to all this trouble, here's a simple demonstration:</p>
+As for why you might want to go to all this trouble, here's a simple demonstration:
 
-<p class="code">$> time python factors.py 987654321
+```
+$> time python factors.py 987654321
 factors of 987654321 are [3, 3, 17, 17, 379721]
 
 real	0m0.040s
 user	0m0.032s
 sys	0m0.004s
-</p>
+```
 
-<p class="code">$> time ./factors.exe 987654321
+```
+$> time ./factors.exe 987654321
 factors of 987654321 are [3, 3, 17, 17, 379721]
 
 real	0m0.005s
 user	0m0.004s
 sys	0m0.000s
-</p>
+```
 
-<p>That's an order-of-magnitude speedup.</p>
+That's an order-of-magnitude speedup.
