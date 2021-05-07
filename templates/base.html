@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ current_url }}" />
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:creator" content="@rfkelly">
+    <meta name="twitter:site" content="@rfkelly">
+
+    {% if page.title %}
+      <meta name="twitter:title" content="{{ page.title }}">
+      <title>{{ page.title }}</title>
+    {% else %}
+    <meta name="twitter:title" content="Ryan's Ramblings">
+    <title>Ryan's Ramblings</title>
+    {% endif %}
+
+    <!-- TODO - necessary? -->
+    <link rel="prefetch" href="{{ resize_image(path="profile_small.png", width=50, height=50) }}" />
+    <link rel="stylesheet" href="{{ get_url(path="main.css") }}">
+    {% block meta %} {% endblock meta %}
+  </head>
+  <body>
+    {% block header %}
+      <header>
+        <a class="profile-pic" href="/">
+          <!-- TODO - tweak this -->
+          <img src="{{ resize_image(path="profile_small.png", width=50, height=50) }}" alt="profile picture">
+        </a>
+        <nav>
+            <a href="/about/">About</a>
+            <a href="/blog/">Blog</a>
+        </nav>
+      </header>
+    {% endblock header %}
+    <main>
+    {% block content %} {% endblock content %}
+    </main>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+  <h1>{{ term.pages | length }} pages tagged with "{{ term.name }}"</h1>
+  <div class="taxonomy-container">
+    {% for post in term.pages %}
+      {% include "entry-summary.html" %}
+    {% endfor %}
+  </div>
+{% endblock content %}

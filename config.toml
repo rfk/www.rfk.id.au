@@ -2,11 +2,9 @@ base_url = "https://rfk.id.au"
 compile_sass = true
 build_search_index = false
 
-theme = "simple-dev-blog"
-taxonomies = [ { name = "tags" } ]
-
-title = "Ryan's Ramblings"
-twitter = "rfkelly"
+taxonomies = [
+    { name = "blog/tags", feed = false, paginate_by = 10 }
+]
 
 [markdown]
 highlight_code = true
