@@ -2,8 +2,6 @@
 title = "Ryan F. Kelly"
 +++
 
-## Ryan F. Kelly
-
 I am a software developer and occasional consultant.  I live in a <a href="http://en.wikipedia.org/wiki/Inverloch,_Victoria">seaside village</a> near Melbourne, Australia and currently work remotely for <a href="https://www.mozilla.com/">Mozilla</a>.  The best way to contact me is by email:</p>
   <p><span class="email-addr">ryan@rfk.id.au</span></p>
 

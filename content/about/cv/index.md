@@ -1,10 +1,10 @@
 +++
-template = "page.html"
+title = "Curriculum Vitae of Ryan Francis Kelly"
 aliases = ["/about/cv.html"]
 +++
 
 
-  <h1>Curriculum Vitae of Ryan Francis Kelly</h1>
+  <h1></h1>
 
    <p>I am a software developer and occasional consultant.  I live in a <a href="http://en.wikipedia.org/wiki/Inverloch,_Victoria">seaside village</a> near Melbourne, Australia and currently work remotely for <a href="https://www.mozilla.com/">Mozilla</a>.  The best way to contact me is by email:</p>
   <p><span class="email-addr">&#114;ya&#110;&#64;&#114;&#102;&#107;&#46;&#105;d&#46;&#97;u</span></p>

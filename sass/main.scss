@@ -73,9 +73,11 @@ code {
 
 a,
 a:visited {
-  color: var(--midlight);
   text-decoration: none;
-  border-bottom: 1px solid var(--highlight);
+  &[href] {
+    color: var(--midlight);
+    border-bottom: 1px solid var(--highlight);
+  }
 }
 
 

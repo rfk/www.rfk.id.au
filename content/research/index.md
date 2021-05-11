@@ -1,5 +1,4 @@
 +++
-template = "page.html"
 title = "Ryan's Research"
 aliases = ["/ramblings/research/index.html"]
 +++
