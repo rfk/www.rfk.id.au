@@ -10,6 +10,8 @@ If you've seen any of my [latest](http://pypi.python.org/pypi/esky) [python](htt
 
 This post is part motivational, part example.  I'll show you a basic "hello world" app in PySide, take you through the process of freezing it into a stand-alone application, then show how to use Hatchet to shrink the distribution down to a manageable size.  If that seems a little too academic for you, consider this for real-world motivation: using the techniques shown in this post, I was able to chop over *40MB* off of the [SaltDrive](http://www.saltdrive.com/) application bundle for Mac OSX.
 
+<!-- more -->
+
 Let's begin with the PySide version of "hello world".  Here's the code:
 
 ```python 
@@ -22,7 +24,7 @@ msg.show()
 app.exec_()
 ```
 
-To make this into a stand-alone application, we can freeze it using [cxfreeze](http://cx-freeze.sourceforge.net/) (or [bbfreeze](TODO), or [py2exe](TODO), or [pyp2app](TODO), the results will all be similar).  Using just the packages installed into my system python, we get the following:<!-- more -->
+To make this into a stand-alone application, we can freeze it using [cxfreeze](http://cx-freeze.sourceforge.net/) (or [bbfreeze](TODO), or [py2exe](TODO), or [pyp2app](TODO), the results will all be similar).  Using just the packages installed into my system python, we get the following:
 
 ``` 
 $> #  call cxfreeze to generate the frozen app

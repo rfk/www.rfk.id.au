@@ -3,7 +3,7 @@ title = "Security Bugs in Practice: SSRF via Request Splitting"
 date = 2018-09-10T17:48:00
 updated = 2018-09-11T06:07:00
 [taxonomies]
-"blog/tags" = ['technology', 'mozilla']
+tags = ['technology', 'mozilla']
 +++
 
 One of the most interesting (and sometimes scary!)

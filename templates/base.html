@@ -23,22 +23,24 @@
     <meta name="twitter:title" content="Ryan's Ramblings">
     <title>Ryan's Ramblings</title>
     {% endif %}
-
-    <!-- TODO - necessary? -->
-    <link rel="prefetch" href="{{ resize_image(path="profile_small.png", width=50, height=50) }}" />
+    
+    <link rel="icon" href="{{ resize_image(path="profile_small.png", width=48, height=48, op="fill") }}" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
     <link rel="stylesheet" href="{{ get_url(path="main.css") }}">
     {% block meta %} {% endblock meta %}
   </head>
   <body>
     {% block header %}
       <header>
-        <a class="profile-pic" href="/">
-          <!-- TODO - tweak this -->
-          <img src="{{ resize_image(path="profile_small.png", width=50, height=50) }}" alt="profile picture">
+        <a class="profile-icon" href="/">
+          <img src="{{ resize_image(path="profile_small.png", width=48, height=48) }}" alt="profile picture">
         </a>
         <nav>
             <a href="/about/">About</a>
             <a href="/blog/">Blog</a>
+            <a href="https://github.com/rfk">GitHub</a>
+            <a href="https://twitter.com/rfkelly">Twitter</a>
         </nav>
       </header>
     {% endblock header %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>{{ page.title }}</h2>
+  <div class="page-meta">
+    {% if page.date %}
+    <div class="page-date">{{ page.date| date(format="%B %d, %Y") }}</div>
+    {% if page.taxonomies.tags %}
+      <div class="page-tags">
+        [ 
+        {% for tag in page.taxonomies.tags %}
+          <a href="{{ get_taxonomy_url(kind="tags", name=tag) }}">{{ tag }}</a>
+          {% if not loop.last %} | {% endif %}
+        {% endfor %}
+        ]
+      </div>
+    {% endif %}
+    {% endif %}
+  </div>
+
+  {{ page.content | safe }}
+
+  <hr />
+
+  <div class="related-pages">
+    <div>{% if page.later %}<a href="{{ page.later.permalink }}">{{ page.later.title }}</a>{% endif %}</div>
+    <div>{% if page.earlier %}<a href="{{ page.earlier.permalink }}">{{ page.earlier.title }}</a>{% endif %}</div>
+  </div>
+{% endblock content %}

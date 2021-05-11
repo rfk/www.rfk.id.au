@@ -2,21 +2,20 @@
 
 {% block meta %}
 <link rel="stylesheet" href="{{ get_url(path="index.css") }}">
-<!-- prefetch large profile image? -->
 {% endblock meta %}
 
 
 {% block content %}
 <div class="profile">
-    <div class="profile-container">
-      <img src="{{ resize_image(path="profile.jpg", width=280, height=373, op="fill") }}" alt="profile picture">
-    </div>
-  </div>
-  <div class="content">
-    {{ section.content | safe }}
-    <nav>
-        <a href="/about/">About</a>
-        <a href="/blog/">Blog</a>
-    </nav>
-  </div>
-  {% endblock content %}
+    <img src="{{ resize_image(path="profile.jpg", width=250, op="fit_width") }}" alt="profile picture">
+</div>
+<div class="content">
+  {{ section.content | safe }}
+  <nav>
+    <a href="/about/">About</a>
+    <a href="/blog/">Blog</a>
+    <a href="https://github.com/rfk">GitHub</a>
+    <a href="https://twitter.com/rfkelly">Twitter</a>
+</nav>
+</div>
+{% endblock content %}

@@ -1,8 +1,6 @@
 ---
-title: RFK | Research | Thesis
+title: Ryan's Thesis
 ---
-
-  <h1>Thesis Material</h1>
 
   <p>This page hosts material for my PhD thesis, entitled "Asynchronous Multi-Agent Reasoning in the Situation Calculus" and submitted in October 2008.  A PDF version is available for download: <a href="rfk-thesis.pdf">Ryan's Thesis</a>.
 

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {{ section.content | safe }}
+
+  {% if paginator %}
+    {% set pages = paginator.pages %}
+  {% else %}
+    {% set pages = section.pages %}
+  {% endif %}
+
+  {% for page in pages %}
+    <hr />
+    {% include "page-summary.html" %}
+  {% endfor %}
+
+  {% if paginator %}
+  {% if paginator.next or paginator.previous %}
+  <hr />
+  <div class="related-pages">
+    <div>{% if paginator.previous %}<a href="{{ paginator.previous }}">Newer</a>{% endif %}</div>
+    <div>{% if paginator.next %}<a href="{{ paginator.next }}">Older</a>{% endif %}</div>
+  </div>
+  {% endif %}
+  {% endif %}
+
+{% endblock content %}

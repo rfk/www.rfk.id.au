@@ -10,7 +10,7 @@ For my future reference, here are the basics of generating and publishing it:
 * Mount Fastmail files via [WebDAV](https://www.fastmail.help/hc/en-us/articles/1500000277882-Remote-file-access).
     * [This post](https://askubuntu.com/questions/498526/mounting-a-webdav-share-by-users) was
       pretty useful to me for getting it set up under WSL.
-* Run: `rsync -avzd ./public/ /path/to/mounted/rfkelly.fastmail.fm/files/www.rfk.id.au/`
+* Run: `rsync -rlvWa --inplace --no-owner --no-group --no-times --delete ./public/ /rfkelly.fastmail.fm/files/www.rfk.id.au/`
 
 Yeah yeah, rsync-over-webdav is likely to be inefficient, and this creates a window in which
 the site may be hosting partially-updated content. But it's not going to matter at this scale.

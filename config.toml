@@ -3,7 +3,7 @@ compile_sass = true
 build_search_index = false
 
 taxonomies = [
-    { name = "blog/tags", feed = false, paginate_by = 10 }
+    { name = "tags", feed = false, paginate_by = 10 }
 ]
 
 [markdown]

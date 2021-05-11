@@ -11,7 +11,9 @@ One of my commercial projects requires a space-efficient object serialisation fo
 
 The last straw came when I tried to establish a deployment scheme using [pip requirements files](http://blog.ianbicking.org/2008/12/16/using-pip-requirements/).  Both `pip install protobuf` and `easy_install protobuf` fail hard: the pypi eggs are out of date, the source download has a non-standard structure, and the `setup.py` script tries to bootstrap itself using the protobuf compiler that it assumes you have already built.  Yuck.  This was more pain than I was willing to put up with.  Plus it was a good opportunity to take another look around.
 
-I toyed briefly with [Facebook's](http://developers.facebook.com/thrift/)...errr...I mean [Apache Thrift](http://developers.facebook.com/thrift/), but it had too much remote-procedure-call baggage and not enough documentation.  Then I stumbled across a great little screed about [extprot](http://eigenclass.org/R2/writings/extprot-extensible-protocols-intro), a technology to create "compact, efficient and extensible binary protocols that can be used for cross-language communication and long-term data serialization".<!-- more -->
+<!-- more -->
+
+I toyed briefly with [Facebook's](http://developers.facebook.com/thrift/)...errr...I mean [Apache Thrift](http://developers.facebook.com/thrift/), but it had too much remote-procedure-call baggage and not enough documentation.  Then I stumbled across a great little screed about [extprot](http://eigenclass.org/R2/writings/extprot-extensible-protocols-intro), a technology to create "compact, efficient and extensible binary protocols that can be used for cross-language communication and long-term data serialization".
 
 Yet another wire format for data serialisation?  Yes, but this one has some neat features that fit well into my headspace:
 

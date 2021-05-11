@@ -10,7 +10,9 @@ Following my previous post on [testing Django with Windmill](http://www.rfk.id.a
 
 In Firefox it's possible to [request elevated permissions](http://cakebaker.wordpress.com/2006/03/29/file-upload-with-selenium/) for your unit tests, but this is far from ideal.  It means the tests are no longer automatic (you have to click "yes, grant this page extra permissions" whenever the tests are run) and it takes other browsers out of the testing loop.  Like many things in life, the easiest solution seems to be simply to [fake it](http://www.opensourceconnections.com/2007/06/06/file-uploads-with-selenium/).
 
-But like any convincing fakery, the details are never that simple in practice.  Uploading a big file from a web browser will take a long time, but could be nearly instantaneous if you fake it using a server-side file.  And what if you have custom upload handlers to enable things like [upload progress reporting](http://www.fairviewcomputing.com/blog/2008/10/21/ajax-upload-progress-bars-jquery-django-nginx/)?  How can we make fake file uploads as transparent and convincing as possible?<!-- more -->
+<!-- more -->
+
+But like any convincing fakery, the details are never that simple in practice.  Uploading a big file from a web browser will take a long time, but could be nearly instantaneous if you fake it using a server-side file.  And what if you have custom upload handlers to enable things like [upload progress reporting](http://www.fairviewcomputing.com/blog/2008/10/21/ajax-upload-progress-bars-jquery-django-nginx/)?  How can we make fake file uploads as transparent and convincing as possible?
 
 Presenting [`FakeFileUploadMiddleware`](http://www.djangosnippets.org/snippets/1300/).
 

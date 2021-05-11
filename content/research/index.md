@@ -1,11 +1,8 @@
 +++
 template = "page.html"
-title = "RFK | Research"
+title = "Ryan's Research"
 aliases = ["/ramblings/research/index.html"]
 +++
-
-
-  <h1>Ryan's Research</h1>
 
   <p>What's the point of doing academic work if you're not sharing it with the 
 world?  These pages contain the outcomes and results from my PhD research.</p>

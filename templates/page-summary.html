@@ -1,0 +1,22 @@
+  <div class="page-preview">
+    <h3><a href="{{ page.permalink }}">{{ page.title }}</a></h3>
+    <div class="page-meta">
+      <div class="page-date">{{ page.date| date(format="%B %d, %Y") }}</div>
+      <div class="page-tags">
+        [ 
+        {% for tag in page.taxonomies.tags %}
+          <a href="{{ get_taxonomy_url(kind="tags", name=tag) }}">{{ tag }}</a>
+          {% if not loop.last %} | {% endif %}
+        {% endfor %}
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      {% if page.summary -%}
+        {{ page.summary | safe }}
+        <a href="{{ page.permalink }}">read more &gt;&gt;</a>
+      {% else %}
+        {{ page.content | safe }}
+      {%- endif %}
+    </div>
+  </div>

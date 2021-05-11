@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+title = "Ryan F. Kelly"
 +++
 
 ## Ryan F. Kelly

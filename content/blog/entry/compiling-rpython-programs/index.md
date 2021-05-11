@@ -3,7 +3,7 @@ title = "Compiling RPython Programs"
 date = 2010-08-09T15:45:36.194366
 updated = 2010-08-09T16:44:24.776465
 [taxonomies]
-"blog/tags" = ['python']
+tags = ['python']
 +++
 
 Inspired by a recent [discussion on Reddit](http://www.reddit.com/r/programming/comments/cytcx/shed_skin_05_released_an_optimizing_pythontoc/) about a Python-to-C++ compiler called [Shed Skin](http://shed-skin.blogspot.com/2010/08/shed-skin-05.html), I decided to write up my own experiences on compiling (a restricted subset of) Python to a stand-alone executable.  My tool of choice is the translation toolchain from the [PyPy](http://pypy.org/) project – a project, by the way, that every Python programmer should take a look at.

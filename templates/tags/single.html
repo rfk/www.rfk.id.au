@@ -1,11 +1,30 @@
 {% extends "base.html" %}
 
-
 {% block content %}
-  <h1>{{ term.pages | length }} pages tagged with "{{ term.name }}"</h1>
+
+  {% if paginator %}
+    {% set pages = paginator.pages %}
+    <h2>Pages {{ (paginator.current_index - 1) * paginator.paginate_by + 1 }} - {{ paginator.pages | length + (paginator.current_index - 1) * paginator.paginate_by }} of {{ paginator.total_pages }} with tag "{{ term.name }}"</h2>
+    {% else %}
+    {% set pages = term.pages %}
+    <h2>{{ term.pages | length }} pages tagged "{{ term.name }}"</h2>
+  {% endif %}
+
   <div class="taxonomy-container">
-    {% for post in term.pages %}
-      {% include "entry-summary.html" %}
-    {% endfor %}
+  {% for page in pages %}
+    <hr />
+    {% include "page-summary.html" %}
+  {% endfor %}
   </div>
+
+  {% if paginator %}
+  {% if paginator.next or paginator.previous %}
+  <hr />
+  <div class="related-pages">
+    <div>{% if paginator.previous %}<a href="{{ paginator.previous }}">Newer</a>{% endif %}</div>
+    <div>{% if paginator.next %}<a href="{{ paginator.next }}">Older</a>{% endif %}</div>
+  </div>
+  {% endif %}
+  {% endif %}
+
 {% endblock content %}
