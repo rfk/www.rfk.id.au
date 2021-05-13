@@ -2,23 +2,25 @@
 title = "Ryan F. Kelly"
 +++
 
-I am a software developer and occasional consultant.  I live in a <a href="http://en.wikipedia.org/wiki/Inverloch,_Victoria">seaside village</a> near Melbourne, Australia and currently work remotely for <a href="https://www.mozilla.com/">Mozilla</a>.  The best way to contact me is by email:</p>
-  <p><span class="email-addr">ryan@rfk.id.au</span></p>
+I am a software engineer and occasional consultant.  I live in the <a href="http://en.wikipedia.org/wiki/Inverloch,_Victoria">seaside town of Inverloch</a> near Melbourne, Australia,
+where I work remotely as a Senior Staff Software Engineer for <a href="https://www.mozilla.com/">Mozilla</a>.
 
-Professionally, I have worked as a programmer and system administrator for over a decade.  I am particularly experienced with the Python programming language, which I have used to develop both web-based and desktop applications.  I also have substantial experience with JavaScript and enjoy logic programming using languages such as Prolog and Mozart.
+The best way to contact me is by email; use `ryan@` plus the domain of this website.
 
-Academically, I have completed a PhD in Computer Science with the Intelligent Agents Laboratory at the University of Melbourne.  My undergraduate studies were a double bachelor's degree in Engineering and Computer Science, which I was awarded with first class honours.  If you're interested in logical approaches to reasoning about knowledge, action and change, you might enjoy a <a href="/ramblings/research/">summary of my research</a> and a browse through my <a href="/ramblings/research/">published papers</a>.
+Professionally, I have worked as a software engineer for over a decade. I have substantial experience with Python, JavaScript, and Rust, but will confidently dabble in just about any language.
+I've worked at scale across the stack, from back-end services to webapps to native clients, and have even spent a few years in management. I sometimes write about those experiences on [my blog](/blog).
 
-Personally, I enjoy public speaking, theatre and performance arts of any persuasion.  I am a keen hiker and camper, even though it means being disconnected from the Internet for days at a time.
+Academically, I hold a PhD in Computer Science from the Intelligent Agents Laboratory at the University of Melbourne. My undergraduate studies were a double bachelor's degree in Engineering and Computer Science, which I was awarded with first class honours.  If you're interested in logical approaches to reasoning about knowledge, action and change, you might enjoy a reading <a href="/ramblings/research/">more about my research</a>.
 
-<p>For more information, please see my <a href="/about/cv.html">Curriculum Vitae</a>:
-<ul>
-<li><a href="/about/cv.html#employment">Employment History</a></li>
-<li><a href="/about/cv.html#education">Education</a></li>
-<li><a href="/about/cv.html#languages">Programming Languages</a></li>
-<li><a href="/about/cv.html#presentations">Presentations</a></li>
-<li><a href="/about/cv.html#publications">Publications</a></li>
-<li><a href="/about/cv.html#positions">Positions of Responsibility</a></li>
-<li><a href="/about/cv.html#awards">Awards and Scholarships</a></li>
-<li><a href="/about/cv.html#personal">Personal Interests</a></li>
-</ul>
+Personally, I enjoy public speaking, theatre and performance arts of any persuasion.  I am a keen hiker and camper, even though it means being disconnected from the Internet for hours or even days at a time.
+
+If you want to know *even more* about me, please see my [LinkedIn profile page](https://www.linkedin.com/in/ryanfkelly/) or
+my detailed [Curriculum Vitae](/about/cv/):
+
+* <a href="/about/cv/#employment">Employment History</a>
+* <a href="/about/cv/#education">Education</a>
+* <a href="/about/cv/#presentations">Presentations</a>
+* <a href="/about/cv/#publications">Publications</a>
+* <a href="#personal">Personal Interests</a>
+
+<!-- * <a href="#skills">Skills</a> -->

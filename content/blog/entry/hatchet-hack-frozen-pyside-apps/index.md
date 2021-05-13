@@ -24,7 +24,7 @@ msg.show()
 app.exec_()
 ```
 
-To make this into a stand-alone application, we can freeze it using [cxfreeze](http://cx-freeze.sourceforge.net/) (or [bbfreeze](TODO), or [py2exe](TODO), or [pyp2app](TODO), the results will all be similar).  Using just the packages installed into my system python, we get the following:
+To make this into a stand-alone application, we can freeze it using [cxfreeze](http://cx-freeze.sourceforge.net/) (or [bbfreeze](https://pypi.org/project/bbfreeze/), or [py2exe](https://pypi.org/project/py2exe/), or [pyp2app](https://py2app.readthedocs.io/en/latest/), the results will all be similar).  Using just the packages installed into my system python, we get the following:
 
 ``` 
 $> #  call cxfreeze to generate the frozen app

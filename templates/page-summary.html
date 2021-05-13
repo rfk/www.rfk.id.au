@@ -1,8 +1,8 @@
   <div class="page-preview">
     <h3><a href="{{ page.permalink }}">{{ page.title }}</a></h3>
-    <div class="page-meta">
-      <div class="page-date">{{ page.date| date(format="%B %d, %Y") }}</div>
-      <div class="page-tags">
+    <div class="item-meta">
+      <div class="item-date">{{ page.date| date(format="%B %d, %Y") }}</div>
+      <div class="item-tags">
         [ 
         {% for tag in page.taxonomies.tags %}
           <a href="{{ get_taxonomy_url(kind="tags", name=tag) }}">{{ tag }}</a>
