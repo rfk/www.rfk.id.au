@@ -3,14 +3,25 @@
 In case the name didn't give it away, this is the source repo for my website at https://www.rfk.id.au/.
 
 It's currently generated using [Zola](https://www.getzola.org/) and hosted on [Fastmail](fastmail.com/).
-For my future reference, here are the basics of generating and publishing it:
+Deployments are managed automatically via GitHub Actions, approximately as follows:
+
+* There is a `built` branch containing the content to be deployed,
+  i.e. the contents of the `./public/` directory produced by `zola build`.
+    * Keeping this in git makes the subsequent deploy step easier,
+      see below.
+* Each push to `main` triggers a GitHub action to build the new
+  contents and push them to the `built` branch.
+* Each push to the `built` branch triggers a GitHub action to copy
+  updated files over to Fastmail.
+    * The deployed code knows what commit on the `built` branch
+      if was deployed from, so we can push out just the files
+      that have changed. This helps us make a more efficient
+      deploy process on top of the...uh...suboptimal deploy
+      target of Fastmail webdev files.
+
+For local development:
 
 * Make sure you've `git submodule update`d to get the latest theme (thanks, [@bennetthardwick](https://github.com/bennetthardwick/simple-dev-blog-zola-starter)!)
-* Run: `zola build`.
-* Mount Fastmail files via [WebDAV](https://www.fastmail.help/hc/en-us/articles/1500000277882-Remote-file-access).
-    * [This post](https://askubuntu.com/questions/498526/mounting-a-webdav-share-by-users) was
-      pretty useful to me for getting it set up under WSL.
-* Run: `rsync -rlvWa --inplace --no-owner --no-group --no-times --delete ./public/ /rfkelly.fastmail.fm/files/www.rfk.id.au/`
-
-Yeah yeah, rsync-over-webdav is likely to be inefficient, and this creates a window in which
-the site may be hosting partially-updated content. But it's not going to matter at this scale.
+* Install [Zola](https://github.com/getzola/zola) v0.14.
+* Run: `zola serve`.
+* Push to `main` when ready to deploy.

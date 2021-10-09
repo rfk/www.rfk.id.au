@@ -1,0 +1,34 @@
+
+name: Build from main
+
+on:
+  push:
+    branches:
+      - main
+      - gh-actions-deploy
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: rfkelly/website-tooling:latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build the website
+        run: zola build --output-dir /tmp/zola-build
+
+      - name: Commit to the `built` branch
+        run: |
+          SHA=`git rev-parse HEAD`
+          git remote set-branches --add origin built
+          git fetch origin built
+          ls
+          git checkout -t origin/built
+          rm -rf ./*
+          cp -aR /tmp/zola-build/* ./
+          git diff
+          git add --all .
+          git config user.email "ryan@rfk.id.au"
+          git config user.name "Ryan Kelly"
+          git commit --allow-empty -m "Build from main at $SHA"
+          git push
