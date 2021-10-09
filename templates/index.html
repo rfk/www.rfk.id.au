@@ -7,7 +7,8 @@
 
 {% block content %}
 <div class="profile">
-    <img src="{{ resize_image(path="profile.jpg", width=250, op="fit_width") }}" alt="profile picture">
+    {% set profile_image = resize_image(path="profile.jpg", width=250, op="fit_width") %}
+    <img src="{{ profile_image.url }}" alt="profile picture">
 </div>
 <div class="content">
   {{ section.content | safe }}

@@ -1,0 +1,25 @@
+
+name: Deploy latest build
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Build from main"]
+    types:
+      - completed
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    container: rfkelly/website-tooling:latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Prepare
+        run: |
+          git remote set-branches --add origin built
+          git fetch origin built
+          git checkout -t origin/built
+
+      - name: Deploy
+        run: deployer

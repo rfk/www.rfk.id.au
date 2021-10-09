@@ -24,7 +24,8 @@
     <title>Ryan's Ramblings</title>
     {% endif %}
     
-    <link rel="icon" href="{{ resize_image(path="profile_small.png", width=48, height=48, op="fill") }}" />
+    {% set icon_image = resize_image(path="profile_small.png", width=48, height=48, op="fill") %}
+    <link rel="icon" href="{{ icon_image.url }}" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
     <link rel="stylesheet" href="{{ get_url(path="main.css") }}">
@@ -34,7 +35,8 @@
     {% block header %}
       <header>
         <a class="profile-icon" href="/">
-          <img src="{{ resize_image(path="profile_small.png", width=48, height=48) }}" alt="profile picture">
+          {% set profile_image = resize_image(path="profile_small.png", width=48, height=48) %}
+          <img src="{{ profile_image.url }}" alt="profile picture">
         </a>
         <nav>
             <a href="/about/">About</a>
