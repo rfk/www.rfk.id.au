@@ -1,0 +1,141 @@
+#!/bin/bash
+#
+#  ozec2:  spawn Mozart/Oz remote computations on a fresh EC2 instance
+#
+#  Copyright 2009, Ryan Kelly.
+#  Redistributable under the terms of the BSD license.
+#  http://www.opensource.org/licenses/bsd-license.php
+#
+#  This script acts as a Mozart/Oz fork command, spawning a new machine
+#  instance on Amazon EC2, installing Mozart, and then executing the
+#  given command on the instance using ssh.  It expects to be called as
+#  follows:
+#
+#    ozec2 <hostname> <command> <args>
+#
+#  Since a fresh machine instance will be created, the hostname argument
+#  is simply ignored.
+#
+#  To use, simply tweak the configuration below (or set the appropriate
+#  environment variables) and place it somewhere in your PATH.  Then you
+#  can do fun things like launching a remote computation on EC2:
+#
+#    {New Remote.manager init(fork:ozec2)}
+#
+#  Or spinning up some EC2 instances to run a paralel search:
+#
+#    {New Search.parallel init(unit:6#ozec2)}
+#
+#  This assumes that you have a working installation of the Amazon EC2
+#  command-line utilities, including the necessary environment variables.
+#
+
+
+###   Configuration Variables
+
+
+# Whether to print debugging info
+if [ "x$OZEC2_DEBUG" = "x" ]
+then
+    OZEC2_DEBUG=""
+fi
+
+#  The machine image to use.  By default it's a public ubuntu image.
+if [ "x$OZEC2_AMI" = "x" ]
+then
+    OZEC2_AMI="ami-1a5db973"
+fi
+
+#  Any additional args for launching the instance
+if [ "x$OZEC2_INSTANCE_ARGS" = "x" ]
+then
+    OZEC2_INSTANCE_ARGS=""
+fi
+
+#  The EC2 keypair to use.  This must be registered with EC2 using the
+#  specified name, and exist as a local file so SSH can use it.
+if [ "x$OZEC2_KEYPAIR_FILE" = "x" ]
+then
+    OZEC2_KEYPAIR_FILE="$HOME/.ec2/keypair.pem"
+fi
+if [ "x$OZEC2_KEYPAIR_NAME" = "x" ]
+then
+    OZEC2_KEYPAIR_NAME="ec2-keypair"
+fi
+
+#  The Mozart/Oz tarball to download and install on the created instance.
+#  Set this to "none" if the machine image already has mozart installed.
+if [ "x$OZEC2_TARBALL" = "x" ]
+then
+    OZEC2_TARBALL="http://www.mozart-oz.org/download/mozart-ftp/store/1.3.2-2006-06-15-tar/mozart-1.3.2.20060615-linux-i486.tar.gz"
+fi
+
+
+###   End of configuration variables
+
+
+# Ignore the first argument, it's the hostname from Mozart and isn't used
+shift 1
+
+# Launch the EC2 instance
+INSTANCE=`ec2-run-instances $OZEC2_AMI -k $OZEC2_KEYPAIR_NAME $OZEC2_INSTANCE_ARGS | grep INSTANCE | cut -f 2`
+
+if [ "x$OZEC2_DEBUG" != "x" ]
+then
+    echo "Launched instance, waiting for it to start"
+fi
+
+# Ensure that it gets stopped properly on exit
+trap 'ec2-terminate-instances $INSTANCE > /dev/null 2>&1; exit 0' INT TERM EXIT
+
+# Wait for it to be up and running
+STATUS=pending
+while [ x$STATUS != "xrunning" ]
+do
+  STATUS=`ec2-describe-instances | grep INSTANCE | grep $INSTANCE | cut -f 6`
+done
+
+HOSTNAME=`ec2-describe-instances | grep INSTANCE | grep $INSTANCE | cut -f 4`
+SSH="ssh -q -o StrictHostKeyChecking=no -i $OZEC2_KEYPAIR_FILE root@$HOSTNAME"
+
+if [ "x$OZEC2_DEBUG" != "x" ]
+then
+    echo "Instance running, hostname is $HOSTNAME"
+fi
+
+#  Poll the ssh connection, waiting for it to come up
+$SSH true > /dev/null 2>&1
+STATUS=$?
+while [ $STATUS -ne 0 ]
+do
+  $SSH true > /dev/null 2>&1
+  STATUS=$?
+done
+
+if [ "x$OZEC2_DEBUG" != "x" ]
+then
+    echo "SSH ready"
+fi
+
+#  Install Mozart
+if [ "x$OZEC2_TARBALL" != "xnone" ]
+then
+    $SSH "wget $OZEC2_TARBALL && tar -xzvf `basename $OZEC2_TARBALL`" > /dev/null 2>&1
+    $SSH "mv mozart/bin/* /usr/local/bin/ && mv mozart/include/* /usr/local/include/ && mv mozart/share/*.* /usr/local/share/ && mv mozart/platform /usr/local/platform && mv mozart/cache /usr/local/cache" > /dev/null 2>&1
+    if [ "x$OZEC2_DEBUG" != "x" ]
+    then
+        echo "Mozart installed"
+    fi
+fi
+
+#  Run the given command
+if [ "x$OZEC2_DEBUG" != "x" ]
+then
+    echo "Running command..."
+fi
+$SSH $@
+if [ "x$OZEC2_DEBUG" != "x" ]
+then
+    echo "Done"
+fi
+

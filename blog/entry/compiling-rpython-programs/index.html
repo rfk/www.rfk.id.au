@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;compiling-rpython-programs&#x2F;" />
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:creator" content="@rfkelly">
+    <meta name="twitter:site" content="@rfkelly">
+
+    
+      <meta name="twitter:title" content="Compiling RPython Programs">
+      <title>Compiling RPython Programs</title>
+    
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+     
+  </head>
+  <body>
+    
+      <header>
+        <a class="profile-icon" href="/">
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+        </a>
+        <nav>
+            <a href="/about/">About</a>
+            <a href="/blog/">Blog</a>
+            <a href="https://github.com/rfk">GitHub</a>
+            <a href="https://twitter.com/rfkelly">Twitter</a>
+        </nav>
+      </header>
+    
+    <main>
+    
+  <h1>Compiling RPython Programs</h1>
+  <div class="item-meta">
+    
+    <div class="item-date">August 09, 2010</div>
+    
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+          
+        
+        ]
+      </div>
+    
+    
+  </div>
+
+  <p>Inspired by a recent <a href="http://www.reddit.com/r/programming/comments/cytcx/shed_skin_05_released_an_optimizing_pythontoc/">discussion on Reddit</a> about a Python-to-C++ compiler called <a href="http://shed-skin.blogspot.com/2010/08/shed-skin-05.html">Shed Skin</a>, I decided to write up my own experiences on compiling (a restricted subset of) Python to a stand-alone executable.  My tool of choice is the translation toolchain from the <a href="http://pypy.org/">PyPy</a> project – a project, by the way, that every Python programmer should take a look at.</p>
+<p>Take this very exciting (<strong>EDIT:</strong> and <a href="http://www.reddit.com/r/Python/comments/cyyzz/compiling_rpython_programs/c0wbopq">needlessly inefficient</a>) python script, which we'll assume is in a file &quot;factors.py&quot;:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-python" data-lang="python"><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">factors</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">n</span><span style="color:#c0c5ce;">):
+    </span><span style="color:#65737e;">&quot;&quot;&quot;Calculate all the factors of n.&quot;&quot;&quot;
+    </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">i </span><span style="color:#b48ead;">in </span><span style="color:#bf616a;">xrange</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">,n / </span><span style="color:#d08770;">2 </span><span style="color:#c0c5ce;">+ </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">):
+       </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">n % i == </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">:
+           </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">[i] + </span><span style="color:#bf616a;">factors</span><span style="color:#c0c5ce;">(n / i)
+    </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">[n]
+
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">main</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">argv</span><span style="color:#c0c5ce;">):
+    n = </span><span style="color:#bf616a;">int</span><span style="color:#c0c5ce;">(argv[</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">])
+    </span><span style="color:#b48ead;">print </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">factors of</span><span style="color:#c0c5ce;">&quot;, n, &quot;</span><span style="color:#a3be8c;">are</span><span style="color:#c0c5ce;">&quot;, </span><span style="color:#bf616a;">factors</span><span style="color:#c0c5ce;">(n)
+
+</span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">__name__ == &quot;</span><span style="color:#a3be8c;">__main__</span><span style="color:#c0c5ce;">&quot;:
+    </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">sys
+    </span><span style="color:#bf616a;">main</span><span style="color:#c0c5ce;">(sys.argv)
+</span></code></pre>
+<p>We can of course run this from the command-line using the python interpreter, but gosh that's boring:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-console" data-lang="console"><span style="color:#c0c5ce;">$&gt; python factors.py 987654321
+factors of 987654321 are [3, 3, 17, 17, 379721]
+</span></code></pre>
+<p>Instead, let's compile it into a stand-alone executable!  Grab the latest source tarball from the <a href="http://pypy.org/download.html#building-from-source">PyPy downloads page</a> and unzip it in your work directory:<span id="continue-reading"></span></p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">$&gt; ls
+pypy-1.3  factors.py
+</span></code></pre>
+<p>To compile this script using the PyPy translator, it will need to be in a restricted subset of Python known as &quot;RPython&quot;.  Among other things this means no generators, no runtime function definitions, and no changing the type of a variable.  Unfortunately there is no complete definition of what RPython is – it's basically whatever subset of Python the PyPy developers have managed to make work.  A good reference for getting started is the <a href="http://codespeak.net/pypy/dist/pypy/doc/coding-guide.html#restricted-python">PyPy coding guide</a>.</p>
+<p>Fortunately, our simple script is already valid RPython :-)</p>
+<p>Next we need to add a hook telling the PyPy compiler where execution of our script begins.  Rather than the classic <strong>name</strong> == &quot;<strong>main</strong>&quot; block, PyPy loads and executes a special function named &quot;target&quot; to find the entry point for the script:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-python" data-lang="python"><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">factors</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">n</span><span style="color:#c0c5ce;">):
+    </span><span style="color:#65737e;">&quot;&quot;&quot;Calculate all the factors of n.&quot;&quot;&quot;
+    </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">i </span><span style="color:#b48ead;">in </span><span style="color:#bf616a;">xrange</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">,n / </span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">):
+       </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">n % i == </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">:
+           </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">[i] + </span><span style="color:#bf616a;">factors</span><span style="color:#c0c5ce;">(n / i)
+    </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">[n]
+
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">main</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">argv</span><span style="color:#c0c5ce;">):
+    n = </span><span style="color:#bf616a;">int</span><span style="color:#c0c5ce;">(argv[</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">])
+    </span><span style="color:#b48ead;">print </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">factors of</span><span style="color:#c0c5ce;">&quot;, n, &quot;</span><span style="color:#a3be8c;">are</span><span style="color:#c0c5ce;">&quot;, </span><span style="color:#bf616a;">factors</span><span style="color:#c0c5ce;">(n)
+    </span><span style="color:#b48ead;">return </span><span style="color:#d08770;">0
+
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">target</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">driver</span><span style="color:#c0c5ce;">,</span><span style="color:#bf616a;">args</span><span style="color:#c0c5ce;">):
+    </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">main,</span><span style="color:#d08770;">None
+</span></code></pre>
+<p>Note that the &quot;target&quot; function returns the desired entry-point for the script as a function object.  I've no idea why it has to return a tuple – perhaps one of the PyPy devs will stumble past and enlighten us.  Also note that the main routine is required to return an integer status code.</p>
+<p>Now, we can simply invoke the PyPy translation toolchain on our script:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">$&gt; python pypy-1.3/pypy/translator/goal/translate.py --batch --output factors.exe factors.py
+...
+...lots and lots of output
+...
+[Timer] Total:                         --- 17.9 s
+$&gt;
+$&gt; ls
+pypy-1.3  factors.exe  factors.py
+</span></code></pre>
+<p>Yep, it takes almost 20 seconds to compile on my machine.  That should give you some idea of how much work PyPy is doing behind the scenes.</p>
+<p>The <code>--output</code> option lets you specify the name of the output file, and the <code>--batch</code> option prevents the compiler from trying to open an interactive debug window.  You can of course pass <code>--help</code> to get a list of available options, but most of them are specific to building PyPy's standlone python interpreter (e.g. they select the GC engine to use, whether to include stackless extensions, etc) and are not relevant for a generic RPython program.</p>
+<p>The resulting executable does just what you'd expect:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">$&gt; ./factors.exe 987654321
+factors of 987654321 are [3, 3, 17, 17, 379721]
+</span></code></pre>
+<p>Neat.</p>
+<p>For a real-life example of this toolchain in action, check out the experimental <a href="http://github.com/rfk/esky/tree/pypy-compile">&quot;pypy-compile&quot; branch of esky</a>.  The script <a href="http://github.com/rfk/esky/blob/pypy-compile/esky/bootstrap.py">esky/bootstrap.py</a> is valid RPython, while the function <code>compile_to_bootstrap_exe</code> in <a href="http://github.com/rfk/esky/blob/pypy-compile/esky/bdist_esky/__init__.py">esky/bdist_esky/<strong>init</strong>.py</a> automates the process shown here, calling out to PyPy to compile this bootstrapping script into a stand-alone executable.</p>
+<p>As for why you might want to go to all this trouble, here's a simple demonstration:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">$&gt; time python factors.py 987654321
+factors of 987654321 are [3, 3, 17, 17, 379721]
+
+real	0m0.040s
+user	0m0.032s
+sys	0m0.004s
+</span></code></pre><pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">$&gt; time ./factors.exe 987654321
+factors of 987654321 are [3, 3, 17, 17, 379721]
+
+real	0m0.005s
+user	0m0.004s
+sys	0m0.000s
+</span></code></pre>
+<p>That's an order-of-magnitude speedup.</p>
+
+
+  <hr />
+
+  <div class="related-pages">
+    <div><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pyenchant-precompiled-osx&#x2F;">PyEnchant: now with OSX!</a></div>
+    <div><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;frozen-app-starting-faster&#x2F;">Starting Faster for Frozen Python Apps</a></div>
+  </div>
+
+    </main>
+  </body>
+</html>

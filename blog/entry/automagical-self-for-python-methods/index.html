@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;automagical-self-for-python-methods&#x2F;" />
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:creator" content="@rfkelly">
+    <meta name="twitter:site" content="@rfkelly">
+
+    
+      <meta name="twitter:title" content="Automagical &#x27;self&#x27; for Python Methods">
+      <title>Automagical &#x27;self&#x27; for Python Methods</title>
+    
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+     
+  </head>
+  <body>
+    
+      <header>
+        <a class="profile-icon" href="/">
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+        </a>
+        <nav>
+            <a href="/about/">About</a>
+            <a href="/blog/">Blog</a>
+            <a href="https://github.com/rfk">GitHub</a>
+            <a href="https://twitter.com/rfkelly">Twitter</a>
+        </nav>
+      </header>
+    
+    <main>
+    
+  <h1>Automagical &#x27;self&#x27; for Python Methods</h1>
+  <div class="item-meta">
+    
+    <div class="item-date">September 12, 2007</div>
+    
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;software&#x2F;">software</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+          
+        
+        ]
+      </div>
+    
+    
+  </div>
+
+  <p>Inspired by the never-ending stream of &quot;explicit self is really ugly&quot; comments that Python seems to attract, and wanting to hack around a little in the deep bowels of Python, I've put together a new python module called <a href="http://cheeseshop.python.org/pypi/autoself/">autoself</a>.</p>
+<p>As the name suggests, it does one very simple thing: automagically adds 'self' as the first argument in a method  definition.  It doesn't turn local variables into instance attributes.  It doesn't change the semantics of method calls in any way shape or form.  It just lets you save five keystrokes when defining a method.
+Will I be using this in my own code?  No. No no no. I love explicit 'self'!  But it was a lot of fun, and surprisingly subtle to get right in non-trivial cases such as inner classes.  And I can now cross &quot;python bytecode hacking&quot; off my things-to-do list. (Interesting fact: python uses different bytecodes to access local variables, for optimization purposes.  So turning 'self' from a free variable reference to a local variable requires rewriting the function's bytecode)</p>
+
+
+  <hr />
+
+  <div class="related-pages">
+    <div><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;preparing-pyenchant-for-python-3&#x2F;">Preparing PyEnchant for Python 3.0</a></div>
+    <div></div>
+  </div>
+
+    </main>
+  </body>
+</html>

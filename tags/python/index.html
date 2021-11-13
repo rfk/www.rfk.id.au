@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;" />
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:creator" content="@rfkelly">
+    <meta name="twitter:site" content="@rfkelly">
+
+    
+    <meta name="twitter:title" content="Ryan's Ramblings">
+    <title>Ryan's Ramblings</title>
+    
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+     
+  </head>
+  <body>
+    
+      <header>
+        <a class="profile-icon" href="/">
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+        </a>
+        <nav>
+            <a href="/about/">About</a>
+            <a href="/blog/">Blog</a>
+            <a href="https://github.com/rfk">GitHub</a>
+            <a href="https://twitter.com/rfkelly">Twitter</a>
+        </nav>
+      </header>
+    
+    <main>
+    
+
+  
+    
+    <h2>Pages 1 - 10 of 18 with tag "python"</h2>
+    
+
+  <div class="taxonomy-container">
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;are-we-python-yet&#x2F;">Are we Python yet?</a></h3>
+    <div class="item-meta">
+      <div class="item-date">January 28, 2015</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;mozilla&#x2F;">mozilla</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>While it was a lot of fun to see <a href="/blog/entry/pypy-js-faster-than-cpython">a web-based python interpreter beat my system python on a single carefully-tuned benchmark</a>, that result obviously didn't say much about the usefulness of <a href="http://pypyjs.org">PyPy.js</a> for any real-world applications.  I'm keen to find out whether the web can support dynamic language interpreters for general-purpose use in a way that's truly competitive with a native environment.</p>
+<p>Inspired by the <a href="http://speed.pypy.org/">PyPy speed center</a> and the fine Mozilla tradition of <a href="http://arewefastyet.com/">publicly</a> <a href="https://areweslimyet.com/">visualising</a> <a href="http://areweamillionyet.org/">performance</a> <a href="http://arewemetayet.com/">metrics</a>, I've been working on a benchmark suite and metrics-tracking site for PyPy.js.  The initial version is finally live:</p>
+<p><a href="http://arewepythonyet.com">Are we Python yet?</a></p>
+<p><strong>TL;DR:</strong>  not really, not yet – but we're tracking slowly towards that goal.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;are-we-python-yet&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pypy-js-faster-than-cpython&#x2F;">PyPy.js: Now faster than CPython</a></h3>
+    <div class="item-meta">
+      <div class="item-date">May 06, 2014</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;mozilla&#x2F;">mozilla</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>OK OK, I couldn't resist that title but it probably goes a bit far.  Let me try for a little more nuance:</p>
+<p><strong>PyPy.js: Now faster than CPython, on a single carefully-tuned benchmark, after JIT warmup.</strong></p>
+<p>It has been the better part of a year since I first started hacking on <a href="/blog/entry/pypy-js-first-steps/">PyPy.js</a>, an experiment in bringing a fast and compliant python interpreter to the web.  I've been pretty quiet during that time but have certainly been keeping busy.  Some of the big changes since my <a href="/blog/entry/pypy-js-poc-jit/">previous update</a> include:</p>
+<ul>
+<li>An <a href="https://github.com/rfk/pypy/blob/master/rpython/jit/backend/asmjs/support.py">asmjs-to-python converter</a>, so that PyPy's comprehensive JIT testsuite can be run on the asmjs backend.</li>
+<li>Some <a href="https://github.com/kripken/emscripten/blob/master/tools/js-optimizer.js#L1878">new optimizations</a> in the emscripten compiler, which greatly reduce compiled code size.</li>
+<li>A basic interactive console, so you can <a href="http://pypyjs.org/demo/">try PyPy.js straight from your browser</a>.</li>
+<li>And even uncovering an apparent <a href="http://llvm.org/bugs/show_bug.cgi?id=19580">bug in an LLVM optimization pass</a>.</li>
+</ul>
+<p>The result, while still rough in a lot of places, is nonetheless an exciting milestone: the full <a href="http://pypy.org/">PyPy</a> interpreter, compiled down to javascript and re-targeted to emit <a href="http://asmjs.org/">asmjs</a> from its JIT, running the pystone benchmark faster <em>in a browser</em> than the native CPython interpreter runs it on bare metal.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pypy-js-faster-than-cpython&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pypy-js-poc-jit&#x2F;">PyPy.js Update: A Proof-of-Concept JIT</a></h3>
+    <div class="item-meta">
+      <div class="item-date">August 08, 2013</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;mozilla&#x2F;">mozilla</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>Two weeks ago I hatched a plan to <a href="/blog/entry/pypy-js-first-steps/">port Python to the Web Platform</a> by using <a href="http://emscripten.org">Emscripten</a> to translate <a href="http://pypy.org/">PyPy</a> into JavaScript.  My hope is to produce something than can run in the browser with performance comparable to a standard Python interpreter, a hope which hinges on two key ingredients:</p>
+<ul>
+<li>PyPy's powerful <a href="http://doc.pypy.org/en/latest/jit/index.html">just-in-time compiler</a>, which can optimize the hot loops of your program into efficient native code.</li>
+<li>The recent work on <a href="http://asmjs.org/">asm.js</a>, a low-level subset of JavaScript that can act like an efficient virtual machine in the browser.</li>
+</ul>
+<p>By translating the PyPy interpreter into asm.js code, and by having its JIT backend emit specialized asm.js code at runtime, it should theoretically be possible to have an in-browser Python implementation whose hot loops perform within a factor of two of native code.</p>
+<p>I'm excited to report a small but important milestone on the road to making this a reality.</p>
+<p>It's certainly not a full Python interpreter, and it comes with many caveats and question-marks and todos, but I <em>have</em> been able to produce a simple demo interpreter, with JIT, that approaches the theoretical factor-of-two comparison to native code under some circumstances.  There's a long way to go, but this seems like a very promising start.</p>
+<p>TL;DR?  Feel free to jump straight to <a href="/blog/entry/pypy-js-poc-jit/#graph">the important graph.</a></p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pypy-js-poc-jit&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pypy-js-first-steps&#x2F;">PyPy.js: First Steps</a></h3>
+    <div class="item-meta">
+      <div class="item-date">July 23, 2013</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;mozilla&#x2F;">mozilla</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>I've been spending a lot of time in JavaScript land lately.  It's not totally unexpected – when I first applied for a job with Mozilla, I was warned only semi-jokingly that &quot;they hire all the best Python programmers and then force them to write JavaScript&quot;.  I've no deep love or hate for it as a language, but JavaScript is pretty interesting to me as a <em>platform</em>, as a kind of runs-everywhere lowest-common-denominator environment that is slowly being molded and coerced into a pretty decent universal runtime.  But if <a href="https://blog.mozilla.org/blog/2012/02/27/mozilla-in-mobile-the-web-is-the-platform/">&quot;the Web is the Platform&quot;</a>, what's a stranded Pythonista to do?</p>
+<p>Port Python to JavaScript, of course!</p>
+<p>This has been done before in a variety of ways.  <a href="http://www.skulpt.org/">Skulpt</a> and <a href="http://www.brython.info/tests/console.html">Brython</a> are impressive re-implementations of Python on top of JavaScript, including interactive consoles that make for a very compelling demo.  <a href="http://pyjs.org/">Pyjamas</a> lets you translate Python apps into JavaScript so they can be run in the browser.  There are many more examples with varying degrees of success and completeness.</p>
+<p>I don't want to down-play the phenomenal efforts behind projects like this.  But personally, I'm a little wary of the re-implementation treadmill that they risk being stuck on.  I'd much prefer to leverage the work that's already been done on making a fantastic Python interpreter, along with the work that's already been done on making a fantastic JavaScript runtime, and re-implement as little as possible while gluing them both together.</p>
+<p>I've finally taken my first tentative steps down that path, by combining two amazing projects open-source projects: <a href="http://pypy.org">PyPy</a> and <a href="http://emscripten.org">Emscripten</a>.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pypy-js-first-steps&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;securing-pyramid-persona-macauth&#x2F;">Securing Pyramid with Persona and MACAuth</a></h3>
+    <div class="item-meta">
+      <div class="item-date">October 04, 2012</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p><a href="https://login.persona.org/">Mozilla Persona</a> went into beta release last week, and it has been very exciting to see the interest and positive press it has generated.  I particularly liked the release of <a href="http://pypi.python.org/pypi/pyramid_persona">pyramid_persona</a> and the accompanying article <a href="http://compiletoi.net/quick-authentication-on-pyramid-with-persona.html">Quick authentication on pyramid with persona</a> – it is cleaner, simpler, and more feature-full than <a href="/blog/entry/painless-auth-pyramid-browserid/">my attempt at Pyramid/BrowserID integration</a> from last year.  Great stuff!</p>
+<p>But there is one weak point to using Persona for authentication: it makes automated access difficult.  The login flow depends heavily on javascript and assumes that authentication will involve a real live user and a full-blown web-browser.  Scripting access to your site via something like <a href="http://docs.python-requests.org/en/latest/">requests</a> would be tricky at best, and downright impossible in the general case.</p>
+<p>Most of the webapps we build at <a href="https://wiki.mozilla.org/Services/">Mozilla Services</a> are meant for machines, not people, so we've had to tackle this problem head-on.  We have found that a <em>combined</em> authentication approach works very nicely – we provide Persona for live users, and the much more automation-friendly <a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac">MAC Access Authentication</a> for machines.</p>
+<p>In this post I'll show you how easy it can be to combine the two, using <a href="http://pypi.python.org/pypi/pyramid_persona">pyramid_persona</a> and <a href="http://pypi.python.org/pypi/pyramid_macauth">pyramid_macauth</a> for the heavy lifting, and <a href="http://pypi.python.org/pypi/pyramid_multiauth">pyramid_multiauth</a> to tie them both together.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;securing-pyramid-persona-macauth&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;testing-better-coverage-tox&#x2F;">Testing better with coverage and tox</a></h3>
+    <div class="item-meta">
+      <div class="item-date">May 14, 2011</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;software&#x2F;">software</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>I've got a little bit of downtime at the moment, and I'm determined to spend it keeping my Python skills and projects up to date.  First on the list: testing.</p>
+<p>Almost all of <a href="/software/">my open-source projects</a> come with automated tests of some kind.  Some are woefully under-tested (<a href="http://github.com/rfk/m2wsgi/">m2wsgi</a>, <a href="http://github.com/rfk/myppy/">myppy</a>) while others have collected a test case for just about every feature (<a href="http://github.com/rfk/pyenchant/">pyenchant</a>, <a href="http://github.com/rfk/esky/">esky</a>).  But they could all stand to benefit from a little more testing discipline.</p>
+<p>If you have any of your own python projects, ask yourself: do they work on older versions of python?  How about on 2.7?  On 3.2?  How about on Windows or OSX?  <em>Are you sure?</em></p>
+<p>I want to be able to answer a confident <em>yes</em> to all these questions, so I'm embarking on a rather ambitious plan over the coming months: full test suites, with 100% <a href="http://en.wikipedia.org/wiki/Code_coverage">code coverage</a>, tested on Linux, Windows and OSX, across python 2.5, 2.6, 2.7 and 3.2.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;testing-better-coverage-tox&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;hatchet-hack-frozen-pyside-apps&#x2F;">Hatchet: hack frozen PySide apps down to size</a></h3>
+    <div class="item-meta">
+      <div class="item-date">February 07, 2011</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;software&#x2F;">software</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>If you've seen any of my <a href="http://pypi.python.org/pypi/esky">latest</a> <a href="http://pypi.python.org/pypi/zipimportx">python</a> <a href="http://pypi.python.org/pypi/signedimp">projects</a>, you know that I spend a lot of time thinking about <em>freezing</em> python programs – taking a python script and packaging it up into a stand-alone application that can be deployed to an end user.  My latest quest has been freezing an application that uses <a href="http://www.pyside.org/">PySide</a> for its GUI, and trying to make the resulting distribution bundle as small as possible.  The result is a neat little tool called <a href="https://github.com/rfk/pysidekick/blob/master/PySideKick/Hatchet.py">Hatchet</a>.</p>
+<p>This post is part motivational, part example.  I'll show you a basic &quot;hello world&quot; app in PySide, take you through the process of freezing it into a stand-alone application, then show how to use Hatchet to shrink the distribution down to a manageable size.  If that seems a little too academic for you, consider this for real-world motivation: using the techniques shown in this post, I was able to chop over <em>40MB</em> off of the <a href="http://www.saltdrive.com/">SaltDrive</a> application bundle for Mac OSX.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;hatchet-hack-frozen-pyside-apps&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pyenchant-precompiled-osx&#x2F;">PyEnchant: now with OSX!</a></h3>
+    <div class="item-meta">
+      <div class="item-date">August 17, 2010</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;software&#x2F;">software</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>The latest release of <a href="http://www.rfk.id.au/software/pyenchant/">PyEnchant</a> now contains an experimental binary distribution for OSX, as both an mpkg installer and a python egg.  In theory, users on OSX 10.4 or later should be able to just drop <a href="http://pypi.python.org/packages/2.6/p/pyenchant/pyenchant-1.6.3-py2.6-macosx-10.4-universal.egg"><code>pyenchant-1.6.3-py2.6-macosx-10.4-universal.egg</code></a> somewhere on sys.path and be up and running and spellchecking with ease.</p>
+<p>If you're a Mac user, please try it out and <a href="http://github.com/rfk/pyenchant/issues/">let me know</a> if anything doesn't work the way you expect.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pyenchant-precompiled-osx&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;compiling-rpython-programs&#x2F;">Compiling RPython Programs</a></h3>
+    <div class="item-meta">
+      <div class="item-date">August 09, 2010</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>Inspired by a recent <a href="http://www.reddit.com/r/programming/comments/cytcx/shed_skin_05_released_an_optimizing_pythontoc/">discussion on Reddit</a> about a Python-to-C++ compiler called <a href="http://shed-skin.blogspot.com/2010/08/shed-skin-05.html">Shed Skin</a>, I decided to write up my own experiences on compiling (a restricted subset of) Python to a stand-alone executable.  My tool of choice is the translation toolchain from the <a href="http://pypy.org/">PyPy</a> project – a project, by the way, that every Python programmer should take a look at.</p>
+<p>Take this very exciting (<strong>EDIT:</strong> and <a href="http://www.reddit.com/r/Python/comments/cyyzz/compiling_rpython_programs/c0wbopq">needlessly inefficient</a>) python script, which we'll assume is in a file &quot;factors.py&quot;:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-python" data-lang="python"><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">factors</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">n</span><span style="color:#c0c5ce;">):
+    </span><span style="color:#65737e;">&quot;&quot;&quot;Calculate all the factors of n.&quot;&quot;&quot;
+    </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">i </span><span style="color:#b48ead;">in </span><span style="color:#bf616a;">xrange</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">,n / </span><span style="color:#d08770;">2 </span><span style="color:#c0c5ce;">+ </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">):
+       </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">n % i == </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">:
+           </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">[i] + </span><span style="color:#bf616a;">factors</span><span style="color:#c0c5ce;">(n / i)
+    </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">[n]
+
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">main</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">argv</span><span style="color:#c0c5ce;">):
+    n = </span><span style="color:#bf616a;">int</span><span style="color:#c0c5ce;">(argv[</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">])
+    </span><span style="color:#b48ead;">print </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">factors of</span><span style="color:#c0c5ce;">&quot;, n, &quot;</span><span style="color:#a3be8c;">are</span><span style="color:#c0c5ce;">&quot;, </span><span style="color:#bf616a;">factors</span><span style="color:#c0c5ce;">(n)
+
+</span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">__name__ == &quot;</span><span style="color:#a3be8c;">__main__</span><span style="color:#c0c5ce;">&quot;:
+    </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">sys
+    </span><span style="color:#bf616a;">main</span><span style="color:#c0c5ce;">(sys.argv)
+</span></code></pre>
+<p>We can of course run this from the command-line using the python interpreter, but gosh that's boring:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-console" data-lang="console"><span style="color:#c0c5ce;">$&gt; python factors.py 987654321
+factors of 987654321 are [3, 3, 17, 17, 379721]
+</span></code></pre>
+<p>Instead, let's compile it into a stand-alone executable!  Grab the latest source tarball from the <a href="http://pypy.org/download.html#building-from-source">PyPy downloads page</a> and unzip it in your work directory:
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;compiling-rpython-programs&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;frozen-app-starting-faster&#x2F;">Starting Faster for Frozen Python Apps</a></h3>
+    <div class="item-meta">
+      <div class="item-date">July 21, 2010</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;software&#x2F;">software</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>I've just spent a few days trying to improve the performance of a frozen Python app - specifically, the time it takes to start up and present a login window.  Most of the improvements were down to good old-fashioned writing of better code, but I also put together a couple of tricks to help shave off even more milliseconds.  They both target one of the major sources of slowness when starting up a Python app: imports.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;frozen-app-starting-faster&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+  </div>
+
+  
+  
+  <hr />
+  <div class="related-pages">
+    <div></div>
+    <div><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;page&#x2F;2&#x2F;">Older</a></div>
+  </div>
+  
+  
+
+
+    </main>
+  </body>
+</html>

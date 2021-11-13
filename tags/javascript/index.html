@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;" />
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:creator" content="@rfkelly">
+    <meta name="twitter:site" content="@rfkelly">
+
+    
+    <meta name="twitter:title" content="Ryan's Ramblings">
+    <title>Ryan's Ramblings</title>
+    
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+     
+  </head>
+  <body>
+    
+      <header>
+        <a class="profile-icon" href="/">
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+        </a>
+        <nav>
+            <a href="/about/">About</a>
+            <a href="/blog/">Blog</a>
+            <a href="https://github.com/rfk">GitHub</a>
+            <a href="https://twitter.com/rfkelly">Twitter</a>
+        </nav>
+      </header>
+    
+    <main>
+    
+
+  
+    
+    <h2>Pages 1 - 7 of 7 with tag "javascript"</h2>
+    
+
+  <div class="taxonomy-container">
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;are-we-python-yet&#x2F;">Are we Python yet?</a></h3>
+    <div class="item-meta">
+      <div class="item-date">January 28, 2015</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;mozilla&#x2F;">mozilla</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>While it was a lot of fun to see <a href="/blog/entry/pypy-js-faster-than-cpython">a web-based python interpreter beat my system python on a single carefully-tuned benchmark</a>, that result obviously didn't say much about the usefulness of <a href="http://pypyjs.org">PyPy.js</a> for any real-world applications.  I'm keen to find out whether the web can support dynamic language interpreters for general-purpose use in a way that's truly competitive with a native environment.</p>
+<p>Inspired by the <a href="http://speed.pypy.org/">PyPy speed center</a> and the fine Mozilla tradition of <a href="http://arewefastyet.com/">publicly</a> <a href="https://areweslimyet.com/">visualising</a> <a href="http://areweamillionyet.org/">performance</a> <a href="http://arewemetayet.com/">metrics</a>, I've been working on a benchmark suite and metrics-tracking site for PyPy.js.  The initial version is finally live:</p>
+<p><a href="http://arewepythonyet.com">Are we Python yet?</a></p>
+<p><strong>TL;DR:</strong>  not really, not yet – but we're tracking slowly towards that goal.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;are-we-python-yet&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;cromulate-improve-compressibility&#x2F;">An Experiment in Improving Compressiblity</a></h3>
+    <div class="item-meta">
+      <div class="item-date">July 17, 2014</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;mozilla&#x2F;">mozilla</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>Alternate title: <strong>reduce your compressed file size with this one weird trick!</strong></p>
+<p>One of the top items on my list for <a href="http://www.pypyjs.org">PyPy.js</a> development is to reduce the size of the initial download – it currently weighs in at a hefty 3.1M of compressed javascript code plus another 2.4M of binary data.  The big wins here are clearly going to come from just generating less code, and I have made some promising initial progress on that front.  But it's also a good opportunity to experiment with some after-the-fact techniques for reducing the <em>compressed</em> filesize without having to change the actual generated code.</p>
+<p>The obvious approach is to reach for a higher-performance compression algorithm, perhaps <a href="https://en.wikipedia.org/wiki/Bzip2">bzip2</a> or <a href="https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Markov_chain_algorithm">LZMA</a>.  But these algorithms can suffer from slow decompression speeds and are not generally supported in today's web browsers.  For shipping compressed content on the web today, gzip is the only game in town.</p>
+<p>So can we do better while staying within the confines of gzip?</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;cromulate-improve-compressibility&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pypy-js-faster-than-cpython&#x2F;">PyPy.js: Now faster than CPython</a></h3>
+    <div class="item-meta">
+      <div class="item-date">May 06, 2014</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;mozilla&#x2F;">mozilla</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>OK OK, I couldn't resist that title but it probably goes a bit far.  Let me try for a little more nuance:</p>
+<p><strong>PyPy.js: Now faster than CPython, on a single carefully-tuned benchmark, after JIT warmup.</strong></p>
+<p>It has been the better part of a year since I first started hacking on <a href="/blog/entry/pypy-js-first-steps/">PyPy.js</a>, an experiment in bringing a fast and compliant python interpreter to the web.  I've been pretty quiet during that time but have certainly been keeping busy.  Some of the big changes since my <a href="/blog/entry/pypy-js-poc-jit/">previous update</a> include:</p>
+<ul>
+<li>An <a href="https://github.com/rfk/pypy/blob/master/rpython/jit/backend/asmjs/support.py">asmjs-to-python converter</a>, so that PyPy's comprehensive JIT testsuite can be run on the asmjs backend.</li>
+<li>Some <a href="https://github.com/kripken/emscripten/blob/master/tools/js-optimizer.js#L1878">new optimizations</a> in the emscripten compiler, which greatly reduce compiled code size.</li>
+<li>A basic interactive console, so you can <a href="http://pypyjs.org/demo/">try PyPy.js straight from your browser</a>.</li>
+<li>And even uncovering an apparent <a href="http://llvm.org/bugs/show_bug.cgi?id=19580">bug in an LLVM optimization pass</a>.</li>
+</ul>
+<p>The result, while still rough in a lot of places, is nonetheless an exciting milestone: the full <a href="http://pypy.org/">PyPy</a> interpreter, compiled down to javascript and re-targeted to emit <a href="http://asmjs.org/">asmjs</a> from its JIT, running the pystone benchmark faster <em>in a browser</em> than the native CPython interpreter runs it on bare metal.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pypy-js-faster-than-cpython&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pypy-js-poc-jit&#x2F;">PyPy.js Update: A Proof-of-Concept JIT</a></h3>
+    <div class="item-meta">
+      <div class="item-date">August 08, 2013</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;mozilla&#x2F;">mozilla</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>Two weeks ago I hatched a plan to <a href="/blog/entry/pypy-js-first-steps/">port Python to the Web Platform</a> by using <a href="http://emscripten.org">Emscripten</a> to translate <a href="http://pypy.org/">PyPy</a> into JavaScript.  My hope is to produce something than can run in the browser with performance comparable to a standard Python interpreter, a hope which hinges on two key ingredients:</p>
+<ul>
+<li>PyPy's powerful <a href="http://doc.pypy.org/en/latest/jit/index.html">just-in-time compiler</a>, which can optimize the hot loops of your program into efficient native code.</li>
+<li>The recent work on <a href="http://asmjs.org/">asm.js</a>, a low-level subset of JavaScript that can act like an efficient virtual machine in the browser.</li>
+</ul>
+<p>By translating the PyPy interpreter into asm.js code, and by having its JIT backend emit specialized asm.js code at runtime, it should theoretically be possible to have an in-browser Python implementation whose hot loops perform within a factor of two of native code.</p>
+<p>I'm excited to report a small but important milestone on the road to making this a reality.</p>
+<p>It's certainly not a full Python interpreter, and it comes with many caveats and question-marks and todos, but I <em>have</em> been able to produce a simple demo interpreter, with JIT, that approaches the theoretical factor-of-two comparison to native code under some circumstances.  There's a long way to go, but this seems like a very promising start.</p>
+<p>TL;DR?  Feel free to jump straight to <a href="/blog/entry/pypy-js-poc-jit/#graph">the important graph.</a></p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pypy-js-poc-jit&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pypy-js-first-steps&#x2F;">PyPy.js: First Steps</a></h3>
+    <div class="item-meta">
+      <div class="item-date">July 23, 2013</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;mozilla&#x2F;">mozilla</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>I've been spending a lot of time in JavaScript land lately.  It's not totally unexpected – when I first applied for a job with Mozilla, I was warned only semi-jokingly that &quot;they hire all the best Python programmers and then force them to write JavaScript&quot;.  I've no deep love or hate for it as a language, but JavaScript is pretty interesting to me as a <em>platform</em>, as a kind of runs-everywhere lowest-common-denominator environment that is slowly being molded and coerced into a pretty decent universal runtime.  But if <a href="https://blog.mozilla.org/blog/2012/02/27/mozilla-in-mobile-the-web-is-the-platform/">&quot;the Web is the Platform&quot;</a>, what's a stranded Pythonista to do?</p>
+<p>Port Python to JavaScript, of course!</p>
+<p>This has been done before in a variety of ways.  <a href="http://www.skulpt.org/">Skulpt</a> and <a href="http://www.brython.info/tests/console.html">Brython</a> are impressive re-implementations of Python on top of JavaScript, including interactive consoles that make for a very compelling demo.  <a href="http://pyjs.org/">Pyjamas</a> lets you translate Python apps into JavaScript so they can be run in the browser.  There are many more examples with varying degrees of success and completeness.</p>
+<p>I don't want to down-play the phenomenal efforts behind projects like this.  But personally, I'm a little wary of the re-implementation treadmill that they risk being stuck on.  I'd much prefer to leverage the work that's already been done on making a fantastic Python interpreter, along with the work that's already been done on making a fantastic JavaScript runtime, and re-implement as little as possible while gluing them both together.</p>
+<p>I've finally taken my first tentative steps down that path, by combining two amazing projects open-source projects: <a href="http://pypy.org">PyPy</a> and <a href="http://emscripten.org">Emscripten</a>.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pypy-js-first-steps&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;xmlns-selectors-jquery&#x2F;">XML Namespace Selectors for jQuery</a></h3>
+    <div class="item-meta">
+      <div class="item-date">May 22, 2009</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;software&#x2F;">software</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>I hit my first real roadbump with <a href="http://www.jquery.com/">jQuery</a>
+yesterday, a missing feature that really made me stop and stare in puzzlement:
+jQuery doesn't support xml-namespace selectors.  Since I'm trying to parse <a href="http://en.wikipedia.org/wiki/WebDAV">WebDAV</a> response bodies, and such documents make extensive use of namespaces, it's quite the issue for me.  Or rather, it <em>was</em> quite the issue – read on if you're interested in the details, or just <a href="/static/scratch/jquery.xmlns.js">download my solution</a> if you're impatient.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;xmlns-selectors-jquery&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;jquery-first-impressions&#x2F;">jQuery, first impressions</a></h3>
+    <div class="item-meta">
+      <div class="item-date">January 11, 2009</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;software&#x2F;">software</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>New projects are always a great opportunity to develop some new skills along
+the way. With my latest project I've jumped on the chance to tick a box
+that's spent far too long on my todo-list, and find out what all the
+fuss is about concerning the &quot;write less, do more&quot;
+JavaScript library known as <a href="http://jquery.com/">jQuery</a>.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;jquery-first-impressions&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+  </div>
+
+  
+  
+  
+
+
+    </main>
+  </body>
+</html>

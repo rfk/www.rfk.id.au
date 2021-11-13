@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;testing-file-uploads-in-django&#x2F;" />
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:creator" content="@rfkelly">
+    <meta name="twitter:site" content="@rfkelly">
+
+    
+      <meta name="twitter:title" content="Testing file uploads in Django">
+      <title>Testing file uploads in Django</title>
+    
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+     
+  </head>
+  <body>
+    
+      <header>
+        <a class="profile-icon" href="/">
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+        </a>
+        <nav>
+            <a href="/about/">About</a>
+            <a href="/blog/">Blog</a>
+            <a href="https://github.com/rfk">GitHub</a>
+            <a href="https://twitter.com/rfkelly">Twitter</a>
+        </nav>
+      </header>
+    
+    <main>
+    
+  <h1>Testing file uploads in Django</h1>
+  <div class="item-meta">
+    
+    <div class="item-date">January 28, 2009</div>
+    
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;software&#x2F;">software</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;django&#x2F;">django</a>
+          
+        
+        ]
+      </div>
+    
+    
+  </div>
+
+  <p>Following my previous post on <a href="http://www.rfk.id.au/blog/entry/django-unittest-windmill-goodness">testing Django with Windmill</a>, I quickly ran into a common snag with in-browser web app testing: it's not possible to programmatically set the value of file input fields.  This makes it very difficult to test file upload functionality using frameworks such as <a href="http://www.getwindmill.com/">Windmill</a> or <a href="http://seleniumhq.org/">Selenium</a>.</p>
+<p>In Firefox it's possible to <a href="http://cakebaker.wordpress.com/2006/03/29/file-upload-with-selenium/">request elevated permissions</a> for your unit tests, but this is far from ideal.  It means the tests are no longer automatic (you have to click &quot;yes, grant this page extra permissions&quot; whenever the tests are run) and it takes other browsers out of the testing loop.  Like many things in life, the easiest solution seems to be simply to <a href="http://www.opensourceconnections.com/2007/06/06/file-uploads-with-selenium/">fake it</a>.</p>
+<span id="continue-reading"></span>
+<p>But like any convincing fakery, the details are never that simple in practice.  Uploading a big file from a web browser will take a long time, but could be nearly instantaneous if you fake it using a server-side file.  And what if you have custom upload handlers to enable things like <a href="http://www.fairviewcomputing.com/blog/2008/10/21/ajax-upload-progress-bars-jquery-django-nginx/">upload progress reporting</a>?  How can we make fake file uploads as transparent and convincing as possible?</p>
+<p>Presenting <a href="http://www.djangosnippets.org/snippets/1300/"><code>FakeFileUploadMiddleware</code></a>.</p>
+<p>This middleware class hooks into the standard Django file upload mechanism, re-writing requests and responses to transparently provide support for fake file uploads.  At the heart of its operation is the setting <code>FAKEUPLOAD_FILE_SPEC</code>, which specifies a set of available files for fake upload.  Here's a representative example:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-python" data-lang="python"><span style="color:#bf616a;">FAKEUPLOAD_FILE_SPEC </span><span style="color:#c0c5ce;">= {
+
+  &quot;</span><span style="color:#a3be8c;">smallfile</span><span style="color:#c0c5ce;">&quot;:  { &quot;</span><span style="color:#a3be8c;">filename</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">test1.txt</span><span style="color:#c0c5ce;">&quot;,
+                      &quot;</span><span style="color:#a3be8c;">contents</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">I am a small text file</span><span style="color:#c0c5ce;">&quot;},
+  &quot;</span><span style="color:#a3be8c;">slowfile</span><span style="color:#c0c5ce;">&quot;:   { &quot;</span><span style="color:#a3be8c;">filename</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">example.bin</span><span style="color:#c0c5ce;">&quot;,
+                      &quot;</span><span style="color:#a3be8c;">file</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">/path/on/server/to/example.bin</span><span style="color:#c0c5ce;">&quot;,
+                      &quot;</span><span style="color:#a3be8c;">chunk_size</span><span style="color:#c0c5ce;">&quot;: </span><span style="color:#d08770;">1024</span><span style="color:#c0c5ce;">,
+                      &quot;</span><span style="color:#a3be8c;">sleep_time</span><span style="color:#c0c5ce;">&quot;: </span><span style="color:#d08770;">1 </span><span style="color:#c0c5ce;">}
+}```
+
+This specifies two fake files.  The one </span><span style="color:#b48ead;">with </span><span style="color:#96b5b4;">id </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">smallfile</span><span style="color:#c0c5ce;">&quot; is a simple text file whose contents are specified directly.  The one </span><span style="background-color:#bf616a;color:#2b303b;">with</span><span style="color:#c0c5ce;"> </span><span style="color:#96b5b4;">id </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">slowfile</span><span style="color:#c0c5ce;">&quot; takes its contents </span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">a file on the server, will read </span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">this file </span><span style="background-color:#bf616a;color:#2b303b;">in</span><span style="color:#c0c5ce;"> 1KB chunks, and will sleep </span><span style="color:#b48ead;">for</span><span style="color:#c0c5ce;"> 1 second between each read </span><span style="background-color:#bf616a;color:#2b303b;">from</span><span style="color:#c0c5ce;"> the file.  As you can probably guess, this makes the simulated upload quite slow-</span><span style="background-color:#bf616a;color:#2b303b;">and</span><span style="color:#c0c5ce;">-steady, which </span><span style="background-color:#bf616a;color:#2b303b;">is</span><span style="color:#c0c5ce;"> very useful </span><span style="background-color:#bf616a;color:#2b303b;">for</span><span style="color:#c0c5ce;"> testing the behaviour of </span><span style="color:#96b5b4;">any </span><span style="color:#c0c5ce;">fancy </span><span style="color:#bf616a;">AJAX </span><span style="color:#c0c5ce;">progress bars you might have on the site.
+
+Internally, the middleware manages fake uploads by inserting additional fields into </span><span style="color:#96b5b4;">any </span><span style="color:#c0c5ce;">forms being sent to the client.  Suppose we have this simple form:
+
+```html 
+&lt;form method=&#39;</span><span style="color:#a3be8c;">POST</span><span style="color:#c0c5ce;">&#39; enctype=&#39;</span><span style="color:#a3be8c;">multipart/form-data</span><span style="color:#c0c5ce;">&#39;&gt;
+  &lt;</span><span style="color:#96b5b4;">input type</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">file</span><span style="color:#c0c5ce;">&#39; name=&#39;</span><span style="color:#a3be8c;">myfile</span><span style="color:#c0c5ce;">&#39; /&gt;
+  &lt;</span><span style="color:#96b5b4;">input type</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">submit</span><span style="color:#c0c5ce;">&#39; name=&#39;</span><span style="color:#a3be8c;">upload</span><span style="color:#c0c5ce;">&#39; value=&#39;</span><span style="color:#a3be8c;">upload</span><span style="color:#c0c5ce;">&#39; /&gt;
+&lt;/form&gt;
+</span></code></pre>
+<p>As it passes through FakeFileUploadMiddleware on its way to the client, it will be re-written to:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-html" data-lang="html"><span style="color:#c0c5ce;">&lt;</span><span style="color:#bf616a;">form </span><span style="color:#d08770;">method</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">POST</span><span style="color:#c0c5ce;">&#39; </span><span style="color:#d08770;">enctype</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">multipart/form-data</span><span style="color:#c0c5ce;">&#39;&gt;
+  &lt;</span><span style="color:#bf616a;">input </span><span style="color:#d08770;">type</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">hidden</span><span style="color:#c0c5ce;">&#39; </span><span style="color:#d08770;">name</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">fakefile_myfile</span><span style="color:#c0c5ce;">&#39; /&gt;
+  &lt;</span><span style="color:#bf616a;">input </span><span style="color:#d08770;">type</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">file</span><span style="color:#c0c5ce;">&#39; </span><span style="color:#d08770;">name</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">myfile</span><span style="color:#c0c5ce;">&#39; /&gt;
+  &lt;</span><span style="color:#bf616a;">input </span><span style="color:#d08770;">type</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">submit</span><span style="color:#c0c5ce;">&#39; </span><span style="color:#d08770;">name</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">upload</span><span style="color:#c0c5ce;">&#39; </span><span style="color:#d08770;">value</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">upload</span><span style="color:#c0c5ce;">&#39; /&gt;
+&lt;/</span><span style="color:#bf616a;">form</span><span style="color:#c0c5ce;">&gt;
+</span></code></pre>
+<p>In-browser test scripts can then set the value of this hidden form field to the id of a fake file (&quot;smallfile&quot; or &quot;slowfile&quot; in the example specification above).  When these fields are received by the middleware, they are translated into raw file upload data which is then passed through the standard Django file upload mechanism.  The resulting request object is just about indistinguishable from a real file upload.</p>
+<p>I implemented this as middleware so that I can use it in true set-and-forget fashion – I simply include FakeFileUploadMiddleware in the middleware list on my testing server, but remove it on the deployment servers.  None of the rest of the application needs to be modified to support fake uploads.  Of course, if you want to apply this ability to just a specific view function, you can always use the <code>decorator_from_middleware</code> function to do so.</p>
+
+
+  <hr />
+
+  <div class="related-pages">
+    <div><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;forking-ec2-instances-mozart-oz&#x2F;">Forking EC2 instances for Mozart&#x2F;Oz</a></div>
+    <div><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;troubleshooting-remote-connections-mozart&#x2F;">Troubleshooting Remote Connections in Mozart</a></div>
+  </div>
+
+    </main>
+  </body>
+</html>

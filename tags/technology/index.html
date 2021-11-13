@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;" />
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:creator" content="@rfkelly">
+    <meta name="twitter:site" content="@rfkelly">
+
+    
+    <meta name="twitter:title" content="Ryan's Ramblings">
+    <title>Ryan's Ramblings</title>
+    
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+     
+  </head>
+  <body>
+    
+      <header>
+        <a class="profile-icon" href="/">
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+        </a>
+        <nav>
+            <a href="/about/">About</a>
+            <a href="/blog/">Blog</a>
+            <a href="https://github.com/rfk">GitHub</a>
+            <a href="https://twitter.com/rfkelly">Twitter</a>
+        </nav>
+      </header>
+    
+    <main>
+    
+
+  
+    
+    <h2>Pages 1 - 10 of 12 with tag "technology"</h2>
+    
+
+  <div class="taxonomy-container">
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;security-bugs-ssrf-via-request-splitting&#x2F;">Security Bugs in Practice: SSRF via Request Splitting</a></h3>
+    <div class="item-meta">
+      <div class="item-date">September 10, 2018</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;mozilla&#x2F;">mozilla</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>One of the most interesting (and sometimes scary!)
+parts of my job at Mozilla is dealing with security bugs.  We don't always
+ship perfect code – nobody does – but I'm privileged to work with a great
+team of engineers and security folks who know how to deal effectively with
+security issues when they arise.  I'm also privileged to be able to work
+in the open, and I want to start taking more advantage of that to share
+some of my experiences.</p>
+<p>One of the best ways to learn how to write more secure code is to get
+experience watching code fail in practice.  With that in mind, I'm planning
+to write about some of the security-bug stories that I've been involved in
+during my time at Mozilla.  Let's start with a recent one:
+<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1447452">Bug 1447452</a>,
+in which some mishandling of unicode characters by the Firefox Accounts API
+server could have allowed an attacker to make arbitrary requests to its
+backend data store.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;security-bugs-ssrf-via-request-splitting&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;cromulate-improve-compressibility&#x2F;">An Experiment in Improving Compressiblity</a></h3>
+    <div class="item-meta">
+      <div class="item-date">July 17, 2014</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;mozilla&#x2F;">mozilla</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>Alternate title: <strong>reduce your compressed file size with this one weird trick!</strong></p>
+<p>One of the top items on my list for <a href="http://www.pypyjs.org">PyPy.js</a> development is to reduce the size of the initial download – it currently weighs in at a hefty 3.1M of compressed javascript code plus another 2.4M of binary data.  The big wins here are clearly going to come from just generating less code, and I have made some promising initial progress on that front.  But it's also a good opportunity to experiment with some after-the-fact techniques for reducing the <em>compressed</em> filesize without having to change the actual generated code.</p>
+<p>The obvious approach is to reach for a higher-performance compression algorithm, perhaps <a href="https://en.wikipedia.org/wiki/Bzip2">bzip2</a> or <a href="https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Markov_chain_algorithm">LZMA</a>.  But these algorithms can suffer from slow decompression speeds and are not generally supported in today's web browsers.  For shipping compressed content on the web today, gzip is the only game in town.</p>
+<p>So can we do better while staying within the confines of gzip?</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;cromulate-improve-compressibility&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pypy-js-faster-than-cpython&#x2F;">PyPy.js: Now faster than CPython</a></h3>
+    <div class="item-meta">
+      <div class="item-date">May 06, 2014</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;mozilla&#x2F;">mozilla</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>OK OK, I couldn't resist that title but it probably goes a bit far.  Let me try for a little more nuance:</p>
+<p><strong>PyPy.js: Now faster than CPython, on a single carefully-tuned benchmark, after JIT warmup.</strong></p>
+<p>It has been the better part of a year since I first started hacking on <a href="/blog/entry/pypy-js-first-steps/">PyPy.js</a>, an experiment in bringing a fast and compliant python interpreter to the web.  I've been pretty quiet during that time but have certainly been keeping busy.  Some of the big changes since my <a href="/blog/entry/pypy-js-poc-jit/">previous update</a> include:</p>
+<ul>
+<li>An <a href="https://github.com/rfk/pypy/blob/master/rpython/jit/backend/asmjs/support.py">asmjs-to-python converter</a>, so that PyPy's comprehensive JIT testsuite can be run on the asmjs backend.</li>
+<li>Some <a href="https://github.com/kripken/emscripten/blob/master/tools/js-optimizer.js#L1878">new optimizations</a> in the emscripten compiler, which greatly reduce compiled code size.</li>
+<li>A basic interactive console, so you can <a href="http://pypyjs.org/demo/">try PyPy.js straight from your browser</a>.</li>
+<li>And even uncovering an apparent <a href="http://llvm.org/bugs/show_bug.cgi?id=19580">bug in an LLVM optimization pass</a>.</li>
+</ul>
+<p>The result, while still rough in a lot of places, is nonetheless an exciting milestone: the full <a href="http://pypy.org/">PyPy</a> interpreter, compiled down to javascript and re-targeted to emit <a href="http://asmjs.org/">asmjs</a> from its JIT, running the pystone benchmark faster <em>in a browser</em> than the native CPython interpreter runs it on bare metal.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pypy-js-faster-than-cpython&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pypy-js-poc-jit&#x2F;">PyPy.js Update: A Proof-of-Concept JIT</a></h3>
+    <div class="item-meta">
+      <div class="item-date">August 08, 2013</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;mozilla&#x2F;">mozilla</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>Two weeks ago I hatched a plan to <a href="/blog/entry/pypy-js-first-steps/">port Python to the Web Platform</a> by using <a href="http://emscripten.org">Emscripten</a> to translate <a href="http://pypy.org/">PyPy</a> into JavaScript.  My hope is to produce something than can run in the browser with performance comparable to a standard Python interpreter, a hope which hinges on two key ingredients:</p>
+<ul>
+<li>PyPy's powerful <a href="http://doc.pypy.org/en/latest/jit/index.html">just-in-time compiler</a>, which can optimize the hot loops of your program into efficient native code.</li>
+<li>The recent work on <a href="http://asmjs.org/">asm.js</a>, a low-level subset of JavaScript that can act like an efficient virtual machine in the browser.</li>
+</ul>
+<p>By translating the PyPy interpreter into asm.js code, and by having its JIT backend emit specialized asm.js code at runtime, it should theoretically be possible to have an in-browser Python implementation whose hot loops perform within a factor of two of native code.</p>
+<p>I'm excited to report a small but important milestone on the road to making this a reality.</p>
+<p>It's certainly not a full Python interpreter, and it comes with many caveats and question-marks and todos, but I <em>have</em> been able to produce a simple demo interpreter, with JIT, that approaches the theoretical factor-of-two comparison to native code under some circumstances.  There's a long way to go, but this seems like a very promising start.</p>
+<p>TL;DR?  Feel free to jump straight to <a href="/blog/entry/pypy-js-poc-jit/#graph">the important graph.</a></p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pypy-js-poc-jit&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pypy-js-first-steps&#x2F;">PyPy.js: First Steps</a></h3>
+    <div class="item-meta">
+      <div class="item-date">July 23, 2013</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;mozilla&#x2F;">mozilla</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>I've been spending a lot of time in JavaScript land lately.  It's not totally unexpected – when I first applied for a job with Mozilla, I was warned only semi-jokingly that &quot;they hire all the best Python programmers and then force them to write JavaScript&quot;.  I've no deep love or hate for it as a language, but JavaScript is pretty interesting to me as a <em>platform</em>, as a kind of runs-everywhere lowest-common-denominator environment that is slowly being molded and coerced into a pretty decent universal runtime.  But if <a href="https://blog.mozilla.org/blog/2012/02/27/mozilla-in-mobile-the-web-is-the-platform/">&quot;the Web is the Platform&quot;</a>, what's a stranded Pythonista to do?</p>
+<p>Port Python to JavaScript, of course!</p>
+<p>This has been done before in a variety of ways.  <a href="http://www.skulpt.org/">Skulpt</a> and <a href="http://www.brython.info/tests/console.html">Brython</a> are impressive re-implementations of Python on top of JavaScript, including interactive consoles that make for a very compelling demo.  <a href="http://pyjs.org/">Pyjamas</a> lets you translate Python apps into JavaScript so they can be run in the browser.  There are many more examples with varying degrees of success and completeness.</p>
+<p>I don't want to down-play the phenomenal efforts behind projects like this.  But personally, I'm a little wary of the re-implementation treadmill that they risk being stuck on.  I'd much prefer to leverage the work that's already been done on making a fantastic Python interpreter, along with the work that's already been done on making a fantastic JavaScript runtime, and re-implement as little as possible while gluing them both together.</p>
+<p>I've finally taken my first tentative steps down that path, by combining two amazing projects open-source projects: <a href="http://pypy.org">PyPy</a> and <a href="http://emscripten.org">Emscripten</a>.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pypy-js-first-steps&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;exploring-security-persona&#x2F;">Exploring Security on persona.org</a></h3>
+    <div class="item-meta">
+      <div class="item-date">December 05, 2012</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;mozilla&#x2F;">mozilla</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>A few weeks ago, I was involved in discovering a security flaw in the pre-beta version of <a href="https://login.persona.org">login.persona.org</a>,  the hosted account manager that drives <a href="https://login.persona.org/about">Mozilla Persona</a>.  It was fixed quickly, but was not publicly disclosed until the team could conduct a full review of any potential impact.  It is public now, and we're confident that no users were affected, so I wanted to share my take on the experience.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;exploring-security-persona&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;securing-pyramid-persona-macauth&#x2F;">Securing Pyramid with Persona and MACAuth</a></h3>
+    <div class="item-meta">
+      <div class="item-date">October 04, 2012</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p><a href="https://login.persona.org/">Mozilla Persona</a> went into beta release last week, and it has been very exciting to see the interest and positive press it has generated.  I particularly liked the release of <a href="http://pypi.python.org/pypi/pyramid_persona">pyramid_persona</a> and the accompanying article <a href="http://compiletoi.net/quick-authentication-on-pyramid-with-persona.html">Quick authentication on pyramid with persona</a> – it is cleaner, simpler, and more feature-full than <a href="/blog/entry/painless-auth-pyramid-browserid/">my attempt at Pyramid/BrowserID integration</a> from last year.  Great stuff!</p>
+<p>But there is one weak point to using Persona for authentication: it makes automated access difficult.  The login flow depends heavily on javascript and assumes that authentication will involve a real live user and a full-blown web-browser.  Scripting access to your site via something like <a href="http://docs.python-requests.org/en/latest/">requests</a> would be tricky at best, and downright impossible in the general case.</p>
+<p>Most of the webapps we build at <a href="https://wiki.mozilla.org/Services/">Mozilla Services</a> are meant for machines, not people, so we've had to tackle this problem head-on.  We have found that a <em>combined</em> authentication approach works very nicely – we provide Persona for live users, and the much more automation-friendly <a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac">MAC Access Authentication</a> for machines.</p>
+<p>In this post I'll show you how easy it can be to combine the two, using <a href="http://pypi.python.org/pypi/pyramid_persona">pyramid_persona</a> and <a href="http://pypi.python.org/pypi/pyramid_macauth">pyramid_macauth</a> for the heavy lifting, and <a href="http://pypi.python.org/pypi/pyramid_multiauth">pyramid_multiauth</a> to tie them both together.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;securing-pyramid-persona-macauth&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;persona-identity-provider&#x2F;">rfk.id.au is now a Persona Identity Provider</a></h3>
+    <div class="item-meta">
+      <div class="item-date">September 06, 2012</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>After a few days of hacking, &quot;rfk.id.au&quot; now acts as an Identity Provider for the BrowserID protocol, a.k.a <a href="https://login.persona.org/about">Mozilla Persona</a>.  This means I can now log in as <strong>ryan@rfk.id.au</strong> on any persona-enabled website while retaining complete control over my identity.  I do not have to delegate my details or my credentials to a third party, even one that I would trust as much as Mozilla.</p>
+<p>Here's the <a href="/.well-known/browserid">BrowserID support document</a> to prove it.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;persona-identity-provider&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;painless-auth-pyramid-browserid&#x2F;">Painless Authentication with Pyramid and BrowserID</a></h3>
+    <div class="item-meta">
+      <div class="item-date">October 20, 2011</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>There are a couple of really exciting projects underway at Mozilla right now.</p>
+<p>The first is <a href="https://browserid.org/">BrowserID</a>, a distributed single-signon system from the <a href="http://identity.mozilla.com/">Mozilla Identity Team</a>.  BrowserID sports a very slick sign-in process, simple integration with your existing software stack, and is designed from the ground up to provide strong <a href="http://identity.mozilla.com/post/7899984443/privacy-and-browserid">user privacy</a> guarantees.</p>
+<p>The second is <a href="https://wiki.mozilla.org/Services/Sagrada">Project Sagrada</a>, a platform for quickly building secure, scalable web applications from the folks I work with on the <a href="http://blog.mozilla.com/services/">Mozilla Services Team</a>.  While initial development is being driven by Mozilla's internal projects and needs, the hope is that one day developers will be able to just <a href="https://tarekziade.wordpress.com/2011/09/22/sagrada-creation-and-hosting-of-web-services/">write some simple service definitions</a> then deploy their applications across Mozilla's infrastructure.</p>
+<p>Of course, we're not there yet, but we're building up to it piece by piece.  One piece I've been working on, and which is coming along quite nicely if I do say so myself, is authentication.  We are building a secure, flexible and efficient authentication stack on top of some key Python web technologies such a <a href="http://www.pylonsproject.org/projects/pyramid/about">Pyramid</a> and <a href="http://pypi.python.org/pypi/repoze.who/">repoze.who</a>.</p>
+<p>So without further ado, here's a glimpse of my first tiny piece of Project Sagrada: adding BrowserID support to a Pyramid app with just a few lines of configuration.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;painless-auth-pyramid-browserid&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+    <hr />
+      <div class="page-preview">
+    <h3><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;what-i-like-about-browserid&#x2F;">What I like about BrowserID</a></h3>
+    <div class="item-meta">
+      <div class="item-date">September 30, 2011</div>
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+          
+        
+        ]
+      </div>
+    </div>
+    <div class="page-summary">
+      <p>I'm really impressed by Mozilla's new <a href="http://browserid.org">BrowserID</a> project.</p>
+<p>A robust distributed identity infrastructure will make the internet a better place, and I'm keen to help that goal along however I can.  I was quick to jump on the <a href="http://en.wikipedia.org/wiki/OpenID">OpenID</a> bandwagon when it came rolling by, and still use &quot;<a href="http://www.rfk.id.au">http://www.rfk.id.au</a>&quot; as a delegated identity on sites that support it.  But I've never really <em>liked</em> OpenID – it has always felt clunky to me, both a UI level and as a protocol.</p>
+<p>BrowserID fixes pretty much all of the things I dislike about OpenID, and a couple more problems that I didn't even realise I had.</p>
+
+        <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;what-i-like-about-browserid&#x2F;">read more &gt;&gt;</a>
+      
+    </div>
+  </div>
+  
+  </div>
+
+  
+  
+  <hr />
+  <div class="related-pages">
+    <div></div>
+    <div><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;page&#x2F;2&#x2F;">Older</a></div>
+  </div>
+  
+  
+
+
+    </main>
+  </body>
+</html>

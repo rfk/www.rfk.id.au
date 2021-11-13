@@ -1,0 +1,1648 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.11: http://docutils.sourceforge.net/" />
+<title>FunkLoad bench report</title>
+<meta name="date" content="2013-06-13 04:16:57" />
+<style type="text/css">
+
+
+@import url(http://fonts.googleapis.com/css?family=Quando);
+
+body {
+  font-family: 'Quando', serif;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+ text-decoration: none;
+ color: grey;
+}
+
+a:hover {
+ text-decoration: underline;
+}
+
+h1.title {
+  background-image: url("../../media/head.png");
+  height: 80px;
+  color: white;
+  border: none;
+  padding-left: 20px;
+  padding-top: 2px;
+  margin: 0px;
+}
+
+h1.title a {
+  color: white;
+}
+
+div.section, div.abstract, div.contents, table.docinfo {
+  padding-right: 20px;
+  padding-left: 20px;
+  color: black;
+}
+
+a.toc-backref {
+  color: black;
+}
+
+
+pre {
+    font-family: 'Consolas','Deja Vu Sans Mono','Bitstream Vera Sans Mono',monospace;
+    font-size: 0.95em;
+    letter-spacing: 0.015em;
+    line-height: 120%;
+    padding: 0.5em;
+    border: 1px solid rgb(204, 204, 204);
+    background-color: rgb(238, 238, 238);
+    border-radius: 6px 6px 6px 6px;
+    overflow-x: auto;
+}
+
+#header {
+  background-image: url("../../media/head.png");
+  color: white;
+  border: none;
+  padding-left: 20px;
+  padding-top: 2px;
+  margin: 0px;
+  vertical-align: middle;
+  display:block;
+}
+
+#header img {
+  display: inline-block;
+}
+
+
+#title {
+  font-size: 40px;
+  text-decoration: none;
+  color: white;
+}
+
+#subtitle {
+  font-size: 15px;
+  font-style: italic;
+}
+
+#body {
+  padding: 20px;
+  background-image: url("../../media/fade.png") repeat-x scroll -70% 0px transparent;
+
+}
+
+p {
+  font-style: italic;
+  color: grey;
+  font-size: 20px;
+}
+
+#right {
+ float:right;
+}
+
+div.resource {
+  margin-right: 5px;
+  padding: 12px;
+  border: 1px dotted rgb(203, 200, 185);
+  background: none repeat scroll 0% 0% rgb(246, 246, 242);
+}
+
+div.resource span {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+div.resource div {
+  font-style: italic;
+  margin-top: 6px;
+}
+
+#running, #pending, #failures, #successes {
+  float: left;
+  min-width: 400px;
+  padding: 10px;
+}
+
+#workers {
+ margin-bottom: 10px;
+ margin-top: 10px;
+}
+
+div.resource a {
+  float: right;
+}
+
+div.smallform {
+  width: 400px;
+  float: right;
+  margin-top: 10px;
+  border: 1px dotted rgb(203, 200, 185);
+  background: none repeat scroll 0% 0% rgb(246, 246, 242);
+  padding: 12px;
+  margin-right: 5px;
+}
+
+div.smallform input[type="text"]  {
+  width: 300px;
+}
+
+#form {
+  margin-top: 10px;
+  border: 1px dotted rgb(203, 200, 185);
+  background: none repeat scroll 0% 0% rgb(246, 246, 242);
+  padding: 12px;
+  margin-right: 5px;
+}
+
+#form input[type="text"]  {
+  width: 300px;
+}
+
+table.nodes {
+ text-align: center;
+ font-weight: normal;
+ color: #404040;
+ background: none repeat scroll 0% 0% rgb(246, 246, 242);
+ border: 1px dotted rgb(203, 200, 185);
+ border-collapse: collapse;
+ border-spacing: 10px;
+ padding: 10px;
+ min-width: 500px;
+}
+
+table.nodes th {
+    border-bottom: 1px dotted #6699CC;
+    color: #404040;
+    text-align: center;
+    padding: 5px;
+    background-color: white;
+}
+
+table.nodes td {
+    border-bottom: 1px dotted #6699CC;
+    color: #404040;
+    text-align: center;
+    padding: 5px;
+
+}
+
+.label {
+    font-size: 75%;
+    font-weight: bold;
+    line-height: 14px;
+    color: rgb(255, 255, 255);
+    text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.25);
+    white-space: nowrap;
+    vertical-align: baseline;
+    background-color: rgb(58, 135, 173);
+    padding: 1px 4px 2px;
+    border-radius: 3px 3px 3px 3px;
+}
+
+a.label {
+    text-decoration: none;
+}
+
+div.actions {
+  float: left;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+div.message {
+  margin-right: 25px;
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px dotted rgb(203, 200, 185);
+  background: none repeat scroll 0% 0% rgb(246, 246, 242);
+  float: right;
+  color: black;
+}
+
+div.login {
+  float: right;
+  margin-right: 20px;
+  margin-top: 5px;
+}
+
+form.job {
+/*  width: 100%*/
+}
+
+form.job label {
+  padding-left: 5px;
+}
+
+form.job input {
+}
+
+
+form.job fieldset
+{
+  position: relative;
+  margin-top: 15px;
+  margin: 0 0 1em 0;  
+  padding-top: 20px;
+  width: 93%;
+  border: 1px solid gray;
+}
+
+
+form.job fieldset legend 
+{
+  font-size: 140%;
+  font-weight: bold;
+}
+
+form.job fieldset ol 
+{
+    padding: 0 1em 0 1em;  
+    list-style: none;
+}
+
+form.job fieldset li 
+{
+    /* Control leading between rows. */
+    padding-bottom: .7em;
+}
+
+form.job fieldset ol li label {
+  float: left;
+  width: 10em;
+  margin-right: 1em;
+  font-size: 130%
+}
+
+input.button
+{
+  height: 2.5em;
+}
+
+div.buttonsContainer
+{
+    float: left;
+}
+
+
+</style>
+</head>
+<body>
+<div class="document" id="funkload-bench-report">
+<h1 class="title"><a class="reference external" href="http://funkload.nuxeo.org/">FunkLoad</a> bench report</h1>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr><th class="docinfo-name">Date:</th>
+<td>2013-06-13 04:16:57</td></tr>
+</tbody>
+</table>
+<div class="abstract topic">
+<p class="topic-title first">Abstract</p>
+<p>Simple users test
+Bench result of <tt class="docutils literal">StressTest.test_storage_session</tt>:
+No test description</p>
+</div>
+<div class="contents topic" id="table-of-contents">
+<p class="topic-title first">Table of contents</p>
+<ul class="auto-toc simple">
+<li><a class="reference internal" href="index.html#bench-configuration" id="id1">1&nbsp;&nbsp;&nbsp;Bench configuration</a></li>
+<li><a class="reference internal" href="index.html#bench-content" id="id2">2&nbsp;&nbsp;&nbsp;Bench content</a></li>
+<li><a class="reference internal" href="index.html#test-stats" id="id3">3&nbsp;&nbsp;&nbsp;Test stats</a></li>
+<li><a class="reference internal" href="index.html#page-stats" id="id4">4&nbsp;&nbsp;&nbsp;Page stats</a></li>
+<li><a class="reference internal" href="index.html#request-stats" id="id5">5&nbsp;&nbsp;&nbsp;Request stats</a></li>
+<li><a class="reference internal" href="index.html#slowest-requests" id="id6">6&nbsp;&nbsp;&nbsp;Slowest requests</a></li>
+<li><a class="reference internal" href="index.html#page-detail-stats" id="id7">7&nbsp;&nbsp;&nbsp;Page detail stats</a><ul class="auto-toc">
+<li><a class="reference internal" href="index.html#page-001-1-1-cuser3928-info-collections" id="id8">7.1&nbsp;&nbsp;&nbsp;PAGE 001: /1.1/cuser3928/info/collections</a></li>
+<li><a class="reference internal" href="index.html#page-002-1-1-cuser495605-storage-history" id="id9">7.2&nbsp;&nbsp;&nbsp;PAGE 002: /1.1/cuser495605/storage/history</a></li>
+<li><a class="reference internal" href="index.html#page-003-1-1-cuser277419-storage-history" id="id10">7.3&nbsp;&nbsp;&nbsp;PAGE 003: /1.1/cuser277419/storage/history</a></li>
+<li><a class="reference internal" href="index.html#page-004-1-1-cuser80399-storage-passwords" id="id11">7.4&nbsp;&nbsp;&nbsp;PAGE 004: /1.1/cuser80399/storage/passwords</a></li>
+<li><a class="reference internal" href="index.html#page-005-1-1-cuser133936-storage-forms" id="id12">7.5&nbsp;&nbsp;&nbsp;PAGE 005: /1.1/cuser133936/storage/forms</a></li>
+<li><a class="reference internal" href="index.html#page-006-1-1-cuser518316-storage-bookmarks-full-1-newer-1371062070" id="id13">7.6&nbsp;&nbsp;&nbsp;PAGE 006: /1.1/cuser518316/storage/bookmarks?full=1&amp;newer=1371062070</a></li>
+<li><a class="reference internal" href="index.html#page-007-1-1-cuser503973-storage-passwords" id="id14">7.7&nbsp;&nbsp;&nbsp;PAGE 007: /1.1/cuser503973/storage/passwords</a></li>
+<li><a class="reference internal" href="index.html#page-008-1-1-cuser503973-storage-bookmarks" id="id15">7.8&nbsp;&nbsp;&nbsp;PAGE 008: /1.1/cuser503973/storage/bookmarks</a></li>
+<li><a class="reference internal" href="index.html#page-009-1-1-cuser294316-storage-passwords" id="id16">7.9&nbsp;&nbsp;&nbsp;PAGE 009: /1.1/cuser294316/storage/passwords</a></li>
+<li><a class="reference internal" href="index.html#page-010-1-1-cuser226376-storage-prefs" id="id17">7.10&nbsp;&nbsp;&nbsp;PAGE 010: /1.1/cuser226376/storage/prefs</a></li>
+<li><a class="reference internal" href="index.html#page-011-1-1-cuser208718-storage-history" id="id18">7.11&nbsp;&nbsp;&nbsp;PAGE 011: /1.1/cuser208718/storage/history</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="index.html#failures-and-errors" id="id19">8&nbsp;&nbsp;&nbsp;Failures and Errors</a><ul class="auto-toc">
+<li><a class="reference internal" href="index.html#failures" id="id20">8.1&nbsp;&nbsp;&nbsp;Failures</a></li>
+<li><a class="reference internal" href="index.html#errors" id="id21">8.2&nbsp;&nbsp;&nbsp;Errors</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="bench-configuration">
+<h1><a class="toc-backref" href="index.html#id1">1&nbsp;&nbsp;&nbsp;Bench configuration</a></h1>
+<ul class="simple">
+<li>Launched: 2013-06-13 04:16:57</li>
+<li>From: ip-10-251-20-131</li>
+<li>Test: <tt class="docutils literal">stress.py StressTest.test_storage_session</tt></li>
+<li>Target server: <a class="reference external" href="http://this.is.not.used.by.the.tests.but.is.required.by.funkload">http://this.is.not.used.by.the.tests.but.is.required.by.funkload</a></li>
+<li>Cycles of concurrent users: [50, 50, 50]</li>
+<li>Cycle duration: 300s</li>
+<li>Sleeptime between request: from 0.0s to 0.1s</li>
+<li>Sleeptime between test case: 0.01s</li>
+<li>Startup delay between thread: 0.05s</li>
+<li>Apdex: <sub>1.5</sub></li>
+<li><a class="reference external" href="http://funkload.nuxeo.org/">FunkLoad</a> version: 1.17.0</li>
+</ul>
+</div>
+<div class="section" id="bench-content">
+<h1><a class="toc-backref" href="index.html#id2">2&nbsp;&nbsp;&nbsp;Bench content</a></h1>
+<p>The test <tt class="docutils literal">StressTest.test_storage_session</tt> contains:</p>
+<ul class="simple">
+<li>11 page(s)</li>
+<li>0 redirect(s)</li>
+<li>0 link(s)</li>
+<li>0 image(s)</li>
+<li>0 XML RPC call(s)</li>
+</ul>
+<p>The bench contains:</p>
+<ul class="simple">
+<li>40750 tests, 16129 error(s)</li>
+<li>82910 pages, 16129 error(s)</li>
+<li>82910 requests, 16129 error(s)</li>
+</ul>
+</div>
+<div class="section" id="test-stats">
+<h1><a class="toc-backref" href="index.html#id3">3&nbsp;&nbsp;&nbsp;Test stats</a></h1>
+<p>The number of Successful <strong>Tests</strong> Per Second (STPS) over Concurrent Users (CUs).</p>
+<blockquote>
+<img alt="tests.png" src="tests.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">STPS</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>50</td>
+<td>27.630</td>
+<td>13926</td>
+<td>8289</td>
+<td>40.48%</td>
+</tr>
+<tr><td>50</td>
+<td>27.497</td>
+<td>13671</td>
+<td>8249</td>
+<td>39.66%</td>
+</tr>
+<tr><td>50</td>
+<td>26.943</td>
+<td>13153</td>
+<td>8083</td>
+<td>38.55%</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+</div>
+<div class="section" id="page-stats">
+<h1><a class="toc-backref" href="index.html#id4">4&nbsp;&nbsp;&nbsp;Page stats</a></h1>
+<p>The number of Successful <strong>Pages</strong> Per Second (SPPS) over Concurrent Users (CUs).
+Note that an XML RPC call count like a page.</p>
+<blockquote>
+<img alt="pages_spps.png" src="pages_spps.png" />
+<img alt="pages.png" src="pages.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">SPPS</th>
+<th class="head">maxSPPS</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>50</td>
+<td>0.976</td>
+<td>Excellent</td>
+<td>74.693</td>
+<td>134.000</td>
+<td>28045</td>
+<td>22408</td>
+<td>20.10%</td>
+<td>0.111</td>
+<td>0.410</td>
+<td>19.881</td>
+<td>0.140</td>
+<td>0.243</td>
+<td>0.855</td>
+<td>1.447</td>
+</tr>
+<tr><td>50</td>
+<td>0.979</td>
+<td>Excellent</td>
+<td>74.423</td>
+<td>147.000</td>
+<td>27749</td>
+<td>22327</td>
+<td>19.54%</td>
+<td>0.112</td>
+<td>0.415</td>
+<td>10.758</td>
+<td>0.143</td>
+<td>0.266</td>
+<td>0.929</td>
+<td>1.385</td>
+</tr>
+<tr><td>50</td>
+<td>0.973</td>
+<td>Excellent</td>
+<td>73.487</td>
+<td>125.000</td>
+<td>27116</td>
+<td>22046</td>
+<td>18.70%</td>
+<td>0.111</td>
+<td>0.426</td>
+<td>29.647</td>
+<td>0.139</td>
+<td>0.247</td>
+<td>0.998</td>
+<td>1.629</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</div>
+<div class="section" id="request-stats">
+<h1><a class="toc-backref" href="index.html#id5">5&nbsp;&nbsp;&nbsp;Request stats</a></h1>
+<p>The number of <strong>Requests</strong> Per Second (RPS) successful or not over Concurrent Users (CUs).</p>
+<blockquote>
+<img alt="requests_rps.png" src="requests_rps.png" />
+<img alt="requests.png" src="requests.png" />
+<img alt="time_rps.png" src="time_rps.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating*</th>
+<th class="head">RPS</th>
+<th class="head">maxRPS</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>50</td>
+<td>0.976</td>
+<td>Excellent</td>
+<td>93.483</td>
+<td>178.000</td>
+<td>28045</td>
+<td>22408</td>
+<td>20.10%</td>
+<td>0.107</td>
+<td>0.486</td>
+<td>19.881</td>
+<td>0.136</td>
+<td>0.225</td>
+<td>0.797</td>
+<td>1.347</td>
+</tr>
+<tr><td>50</td>
+<td>0.979</td>
+<td>Excellent</td>
+<td>92.497</td>
+<td>165.000</td>
+<td>27749</td>
+<td>22327</td>
+<td>19.54%</td>
+<td>0.108</td>
+<td>0.492</td>
+<td>10.758</td>
+<td>0.139</td>
+<td>0.246</td>
+<td>0.859</td>
+<td>1.304</td>
+</tr>
+<tr><td>50</td>
+<td>0.973</td>
+<td>Excellent</td>
+<td>90.387</td>
+<td>150.000</td>
+<td>27116</td>
+<td>22046</td>
+<td>18.70%</td>
+<td>0.105</td>
+<td>0.504</td>
+<td>40.835</td>
+<td>0.134</td>
+<td>0.230</td>
+<td>0.903</td>
+<td>1.522</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</div>
+<div class="section" id="slowest-requests">
+<h1><a class="toc-backref" href="index.html#id6">6&nbsp;&nbsp;&nbsp;Slowest requests</a></h1>
+<p>The 5 slowest average response time during the best cycle with <strong>50</strong> CUs:</p>
+<ul class="simple">
+<li>In page 008, Apdex rating: Excellent, avg response time: 0.83s, post: <tt class="docutils literal">/1.1/cuser503973/storage/bookmarks</tt>
+``</li>
+<li>In page 007, Apdex rating: Excellent, avg response time: 0.81s, post: <tt class="docutils literal">/1.1/cuser503973/storage/passwords</tt>
+``</li>
+<li>In page 005, Apdex rating: Excellent, avg response time: 0.77s, post: <tt class="docutils literal">/1.1/cuser133936/storage/forms</tt>
+``</li>
+<li>In page 006, Apdex rating: Excellent, avg response time: 0.74s, get: <tt class="docutils literal"><span class="pre">/1.1/cuser518316/storage/bookmarks?full=1&amp;newer=1371062070</span></tt>
+``</li>
+<li>In page 004, Apdex rating: Excellent, avg response time: 0.72s, post: <tt class="docutils literal">/1.1/cuser80399/storage/passwords</tt>
+``</li>
+</ul>
+</div>
+<div class="section" id="page-detail-stats">
+<h1><a class="toc-backref" href="index.html#id7">7&nbsp;&nbsp;&nbsp;Page detail stats</a></h1>
+<div class="section" id="page-001-1-1-cuser3928-info-collections">
+<h2><a class="toc-backref" href="index.html#id8">7.1&nbsp;&nbsp;&nbsp;PAGE 001: /1.1/cuser3928/info/collections</a></h2>
+<ul>
+<li><p class="first">Req: 001, get, url <tt class="docutils literal">/1.1/cuser3928/info/collections</tt></p>
+<blockquote>
+<img alt="request_001.001.png" src="request_001.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>50</td>
+<td>0.985</td>
+<td>Excellent</td>
+<td>13932</td>
+<td>8295</td>
+<td>40.46%</td>
+<td>0.107</td>
+<td>0.385</td>
+<td>19.272</td>
+<td>0.132</td>
+<td>0.190</td>
+<td>0.484</td>
+<td>0.816</td>
+</tr>
+<tr><td>50</td>
+<td>0.984</td>
+<td>Excellent</td>
+<td>13679</td>
+<td>8260</td>
+<td>39.62%</td>
+<td>0.108</td>
+<td>0.405</td>
+<td>10.288</td>
+<td>0.135</td>
+<td>0.203</td>
+<td>0.524</td>
+<td>0.894</td>
+</tr>
+<tr><td>50</td>
+<td>0.988</td>
+<td>Excellent</td>
+<td>13163</td>
+<td>8098</td>
+<td>38.48%</td>
+<td>0.105</td>
+<td>0.379</td>
+<td>40.621</td>
+<td>0.131</td>
+<td>0.194</td>
+<td>0.561</td>
+<td>0.883</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-002-1-1-cuser495605-storage-history">
+<h2><a class="toc-backref" href="index.html#id9">7.2&nbsp;&nbsp;&nbsp;PAGE 002: /1.1/cuser495605/storage/history</a></h2>
+<ul>
+<li><p class="first">Req: 001, post, url <tt class="docutils literal">/1.1/cuser495605/storage/history</tt></p>
+<blockquote>
+<img alt="request_002.001.png" src="request_002.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>50</td>
+<td>0.979</td>
+<td>Excellent</td>
+<td>6707</td>
+<td>6707</td>
+<td>0.00%</td>
+<td>0.111</td>
+<td>0.449</td>
+<td>10.601</td>
+<td>0.133</td>
+<td>0.212</td>
+<td>0.735</td>
+<td>1.191</td>
+</tr>
+<tr><td>50</td>
+<td>0.983</td>
+<td>Excellent</td>
+<td>6679</td>
+<td>6678</td>
+<td>0.01%</td>
+<td>0.112</td>
+<td>0.442</td>
+<td>10.758</td>
+<td>0.133</td>
+<td>0.226</td>
+<td>0.747</td>
+<td>1.178</td>
+</tr>
+<tr><td>50</td>
+<td>0.979</td>
+<td>Excellent</td>
+<td>6611</td>
+<td>6609</td>
+<td>0.03%</td>
+<td>0.111</td>
+<td>0.454</td>
+<td>40.681</td>
+<td>0.129</td>
+<td>0.210</td>
+<td>0.793</td>
+<td>1.324</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-003-1-1-cuser277419-storage-history">
+<h2><a class="toc-backref" href="index.html#id10">7.3&nbsp;&nbsp;&nbsp;PAGE 003: /1.1/cuser277419/storage/history</a></h2>
+<ul>
+<li><p class="first">Req: 001, post, url <tt class="docutils literal">/1.1/cuser277419/storage/history</tt></p>
+<blockquote>
+<img alt="request_003.001.png" src="request_003.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>50</td>
+<td>0.959</td>
+<td>Excellent</td>
+<td>3693</td>
+<td>3693</td>
+<td>0.00%</td>
+<td>0.121</td>
+<td>0.680</td>
+<td>11.388</td>
+<td>0.171</td>
+<td>0.405</td>
+<td>1.221</td>
+<td>2.034</td>
+</tr>
+<tr><td>50</td>
+<td>0.969</td>
+<td>Excellent</td>
+<td>3631</td>
+<td>3629</td>
+<td>0.06%</td>
+<td>0.124</td>
+<td>0.653</td>
+<td>10.552</td>
+<td>0.178</td>
+<td>0.440</td>
+<td>1.155</td>
+<td>1.623</td>
+</tr>
+<tr><td>50</td>
+<td>0.941</td>
+<td>Excellent</td>
+<td>3621</td>
+<td>3620</td>
+<td>0.03%</td>
+<td>0.121</td>
+<td>0.767</td>
+<td>40.835</td>
+<td>0.167</td>
+<td>0.402</td>
+<td>1.592</td>
+<td>2.415</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-004-1-1-cuser80399-storage-passwords">
+<h2><a class="toc-backref" href="index.html#id11">7.4&nbsp;&nbsp;&nbsp;PAGE 004: /1.1/cuser80399/storage/passwords</a></h2>
+<ul>
+<li><p class="first">Req: 001, post, url <tt class="docutils literal">/1.1/cuser80399/storage/passwords</tt></p>
+<blockquote>
+<img alt="request_004.001.png" src="request_004.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>50</td>
+<td>0.955</td>
+<td>Excellent</td>
+<td>2059</td>
+<td>2059</td>
+<td>0.00%</td>
+<td>0.123</td>
+<td>0.720</td>
+<td>10.076</td>
+<td>0.163</td>
+<td>0.415</td>
+<td>1.325</td>
+<td>2.170</td>
+</tr>
+<tr><td>50</td>
+<td>0.958</td>
+<td>Excellent</td>
+<td>2045</td>
+<td>2045</td>
+<td>0.00%</td>
+<td>0.123</td>
+<td>0.730</td>
+<td>10.745</td>
+<td>0.169</td>
+<td>0.474</td>
+<td>1.264</td>
+<td>1.878</td>
+</tr>
+<tr><td>50</td>
+<td>0.939</td>
+<td>Good</td>
+<td>1966</td>
+<td>1964</td>
+<td>0.10%</td>
+<td>0.120</td>
+<td>0.791</td>
+<td>40.243</td>
+<td>0.159</td>
+<td>0.403</td>
+<td>1.612</td>
+<td>2.500</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-005-1-1-cuser133936-storage-forms">
+<h2><a class="toc-backref" href="index.html#id12">7.5&nbsp;&nbsp;&nbsp;PAGE 005: /1.1/cuser133936/storage/forms</a></h2>
+<ul>
+<li><p class="first">Req: 001, post, url <tt class="docutils literal">/1.1/cuser133936/storage/forms</tt></p>
+<blockquote>
+<img alt="request_005.001.png" src="request_005.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>50</td>
+<td>0.952</td>
+<td>Excellent</td>
+<td>1017</td>
+<td>1017</td>
+<td>0.00%</td>
+<td>0.122</td>
+<td>0.774</td>
+<td>19.881</td>
+<td>0.170</td>
+<td>0.419</td>
+<td>1.381</td>
+<td>2.373</td>
+</tr>
+<tr><td>50</td>
+<td>0.963</td>
+<td>Excellent</td>
+<td>1035</td>
+<td>1035</td>
+<td>0.00%</td>
+<td>0.124</td>
+<td>0.725</td>
+<td>7.124</td>
+<td>0.170</td>
+<td>0.478</td>
+<td>1.168</td>
+<td>1.877</td>
+</tr>
+<tr><td>50</td>
+<td>0.944</td>
+<td>Excellent</td>
+<td>1062</td>
+<td>1062</td>
+<td>0.00%</td>
+<td>0.123</td>
+<td>0.746</td>
+<td>11.467</td>
+<td>0.164</td>
+<td>0.429</td>
+<td>1.521</td>
+<td>2.219</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-006-1-1-cuser518316-storage-bookmarks-full-1-newer-1371062070">
+<h2><a class="toc-backref" href="index.html#id13">7.6&nbsp;&nbsp;&nbsp;PAGE 006: /1.1/cuser518316/storage/bookmarks?full=1&amp;newer=1371062070</a></h2>
+<ul>
+<li><p class="first">Req: 001, get, url <tt class="docutils literal"><span class="pre">/1.1/cuser518316/storage/bookmarks?full=1&amp;newer=1371062070</span></tt></p>
+<blockquote>
+<img alt="request_006.001.png" src="request_006.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>50</td>
+<td>0.954</td>
+<td>Excellent</td>
+<td>427</td>
+<td>427</td>
+<td>0.00%</td>
+<td>0.126</td>
+<td>0.735</td>
+<td>7.636</td>
+<td>0.179</td>
+<td>0.413</td>
+<td>1.364</td>
+<td>2.192</td>
+</tr>
+<tr><td>50</td>
+<td>0.961</td>
+<td>Excellent</td>
+<td>454</td>
+<td>454</td>
+<td>0.00%</td>
+<td>0.127</td>
+<td>0.787</td>
+<td>6.110</td>
+<td>0.197</td>
+<td>0.515</td>
+<td>1.298</td>
+<td>2.192</td>
+</tr>
+<tr><td>50</td>
+<td>0.931</td>
+<td>Good</td>
+<td>478</td>
+<td>478</td>
+<td>0.00%</td>
+<td>0.127</td>
+<td>0.806</td>
+<td>10.363</td>
+<td>0.171</td>
+<td>0.448</td>
+<td>1.719</td>
+<td>2.651</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-007-1-1-cuser503973-storage-passwords">
+<h2><a class="toc-backref" href="index.html#id14">7.7&nbsp;&nbsp;&nbsp;PAGE 007: /1.1/cuser503973/storage/passwords</a></h2>
+<ul>
+<li><p class="first">Req: 001, post, url <tt class="docutils literal">/1.1/cuser503973/storage/passwords</tt></p>
+<blockquote>
+<img alt="request_007.001.png" src="request_007.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>50</td>
+<td>0.941</td>
+<td>Excellent</td>
+<td>135</td>
+<td>135</td>
+<td>0.00%</td>
+<td>0.171</td>
+<td>0.806</td>
+<td>7.256</td>
+<td>0.197</td>
+<td>0.500</td>
+<td>1.521</td>
+<td>2.707</td>
+</tr>
+<tr><td>50</td>
+<td>0.957</td>
+<td>Excellent</td>
+<td>152</td>
+<td>152</td>
+<td>0.00%</td>
+<td>0.161</td>
+<td>0.772</td>
+<td>5.621</td>
+<td>0.197</td>
+<td>0.517</td>
+<td>1.322</td>
+<td>1.824</td>
+</tr>
+<tr><td>50</td>
+<td>0.925</td>
+<td>Good</td>
+<td>140</td>
+<td>140</td>
+<td>0.00%</td>
+<td>0.171</td>
+<td>0.780</td>
+<td>6.077</td>
+<td>0.205</td>
+<td>0.542</td>
+<td>2.011</td>
+<td>2.380</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-008-1-1-cuser503973-storage-bookmarks">
+<h2><a class="toc-backref" href="index.html#id15">7.8&nbsp;&nbsp;&nbsp;PAGE 008: /1.1/cuser503973/storage/bookmarks</a></h2>
+<ul>
+<li><p class="first">Req: 001, post, url <tt class="docutils literal">/1.1/cuser503973/storage/bookmarks</tt></p>
+<blockquote>
+<img alt="request_008.001.png" src="request_008.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>50</td>
+<td>0.953</td>
+<td>Excellent</td>
+<td>53</td>
+<td>53</td>
+<td>0.00%</td>
+<td>0.144</td>
+<td>0.833</td>
+<td>5.292</td>
+<td>0.233</td>
+<td>0.552</td>
+<td>1.372</td>
+<td>2.495</td>
+</tr>
+<tr><td>50</td>
+<td>0.922</td>
+<td>Good</td>
+<td>51</td>
+<td>51</td>
+<td>0.00%</td>
+<td>0.172</td>
+<td>0.874</td>
+<td>5.322</td>
+<td>0.238</td>
+<td>0.621</td>
+<td>1.819</td>
+<td>2.223</td>
+</tr>
+<tr><td>50</td>
+<td>0.941</td>
+<td>Excellent</td>
+<td>51</td>
+<td>51</td>
+<td>0.00%</td>
+<td>0.163</td>
+<td>0.775</td>
+<td>4.792</td>
+<td>0.205</td>
+<td>0.565</td>
+<td>1.551</td>
+<td>2.157</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-009-1-1-cuser294316-storage-passwords">
+<h2><a class="toc-backref" href="index.html#id16">7.9&nbsp;&nbsp;&nbsp;PAGE 009: /1.1/cuser294316/storage/passwords</a></h2>
+<ul>
+<li><p class="first">Req: 001, post, url <tt class="docutils literal">/1.1/cuser294316/storage/passwords</tt></p>
+<blockquote>
+<img alt="request_009.001.png" src="request_009.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>50</td>
+<td>0.933</td>
+<td>Good</td>
+<td>15</td>
+<td>15</td>
+<td>0.00%</td>
+<td>0.171</td>
+<td>0.567</td>
+<td>1.743</td>
+<td>0.192</td>
+<td>0.427</td>
+<td>1.517</td>
+<td>1.743</td>
+</tr>
+<tr><td>50</td>
+<td>0.969</td>
+<td>Excellent</td>
+<td>16</td>
+<td>16</td>
+<td>0.00%</td>
+<td>0.167</td>
+<td>0.917</td>
+<td>5.715</td>
+<td>0.178</td>
+<td>0.604</td>
+<td>1.227</td>
+<td>5.715</td>
+</tr>
+<tr><td>50</td>
+<td>0.842</td>
+<td>FAIR</td>
+<td>19</td>
+<td>19</td>
+<td>0.00%</td>
+<td>0.179</td>
+<td>1.298</td>
+<td>5.498</td>
+<td>0.191</td>
+<td>0.538</td>
+<td>5.353</td>
+<td>5.498</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-010-1-1-cuser226376-storage-prefs">
+<h2><a class="toc-backref" href="index.html#id17">7.10&nbsp;&nbsp;&nbsp;PAGE 010: /1.1/cuser226376/storage/prefs</a></h2>
+<ul>
+<li><p class="first">Req: 001, delete, url <tt class="docutils literal">/1.1/cuser226376/storage/prefs</tt></p>
+<blockquote>
+<img alt="request_010.001.png" src="request_010.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>50</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>5</td>
+<td>5</td>
+<td>0.00%</td>
+<td>0.353</td>
+<td>0.513</td>
+<td>0.647</td>
+<td>0.353</td>
+<td>0.485</td>
+<td>0.647</td>
+<td>0.647</td>
+</tr>
+<tr><td>50</td>
+<td>0.917</td>
+<td>Good</td>
+<td>6</td>
+<td>6</td>
+<td>0.00%</td>
+<td>0.383</td>
+<td>1.552</td>
+<td>5.536</td>
+<td>0.383</td>
+<td>0.951</td>
+<td>5.536</td>
+<td>5.536</td>
+</tr>
+<tr><td>50</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>5</td>
+<td>5</td>
+<td>0.00%</td>
+<td>0.178</td>
+<td>0.433</td>
+<td>0.891</td>
+<td>0.178</td>
+<td>0.320</td>
+<td>0.891</td>
+<td>0.891</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-011-1-1-cuser208718-storage-history">
+<h2><a class="toc-backref" href="index.html#id18">7.11&nbsp;&nbsp;&nbsp;PAGE 011: /1.1/cuser208718/storage/history</a></h2>
+<ul>
+<li><p class="first">Req: 001, post, url <tt class="docutils literal">/1.1/cuser208718/storage/history</tt></p>
+<blockquote>
+<img alt="request_011.001.png" src="request_011.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>50</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>2</td>
+<td>2</td>
+<td>0.00%</td>
+<td>0.547</td>
+<td>0.687</td>
+<td>0.827</td>
+<td>0.547</td>
+<td>0.827</td>
+<td>0.827</td>
+<td>0.827</td>
+</tr>
+<tr><td>50</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>1</td>
+<td>1</td>
+<td>0.00%</td>
+<td>0.561</td>
+<td>0.561</td>
+<td>0.561</td>
+<td>0.561</td>
+<td>0.561</td>
+<td>0.561</td>
+<td>0.561</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="failures-and-errors">
+<h1><a class="toc-backref" href="index.html#id19">8&nbsp;&nbsp;&nbsp;Failures and Errors</a></h1>
+<div class="section" id="failures">
+<h2><a class="toc-backref" href="index.html#id20">8.1&nbsp;&nbsp;&nbsp;Failures</a></h2>
+<ul>
+<li><p class="first">7 time(s), code: -1:</p>
+<pre class="literal-block">
+No traceback.
+</pre>
+</li>
+<li><p class="first">16112 time(s), code: 401:</p>
+<pre class="literal-block">
+No traceback.
+</pre>
+</li>
+</ul>
+</div>
+<div class="section" id="errors">
+<h2><a class="toc-backref" href="index.html#id21">8.2&nbsp;&nbsp;&nbsp;Errors</a></h2>
+<ul>
+<li><p class="first">10 time(s), code: -1:</p>
+<pre class="literal-block">
+Traceback (most recent call last):
+
+File &quot;build/bdist.linux-x86_64/egg/funkload/FunkLoadTestCase.py&quot;, line 208, in _connect
+cert_file=self._certfile_path, method=rtype, consumer=consumer)
+
+File &quot;build/bdist.linux-x86_64/egg/funkload/PatchWebunit.py&quot;, line 427, in WF_fetch
+h.endheaders()
+
+File &quot;/usr/lib/python2.7/httplib.py&quot;, line 958, in endheaders
+self._send_output(message_body)
+
+File &quot;/usr/lib/python2.7/httplib.py&quot;, line 818, in _send_output
+self.send(msg)
+
+File &quot;/usr/lib/python2.7/httplib.py&quot;, line 780, in send
+self.connect()
+
+File &quot;/usr/lib/python2.7/httplib.py&quot;, line 1161, in connect
+self.timeout, self.source_address)
+
+File &quot;/usr/lib/python2.7/socket.py&quot;, line 553, in create_connection
+for res in getaddrinfo(host, port, 0, SOCK_STREAM):
+</pre>
+</li>
+</ul>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">/home/marteau/marteau-web/work/4b2f4a1de7654f5c9f0b906a0c22646f/index.rst</tt>, line 354)</p>
+Bullet list ends without a blank line; unexpected unindent.</div>
+<blockquote>
+gaierror: [Errno -2] Name or service not known</blockquote>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr class="footer" />
+Generated on: 2013-06-13 04:33 UTC.
+
+</div>
+</body>
+</html>

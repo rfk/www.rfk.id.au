@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;are-we-python-yet&#x2F;" />
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:creator" content="@rfkelly">
+    <meta name="twitter:site" content="@rfkelly">
+
+    
+      <meta name="twitter:title" content="Are we Python yet?">
+      <title>Are we Python yet?</title>
+    
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+     
+  </head>
+  <body>
+    
+      <header>
+        <a class="profile-icon" href="/">
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+        </a>
+        <nav>
+            <a href="/about/">About</a>
+            <a href="/blog/">Blog</a>
+            <a href="https://github.com/rfk">GitHub</a>
+            <a href="https://twitter.com/rfkelly">Twitter</a>
+        </nav>
+      </header>
+    
+    <main>
+    
+  <h1>Are we Python yet?</h1>
+  <div class="item-meta">
+    
+    <div class="item-date">January 28, 2015</div>
+    
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;mozilla&#x2F;">mozilla</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          
+        
+        ]
+      </div>
+    
+    
+  </div>
+
+  <p>While it was a lot of fun to see <a href="/blog/entry/pypy-js-faster-than-cpython">a web-based python interpreter beat my system python on a single carefully-tuned benchmark</a>, that result obviously didn't say much about the usefulness of <a href="http://pypyjs.org">PyPy.js</a> for any real-world applications.  I'm keen to find out whether the web can support dynamic language interpreters for general-purpose use in a way that's truly competitive with a native environment.</p>
+<p>Inspired by the <a href="http://speed.pypy.org/">PyPy speed center</a> and the fine Mozilla tradition of <a href="http://arewefastyet.com/">publicly</a> <a href="https://areweslimyet.com/">visualising</a> <a href="http://areweamillionyet.org/">performance</a> <a href="http://arewemetayet.com/">metrics</a>, I've been working on a benchmark suite and metrics-tracking site for PyPy.js.  The initial version is finally live:</p>
+<p><a href="http://arewepythonyet.com">Are we Python yet?</a></p>
+<p><strong>TL;DR:</strong>  not really, not yet – but we're tracking slowly towards that goal.</p>
+<span id="continue-reading"></span>
+<p>There are a lot of different ways to look at the data on this site, but here are a few highlights from my own explorations:</p>
+<ul>
+<li>
+<p>While the front page of the <a href="http://speed.pypy.org/">PyPy speed center</a> features twenty python benchmarks that exercise a variety of workloads, the PyPy.js suite currently contains <a href="http://arewepythonyet.com/performance.html#view=breakdown">a mere eight of them</a>.  These are the ones that were easiest for me to get up and running, and they therefore tend to skew towards synthetic-benchmark-style tests rather than real-world code.  I hope to get at least the Django and Spitfire tests ported over sometime soon.</p>
+</li>
+<li>
+<p>Each python benchmark is <a href="http://arewepythonyet.com/performance.html#benchmark=chaos&amp;view=detail">run for 20 iterations</a> and by default we <a href="http://arewepythonyet.com/performance.html#view=trend">summarize by taking the mean</a> across all iterations.  It's also possible to compare the <a href="http://arewepythonyet.com/performance.html#view=trend&amp;metric=max">max</a> (to get an idea of JIT warmup overhead) or the <a href="http://arewepythonyet.com/performance.html#view=trend&amp;metric=min">min</a> (to disregard said overhead).</p>
+</li>
+<li>
+<p>We track performance of a native PyPy interpreter alongside the asmjs version, and the results when <a href="http://arewepythonyet.com/performance.html#view=breakdown&amp;native=on&amp;js=off&amp;d8=off">comparing PyPy against CPython</a> seem to roughly match those reported on PyPy's own speed center.  That's a nice sanity-check, and hopefully means that I haven't committed any terribly grievous sins in analysing these results!</p>
+</li>
+<li>
+<p>When compiled without a JIT, the asmjs version sees a <a href="http://arewepythonyet.com/performance.html#view=trend&amp;js=on&amp;d8=off&amp;jit=off&amp;norm=pypy">fairly uniform 1.5 to 2 times slowdown</a> from a native PyPy interpreter when run under SpiderMonkey.  It is also quite uniform under V8, at a <a href="http://arewepythonyet.com/performance.html#benchmark=chaos&amp;view=trend&amp;native=off&amp;js=off&amp;d8=on&amp;jit=off&amp;norm=pypy">4 to 6 times slowdown</a>.  This is nicely within the expected range of performance penalty when compiling to asmjs.</p>
+</li>
+<li>
+<p>When compiled with an asmjs-targeting JIT, performance is <a href="http://arewepythonyet.com/performance.html#view=breakdown&amp;js=on&amp;d8=on&amp;jit=on&amp;norm=pypy">a lot more variable</a> – there's anywhere from five times to <em><strong>several hundred times</strong></em> slowdown compared to a native PyPy, depending on the benchmark and the javascript engine in use.</p>
+</li>
+<li>
+<p>Digging into the performance over an <a href="http://arewepythonyet.com/performance.html#view=detail&amp;norm=pypy">individual benchmark run</a>, the source of this large and highly-variable slowdown is obvious.  The javascript versions show <a href="http://arewepythonyet.com/performance.html#benchmark=richards&amp;view=detail&amp;js=on&amp;d8=off&amp;jit=on&amp;norm=pypy">substantial</a> <a href="http://arewepythonyet.com/performance.html#benchmark=spectral-norm&amp;view=detail&amp;js=on&amp;d8=off&amp;jit=on&amp;norm=pypy">spikes</a> that correspond to the JIT kicking in and taking a lot of time to re-compile a bunch of javascript code.</p>
+</li>
+<li>
+<p>If we compare the <a href="http://arewepythonyet.com/performance.html#benchmark=spectral-norm&amp;view=detail&amp;js=on&amp;d8=off&amp;jit=on&amp;norm=pypy&amp;metric=min">minimum iteration time</a> from each benchmark rather than the mean across all iterations, the results are a lot less variable and the asmjs version tends to be within a 10 times slowdown from native.  That's still not great, but it's a lot better than 100 or more.</p>
+</li>
+<li>
+<p>Compared to a native CPython interpreter rather than native PyPy, the story is more interesting.  The <a href="http://arewepythonyet.com/performance.html#benchmark=chaos&amp;view=breakdown&amp;js=on&amp;d8=on&amp;native=off&amp;norm=cpython&amp;jit=on&amp;metric=min">minimum iteration times</a> average out to be slightly faster than CPython, but the <a href="http://arewepythonyet.com/performance.html#benchmark=chaos&amp;view=breakdown&amp;js=on&amp;d8=on&amp;native=off&amp;norm=cpython&amp;jit=on&amp;metric=max">maximum times</a> are much slower.  Mean performance works out at around <a href="http://arewepythonyet.com/performance.html#benchmark=chaos&amp;view=breakdown&amp;js=on&amp;d8=on&amp;native=off&amp;norm=cpython&amp;jit=on&amp;metric=mean">2 times slower than CPython</a>, but again, with very high variability.</p>
+</li>
+<li>
+<p>The download size is <a href="http://arewepythonyet.com/startup.html#view=filesize">still humongous</a> and will probably stay that way for some time.  I've got a few ideas in the works that will pull that graph downwards a little, but I've no real sense for how small we might feasibly make the compiled code.  Disabling the JIT <a href="http://arewepythonyet.com/startup.html#view=filesize&amp;jit=off">saves a few MB</a> but leaves plenty behind.</p>
+</li>
+</ul>
+<p>So where are we at, and where to from here?</p>
+<p>Given the above, I think it's fair to say that PyPy.js is not yet competitive with a native python environment.  The combination of large download size and startup overhead, expensive JIT compilation pauses, and occasional embarrassing performance penalties will be a show-stopper for anything but very specialised applications.  And we're not yet even tracking another important metric: the <a href="https://github.com/rfk/arewepythonyet/issues/1">performance of interacting with the host javascript environment and DOM</a>.</p>
+<p>But I do see a lot of scope for continuing to improve these metrics.</p>
+<p>On the performance front, there will always be <em>some</em> penalty to the approach taken in PyPy.js – while a native PyPy interpreter can just write a chunk of native code into memory and then jump to it, we must build a javascript source string in memory, copy it out of the asmjs heap into a native string object, ask the host environment to compile it for us, then indirectly execute it via a helper function.  There is, however, plenty that could be done to reduce this overhead from the current implementation, which naively builds all the code for a loop into a single function and re-compiles it on every change.  Since <a href="http://mozakai.blogspot.com.au/2013/08/outlining-workaround-for-jits-and-big.html">javascript compilation time can increase non-linearly with function size</a>, just breaking things up into smaller functions should go a long way here.</p>
+<p>When it comes to download size, I think I can still squeeze out maybe a MB or two through improvements to the code generation process, such as this in-progress patch for <a href="https://github.com/rfk/pypy/compare/rfk:master...rfk/optz-shadow-stack">reducing the number of writes to PyPy's shadowstack</a>.  After that we'll have to reach for more drastic techniques, such as separating the code for builtin modules from that of the interpreter itself so that they can be loaded on demand.</p>
+<p>Can these improvements bring us within reach of competing with native?  While I'm hopeful, I honestly don't know.  But if nothing else, having these graphs to watch is highly motivating!  We may not be python yet, but we're also not done yet.  Stay tuned.</p>
+
+
+  <hr />
+
+  <div class="related-pages">
+    <div><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;archiving-open-source-projects&#x2F;">Archiving my open-source projects</a></div>
+    <div><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;cromulate-improve-compressibility&#x2F;">An Experiment in Improving Compressiblity</a></div>
+  </div>
+
+    </main>
+  </body>
+</html>

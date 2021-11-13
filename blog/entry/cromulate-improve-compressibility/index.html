@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;cromulate-improve-compressibility&#x2F;" />
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:creator" content="@rfkelly">
+    <meta name="twitter:site" content="@rfkelly">
+
+    
+      <meta name="twitter:title" content="An Experiment in Improving Compressiblity">
+      <title>An Experiment in Improving Compressiblity</title>
+    
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+     
+  </head>
+  <body>
+    
+      <header>
+        <a class="profile-icon" href="/">
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+        </a>
+        <nav>
+            <a href="/about/">About</a>
+            <a href="/blog/">Blog</a>
+            <a href="https://github.com/rfk">GitHub</a>
+            <a href="https://twitter.com/rfkelly">Twitter</a>
+        </nav>
+      </header>
+    
+    <main>
+    
+  <h1>An Experiment in Improving Compressiblity</h1>
+  <div class="item-meta">
+    
+    <div class="item-date">July 17, 2014</div>
+    
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;mozilla&#x2F;">mozilla</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          
+        
+        ]
+      </div>
+    
+    
+  </div>
+
+  <p>Alternate title: <strong>reduce your compressed file size with this one weird trick!</strong></p>
+<p>One of the top items on my list for <a href="http://www.pypyjs.org">PyPy.js</a> development is to reduce the size of the initial download – it currently weighs in at a hefty 3.1M of compressed javascript code plus another 2.4M of binary data.  The big wins here are clearly going to come from just generating less code, and I have made some promising initial progress on that front.  But it's also a good opportunity to experiment with some after-the-fact techniques for reducing the <em>compressed</em> filesize without having to change the actual generated code.</p>
+<p>The obvious approach is to reach for a higher-performance compression algorithm, perhaps <a href="https://en.wikipedia.org/wiki/Bzip2">bzip2</a> or <a href="https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Markov_chain_algorithm">LZMA</a>.  But these algorithms can suffer from slow decompression speeds and are not generally supported in today's web browsers.  For shipping compressed content on the web today, gzip is the only game in town.</p>
+<p>So can we do better while staying within the confines of gzip?</p>
+<span id="continue-reading"></span>
+<p>One example of such a technique is <a href="https://code.google.com/p/zopfli/">zopfli</a>.  This is a gzip-compatible compressor designed to squeeze every last byte out of a file, and the project page quotes an average of around 5% smaller output than a standard <code>gzip -9</code>.  The tradeoff: compression can take 100 times longer or more to complete, although decompression speed remains the same.  It is therefore highly unsuitable for on-demand compression applications, but extremely useful for delivery of web content that is compressed once and then transmitted many times.</p>
+<p>Replacing my existing <code>gzip -9</code> compression with zopfli gives the following size reduction:</p>
+<table style="border: 1px solid; width: 50%; white-space: nowrap;">
+<tbody><tr><th style="width: 100%; padding: 0.5em">File</th><th>uncompressed</th><th>gzip -9</th><th>zopfli</th></tr>
+<tr><td>pypy.js</td><td style="text-align: right">26M</td><td style="text-align: right">3.1M</td><td style="text-align: right">3.0M</td></tr>
+<tr><td>pypy.js.mem</td><td style="text-align: right">9.1M</td><td style="text-align: right">2.4M</td><td style="text-align: right">2.3M</td></tr>
+</tbody></table>
+<p>That's not earth-shattering, but it's not bad for a one-time payment of some extra cpu cycles! Inspired by the zopfli philosophy, I decided to look for other ways to burn cpu in exchange for better gzip compression.</p>
+<p>The <a href="https://en.wikipedia.org/wiki/LZ77_and_LZ78">techniques underlying gzip</a> are based on a sliding window approach.  The algorithm considers only a partial chunk of its input at any one time, and the particulars of the file format limit the size of this window to a maximum of 32K.  This means that if the input file contains similar chunks of code that happen to be spaced far apart, then gzip may not be able to take advantage of that similarity.</p>
+<p>For arbitrary inputs there's nothing you can do about that, it's simply a limitation of the algorithm.  But I'm dealing with code, and chunks of code can be safely moved around.  So what would happen if we re-ordered the function definitions to put similar code closer together?</p>
+<p>I threw together a python script to implement this idea, which was blessedly simple thanks to the highly-structured nature of the code generated by <a href="http://emscripten.org">emscripten</a>.  For want of an actual name for the technique, I called it <a href="https://github.com/rfk/pypyjs/blob/master/tools/cromulate.py">cromulate.py</a>.  It reads in an emscripten-generated javascript file, chunks up the individual function definitions, and measures the &quot;similarity&quot; between a pair of functions A and B by calculating <code>len(gzip(A)) + len(gzip(B)) - len(gzip(A + B))</code>.  It then uses a simple greedy selection algorithm to re-order the functions so that similar ones are closer together.  The result is a semantically-equivalent javascript file that will (hopefully) compress better than the original.</p>
+<p>(If you squint, the underlying idea here is broadly similar to the way that bzip2 uses the <a href="https://en.wikipedia.org/wiki/Burrows%E2%80%93Wheeler_transform">Burrows-Wheeler Transform</a>, which does no compression itself but which re-orders data to make subsequent compression work better.  The trick of intuiting similarity by concatenating and compressing is not new either – see for example its application to linguistic analysis in <a href="http://arxiv.org/abs/cond-mat/0108530">Language Trees and Zipping</a>.)</p>
+<p>Since a naive pairwise comparison of all functions would be O(n^2), I used a sliding window approach similar to gzip's to keep the running time under control.  The &quot;--window-size&quot; option limits the number of functions that will be considered at any one time.  By making the window larger than the 32KB limit of gzip, it is still able to find similarities that would otherwise go un-utilised.  Increasing the size of the window increases the running time, but can also improve the compressibility of the output.</p>
+<p>To test it out, I used the existing emscripten-compiled programs from Alon's &quot;<a href="https://github.com/kripken/Massive">Massive</a>&quot; benchmark suite.  The results are summarized below as a function of cromulation window size:</p>
+<p><img src="./cromulation-results-massive.png"></img></p>
+<p>The first thing to note is that at small window sizes, the script can actually make the program <em>less</em> compressible.  But as the window size increases, and each function definition is compared to a larger portion of the file to find potential similarities, the technique is able to reduce the final compressed file size for all four programs in this test.</p>
+<p>The &quot;box2d&quot; and &quot;lua.vm&quot; programs are fairly small, around a few hundred kilobytes, and the potential gain in compressibility is correspondingly small since similar functions are already likely to be close together.  &quot;Poppler&quot; and &quot;sqlite&quot; are larger at a few megabytes each, and show a modest but noticeable improvement of 1 to 2 percent from this approach.</p>
+<p>Now here are the results for my current PyPy.js source file, for comparison:</p>
+<p><img src="./cromulation-results-all.png"></img></p>
+<p>That's more than a 10 percent reduction in compressed file size just by re-arranging the code – pretty neat for such a naive optimization!</p>
+<p>I have a few theories about why the difference is so much more noticeable with PyPy.js:</p>
+<ul>
+<li>It has over 16 thousand function definitions, meaning lots of opportunities to find similarity and lots of room for small size savings to add up.</li>
+<li>PyPy aggressively inlines code during translation, meaning a higher likelihood of functions with a lot of similar code.</li>
+<li>The memory initialization data is split out into a separate file in this case, so function definitions make up a larger proportion of total file size.</li>
+</ul>
+<p>In terms of running time, it took <em>almost six hours</em> for the current version of my script to process PyPy.js at the largest window size.  I did not record timing details for each run, but even the smaller files took several minutes to process.  So it's clearly not the sort of thing you want to be running regularly.  But for a final deployment build the potential size saving is hard to ignore.</p>
+<p>It's also worth noting that the savings here are largely orthogonal to those found by zopfli.  Here's the same graph, but using zopfli for the compression rather than gzip:</p>
+<p><img src="./cromulation-results-all-zopfli.png"></img></p>
+<p>The ratios have changed a little, but the overall shape of the graph is similar. My final compressed file size after cromulation and zoplification is 2.6M, a saving of more than 15 percent over the initial 3.1M we started with.  It's now almost a full second faster for me to fetch from across the Pacific.</p>
+<p>Will this ultimately be useful in practice?  I'm not sure.  It's possible that as I get around to reducing and optimizing the code generated for PyPy.js, the relative benefit of this approach will grow smaller and smaller.  But based on the results for other codebases shown above, it seems unlikely to go to zero.</p>
+<p><strong>Update:</strong> My colleague <a href="http://fmarier.org/">Francois</a> mentioned that a similar technique could be used to improve compression of CSS files, and I found <a href="http://mainroach.blogspot.com.au/2013/08/css-compression-block-sorting.html">this interesting article</a> about one attempt to do so, including a <a href="http://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence">statistical technique</a> that might be useful for improving the running time of my script. </p>
+
+
+  <hr />
+
+  <div class="related-pages">
+    <div><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;are-we-python-yet&#x2F;">Are we Python yet?</a></div>
+    <div><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;pypy-js-faster-than-cpython&#x2F;">PyPy.js: Now faster than CPython</a></div>
+  </div>
+
+    </main>
+  </body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;preparing-pyenchant-for-python-3&#x2F;" />
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:creator" content="@rfkelly">
+    <meta name="twitter:site" content="@rfkelly">
+
+    
+      <meta name="twitter:title" content="Preparing PyEnchant for Python 3.0">
+      <title>Preparing PyEnchant for Python 3.0</title>
+    
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+     
+  </head>
+  <body>
+    
+      <header>
+        <a class="profile-icon" href="/">
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+        </a>
+        <nav>
+            <a href="/about/">About</a>
+            <a href="/blog/">Blog</a>
+            <a href="https://github.com/rfk">GitHub</a>
+            <a href="https://twitter.com/rfkelly">Twitter</a>
+        </nav>
+      </header>
+    
+    <main>
+    
+  <h1>Preparing PyEnchant for Python 3.0</h1>
+  <div class="item-meta">
+    
+    <div class="item-date">November 26, 2008</div>
+    
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;software&#x2F;">software</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+          
+        
+        ]
+      </div>
+    
+    
+  </div>
+
+  <p>Yesterday I released a new version of the <a href="http://pyenchant.sourceforge.net/">PyEnchant</a> library with two important forward-looking features.</p>
+<p>First, I've switched from generating the C-library binding with <a href="http://www.swig.org/">SWIG</a> to the awesomeness that is <a href="http://www.python.org/doc/2.5.2/lib/module-ctypes.html">ctypes</a>.  The process was very straightforward and the switch brings a couple of significant advantages. PyEnchant is now a pure-python extension module, making it much simpler to distribute and saving me the trouble of creating a separate installer for each python version.  More importantly, it means that PyEnchant can now be used with <a href="http://codespeak.net/pypy/">PyPy</a>!  There are also ctypes implementations in the works for both <a href="http://www.nabble.com/ctypes-td19659413.html">Jython</a> and <a href="http://lists.ironpython.com/pipermail/users-ironpython.com/2006-June/002518.html">IronPython</a>.</p>
+<p>Second, PyEnchant is now upwards-compatible with the upcoming <a href="http://www.python.org/download/releases/3.0/">Python 3</a> series.  Fortunately PyEnchant doesn't use too many advanced features of Python, so it's possible to support both Python 2 and Python 3 from a single codebase.  However, it does take a little work to manage the differences between string objects in the two versions.  These tricks might be useful to others so I'll give a brief overview below.</p>
+<span id="continue-reading"></span>
+<p><strong>Update:</strong> Of course, the recommended way to prepare for Python 3 is to use <a href="http://docs.python.org/library/2to3.html">2to3</a> to automatically generate a Python 3 version of your Python 2 code, and I'll probably ship separate versions once Python 3 starts being being deployed.  For the moment, the changes required for PyEnchant are minimal enough that I can manage them inline in the old codebase, and the new string handling is actually cleaner and more robust than it was in the old Python-2-only version.</p>
+<p>The standard behavior of Python 2, and the behavior provided by PyEnchant, is for string-handling functions to accept either normal ASCII string objects (instances of 'str') or Unicode string objects (instances of 'unicode'), and to return new strings that are of the same type as those provided.  So ASCII in gives ASCII out, and Unicode in gives Unicode out.  In Python 3, the 'str' class always represents a Unicode string.  On top of this, I'm interfacing with a C library that expects strings as UTF-8 encoded character arrays.</p>
+<h3 id="trick-1-vocabulary">Trick 1: Vocabulary</h3>
+<p>In Python 2, it's darn useful to know whether you've got a Unicode string, which you test for by doing the following:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-python" data-lang="python"><span style="color:#b48ead;">if </span><span style="color:#96b5b4;">isinstance</span><span style="color:#c0c5ce;">(s,unicode):
+    </span><span style="color:#bf616a;">handle_unicode</span><span style="color:#c0c5ce;">(s)
+</span><span style="color:#b48ead;">else</span><span style="color:#c0c5ce;">:
+    </span><span style="color:#bf616a;">handle_ascii</span><span style="color:#c0c5ce;">(s)
+</span></code></pre>
+<p>You can also check whether you've got a string object of either kind using the special 'basestring' class:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-python" data-lang="python"><span style="color:#b48ead;">if </span><span style="color:#96b5b4;">isinstance</span><span style="color:#c0c5ce;">(s,basestring):
+    </span><span style="color:#bf616a;">handle_string</span><span style="color:#c0c5ce;">(s)
+</span><span style="color:#b48ead;">else</span><span style="color:#c0c5ce;">:
+    </span><span style="color:#bf616a;">handle_other</span><span style="color:#c0c5ce;">(s)
+</span></code></pre>
+<p>These are both errors in Python 3 since there's no such thing as 'unicode' or 'basestring'.  But it's pretty simple to normalise the vocabulary between the two versions:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-python" data-lang="python"><span style="color:#b48ead;">try</span><span style="color:#c0c5ce;">:
+    unicode = unicode
+</span><span style="color:#b48ead;">except </span><span style="color:#c0c5ce;">NameError:
+    </span><span style="color:#65737e;"># &#39;unicode&#39; is undefined, must be Python 3
+    </span><span style="color:#c0c5ce;">str = str
+    unicode = str
+    bytes = bytes
+    basestring = (str,bytes)
+</span><span style="color:#b48ead;">else</span><span style="color:#c0c5ce;">:
+    </span><span style="color:#65737e;"># &#39;unicode&#39; exists, must be Python 2
+    </span><span style="color:#c0c5ce;">str = str
+    unicode = unicode
+    bytes = str
+    basestring = basestring
+</span></code></pre>
+<p>You can then do all the standard string type-testing that you'd do in Python 2, and it does the right thing in Python 3.</p>
+<h3 id="trick-2-unicode-literals">Trick 2: Unicode Literals</h3>
+<p>In Python 2 you create Unicode string objects by prepending &quot;u&quot; to the string literal, and embedding non-ASCII characters using Unicode escape sequences:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-python" data-lang="python"><span style="color:#c0c5ce;">s = </span><span style="color:#b48ead;">u</span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">This is the Unicode phi symbol: </span><span style="color:#96b5b4;">\u03d5</span><span style="color:#c0c5ce;">&quot;
+</span></code></pre>
+<p>These are a syntax error in Python 3, which has dropped the &quot;u&quot; prefix for string literals.  The equivalent in Python 3 would be:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-python" data-lang="python"><span style="color:#c0c5ce;">s = &quot;</span><span style="color:#a3be8c;">This is the Unicode phi symbol: </span><span style="color:#96b5b4;">\u03d5</span><span style="color:#c0c5ce;">&quot;
+</span></code></pre>
+<p>While this is legal in Python 2, it won't give you what you want - instead, it will produce a string containing the literal character sequence &quot;\u03d5&quot;.</p>
+<p>To produce a notation that works correctly across both versions, we can take advantage of Python's powerful support for encoding/decoding Unicode strings to process the Unicode escape characters at run-time.  The following function will perform the necessary trickery:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-python" data-lang="python"><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">u</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">s</span><span style="color:#c0c5ce;">):
+    </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">s.</span><span style="color:#bf616a;">encode</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">ascii</span><span style="color:#c0c5ce;">&quot;).</span><span style="color:#bf616a;">decode</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">unicode-escape</span><span style="color:#c0c5ce;">&quot;)
+</span></code></pre>
+<p>In Python 2, this would take an ASCII string, encode it into ASCII (leaving it unchanged) and then decode it into a Unicode string by processing the contained escape characters.  In Python 3, it would take a Unicode string, encode it into an ASCII bytestring, then decode it back into a Unicode string by processing the contained escape characters.</p>
+<p>The only remaining trick is to stop the Python parser from processing the escape characters itself when it first loads the string; we can use raw string literals for this purpose.   The final notation is:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-python" data-lang="python"><span style="color:#c0c5ce;">s = </span><span style="color:#bf616a;">u</span><span style="color:#c0c5ce;">(</span><span style="color:#b48ead;">r</span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">This is the Unicode phi symbol: </span><span style="color:#96b5b4;">\u</span><span style="color:#a3be8c;">03d5</span><span style="color:#c0c5ce;">&quot;)
+</span></code></pre>
+<p>This will correctly produce a Unicode string object in both Python 2 and Python 3.</p>
+<p>It may be possible to achieve a similar effect by directly embedding the Unicode characters in the Python source file, and <a href="http://www.python.org/dev/peps/pep-0263/">specifying the file encoding</a> appropriately.
+But I prefer to keep my source files as pure ASCII since I sometimes need to use text editors that can't even be trusted to get line-endings right, let alone preserve non-ASCII characters.</p>
+<h3 id="trick-3-unicode-in-unicode-out">Trick 3: Unicode in, Unicode out</h3>
+<p>The final step in the compatibiltiy migration was ensuring that we respect the traditional Unicode-in/Unicode-out semantics of Python 2,
+while correctly handling Unicode strings in Python 3 <em>and</em> correctly passing UTF-8 encoded byte arrays into the underlying C library.
+To do so, I created a special subclass of 'str' that knows about the necessary logic:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-python" data-lang="python"><span style="color:#b48ead;">class </span><span style="color:#ebcb8b;">EnchantStr</span><span style="color:#eff1f5;">(</span><span style="color:#a3be8c;">str</span><span style="color:#eff1f5;">):
+
+      </span><span style="color:#b48ead;">def </span><span style="color:#96b5b4;">__new__</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">cls</span><span style="color:#c0c5ce;">,</span><span style="color:#bf616a;">value</span><span style="color:#c0c5ce;">):
+        </span><span style="color:#65737e;">&quot;&quot;&quot;EnchantStr data constructor.
+
+        This method records whether the initial string was unicode, then
+        simply passes it along to the default string constructor.
+        &quot;&quot;&quot;
+        </span><span style="color:#b48ead;">if </span><span style="color:#96b5b4;">type</span><span style="color:#c0c5ce;">(value) is unicode:
+          was_unicode = </span><span style="color:#d08770;">True
+          </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">str is not unicode:
+            value = value.</span><span style="color:#bf616a;">encode</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">utf-8</span><span style="color:#c0c5ce;">&quot;)
+        </span><span style="color:#b48ead;">else</span><span style="color:#c0c5ce;">:
+          was_unicode = </span><span style="color:#d08770;">False
+          </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">str is not bytes:
+            </span><span style="color:#b48ead;">raise </span><span style="color:#bf616a;">RuntimeError</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">Don&#39;t pass bytestrings to pyenchant</span><span style="color:#c0c5ce;">&quot;)
+        </span><span style="color:#bf616a;">self </span><span style="color:#c0c5ce;">= str.</span><span style="color:#96b5b4;">__new__</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">cls</span><span style="color:#c0c5ce;">,value)
+        </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">._was_unicode = was_unicode
+        </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">self
+
+    </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">encode</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">):
+        </span><span style="color:#65737e;">&quot;&quot;&quot;Encode this string into a form usable by the enchant C library.&quot;&quot;&quot;
+        </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">str is unicode:
+          </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">str.</span><span style="color:#bf616a;">encode</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">,&quot;</span><span style="color:#a3be8c;">utf-8</span><span style="color:#c0c5ce;">&quot;)
+        </span><span style="color:#b48ead;">else</span><span style="color:#c0c5ce;">:
+          </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">self
+
+    </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">decode</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">,</span><span style="color:#bf616a;">value</span><span style="color:#c0c5ce;">):
+        </span><span style="color:#65737e;">&quot;&quot;&quot;Decode a string returned by the enchant C library.&quot;&quot;&quot;
+        </span><span style="color:#b48ead;">if </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">._was_unicode:
+          </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">str is unicode:
+            </span><span style="color:#65737e;"># ctypes converts c_char_p into a unicode string, but
+            # it may not use utf-8.
+            </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">value.</span><span style="color:#bf616a;">encode</span><span style="color:#c0c5ce;">().</span><span style="color:#bf616a;">decode</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">utf-8</span><span style="color:#c0c5ce;">&quot;)
+          </span><span style="color:#b48ead;">else</span><span style="color:#c0c5ce;">:
+            </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">value.</span><span style="color:#bf616a;">decode</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">utf-8</span><span style="color:#c0c5ce;">&quot;)
+        </span><span style="color:#b48ead;">else</span><span style="color:#c0c5ce;">:
+          </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">value
+</span></code></pre>
+<p>All incoming strings received by PyEnchant are immediately converted to an EnchantStr, which is a subclass of the 'str' type that remembers whether the original string was unicode or ASCII.  This object then knows how to encode itself into a UTF-8 byte array for passing into the C library, and how to decode any strings coming out of the C library back into the appropriate type.  The only trick here is using &quot;str is unicode&quot; to detect that we're on Python 3, and &quot;str is not unicode&quot; to detect Python 2.</p>
+<p>Here's a short example of how this class gets used ('_e' is the ctypes binding to the enchant C library):</p>
+<pre style="background-color:#2b303b;">
+<code class="language-python" data-lang="python"><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">suggest</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">,</span><span style="color:#bf616a;">word</span><span style="color:#c0c5ce;">):
+    word = </span><span style="color:#bf616a;">EnchantStr</span><span style="color:#c0c5ce;">(word)
+    suggs = _e.</span><span style="color:#bf616a;">dict_suggest</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">._this,word.</span><span style="color:#bf616a;">encode</span><span style="color:#c0c5ce;">())
+    </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">[word.</span><span style="color:#bf616a;">decode</span><span style="color:#c0c5ce;">(w) </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">w </span><span style="color:#b48ead;">in </span><span style="color:#c0c5ce;">suggs]
+</span></code></pre>
+<p>Using these simple idioms, PyEnchant can now transparently do-the-right-thing with strings in both Python 2 and Python 3, all from a single codebase.</p>
+
+
+  <hr />
+
+  <div class="related-pages">
+    <div><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;extended-iterable-unpacking&#x2F;">Extended Iterable Unpacking</a></div>
+    <div><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;automagical-self-for-python-methods&#x2F;">Automagical &#x27;self&#x27; for Python Methods</a></div>
+  </div>
+
+    </main>
+  </body>
+</html>

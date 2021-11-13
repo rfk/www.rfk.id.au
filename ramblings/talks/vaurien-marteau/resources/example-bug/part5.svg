@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="16cm" height="11cm" viewBox="119 51 318 205" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <rect style="fill: #ffffff" x="120" y="131" width="101" height="47"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="120" y="131" width="101" height="47"/>
+  </g>
+  <text font-size="13.5467" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="170.5" y="154.5">
+    <tspan x="170.5" y="154.5">gunicorn</tspan>
+  </text>
+  <g>
+    <rect style="fill: #ffffff" x="333.8" y="130.4" width="101" height="47"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="333.8" y="130.4" width="101" height="47"/>
+  </g>
+  <text font-size="13.5467" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="384.3" y="153.9">
+    <tspan x="384.3" y="153.9">MySQL</tspan>
+  </text>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="221" y1="154.5" x2="324.064" y2="153.952"/>
+    <polygon style="fill: #000000" points="331.564,153.912 321.591,158.965 324.064,153.952 321.538,148.965 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="331.564,153.912 321.591,158.965 324.064,153.952 321.538,148.965 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="333.605" y="52.9" width="101" height="47"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="333.605" y="52.9" width="101" height="47"/>
+  </g>
+  <text font-size="13.5467" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="384.105" y="76.4">
+    <tspan x="384.105" y="76.4">MySQL</tspan>
+  </text>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="221" y1="154.5" x2="325.605" y2="81.9487"/>
+    <polygon style="fill: #000000" points="331.768,77.6744 326.4,87.482 325.605,81.9487 320.701,79.265 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="331.768,77.6744 326.4,87.482 325.605,81.9487 320.701,79.265 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="334.405" y="208.8" width="101" height="47"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="334.405" y="208.8" width="101" height="47"/>
+  </g>
+  <text font-size="13.5467" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="384.905" y="232.3">
+    <tspan x="384.905" y="232.3">MySQL</tspan>
+  </text>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="221" y1="154.5" x2="326.377" y2="226.792"/>
+    <polygon style="fill: #000000" points="332.561,231.035 321.487,229.501 326.377,226.792 327.144,221.255 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="332.561,231.035 321.487,229.501 326.377,226.792 327.144,221.255 "/>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #ff0000" x1="270" y1="167" x2="298" y2="142"/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #ff0000" x1="271.624" y1="142.724" x2="293" y2="166"/>
+  <g>
+    <rect style="fill: #ffffff" x="128" y="165" width="84" height="64"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="128" y="165" width="84" height="64"/>
+  </g>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="140" y="187">
+    <tspan x="140" y="187">W</tspan>
+  </text>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="143.8" y="212.8">
+    <tspan x="143.8" y="212.8">W</tspan>
+  </text>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="163.6" y="183.7">
+    <tspan x="163.6" y="183.7">W</tspan>
+  </text>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="187.4" y="193.6">
+    <tspan x="187.4" y="193.6">W</tspan>
+  </text>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="170.2" y="209.5">
+    <tspan x="170.2" y="209.5">W</tspan>
+  </text>
+  <line style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #ff0000" x1="156.605" y1="187.431" x2="176.981" y2="171.707"/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #ff0000" x1="161.981" y1="169.707" x2="176.605" y2="188.431"/>
+</svg>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;announcing-django-paranoid-sessions&#x2F;" />
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:creator" content="@rfkelly">
+    <meta name="twitter:site" content="@rfkelly">
+
+    
+      <meta name="twitter:title" content="Announcing: django-paranoid-sessions">
+      <title>Announcing: django-paranoid-sessions</title>
+    
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+     
+  </head>
+  <body>
+    
+      <header>
+        <a class="profile-icon" href="/">
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+        </a>
+        <nav>
+            <a href="/about/">About</a>
+            <a href="/blog/">Blog</a>
+            <a href="https://github.com/rfk">GitHub</a>
+            <a href="https://twitter.com/rfkelly">Twitter</a>
+        </nav>
+      </header>
+    
+    <main>
+    
+  <h1>Announcing: django-paranoid-sessions</h1>
+  <div class="item-meta">
+    
+    <div class="item-date">August 15, 2009</div>
+    
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+           | 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;django&#x2F;">django</a>
+          
+        
+        ]
+      </div>
+    
+    
+  </div>
+
+  <p>Like most web frameworks, Django provides a convenient mechanism for storing data across requests in a persistent &quot;session&quot; object.  Like most web frameworks, Django implements sessions using a simple mapping from a &quot;session key&quot; to a session object stored on the server.  And like most web frameworks, Django's <a href="http://docs.djangoproject.com/en/dev/topics/http/sessions/">default session implementation</a> is trivially vulnerable to <a href="http://en.wikipedia.org/wiki/Session_hijacking">session hijacking</a> attacks.</p>
+<span id="continue-reading"></span>
+<p>Django's session implementation is quite similar to that provided by PHP; for all the gory details here is an excellent article on <a href="http://shiflett.org/articles/the-truth-about-sessions">The Truth about Sessions</a>, but the simplified version is as follows.  When you first visit a Django-powered site, the server generates a random &quot;session key&quot; and returns it to your browser in a cookie.  Any data that the server wants to remember about you (say, whether you have logged in and under what username) is stored in a giant dictionary indexed by the session key.  On each subsequent visit you browser sends the key back to the server, which looks up your data in this dictionary and proceeds merrily on its way.  The interaction looks something like the following:</p>
+<ul>
+<li>You login at the (hypothetical) Django-powered website <code>http://www.my-todo-list.com/</code>.</li>
+<li>The server stores your login details in its session database, and sends back a session key of <code>123456</code>.</li>
+<li>You send a request to update your todo list, presenting a session key of <code>123456</code>.</li>
+<li>The server looks up &quot;123456&quot; in its session database, checks that the session is correctly logged in as you, and proceeds with the requested update.</li>
+</ul>
+<p>It's a simple and convenient mechanism, but it has an important security issue: anyone who knows your session key can impersonate you to the server!  Consider what happens next:</p>
+<ul>
+<li>Using my l33t hacking skillz, I manage to discover your session key.</li>
+<li>I send a request to delete your todo list, presenting a session key of <code>123456</code>.</li>
+<li>The server looks up <code>123456</code> in its session database, checks that the session is correctly logged in as you, and proceeds to delete all your data.</li>
+</ul>
+<p>So the security of this session mechanism depends crucially on the secrecy of the session key.  Unfortunately, finding someone's session key is far from complicated – it's frequently sent back-and-forth between your browser and the server in plain text, meaning anyone on your network can sniff it with ease.  Cookies can also be stolen using a cross-site scripting vulnerability or by exploiting browser bugs.  If the session key is embedded in the URL (as PHP sometimes does) then it can easily show up in referrer logs, bookmarks or emails.</p>
+<p>Unlike certain other frameworks, Django <em>does</em> take <a href="http://code.djangoproject.com/ticket/362">some simple steps</a> to avoid session-stealing attacks.  If you can suffer the increased server load, Django also allows you to restrict the session key to secure connections so that it cannot be sniffed in transit.  But there are a range of additional security measures that aren't currently available.</p>
+<p>Inspired by this <a href="http://code.djangoproject.com/ticket/362">ancient ticket</a> about session security, I've developed a new app called <a href="http://github.com/rfk/django-paranoid-sessions/tree/master">django-paranoid-sessions</a>.  It provides a middleware class to make Django work a lot harder at session security, through a (configurable) combination of:</p>
+<ul>
+<li>periodic cycling of session keys.</li>
+<li>HTTP header fingerprinting.</li>
+<li>per-request <a href="http://en.wikipedia.org/wiki/Cryptographic_nonce">nonces</a>.</li>
+</ul>
+<p>As usual there's a tradeoff here, providing additional security at the cost of doing more work per request.  You also run the risk of rejecting legitimate user requests that happen to look suspicious. For this reason django-paranoid-sessions is highly configurable, letting you find the right balance for your project.  The <a href="http://github.com/rfk/django-paranoid-sessions/tree/master">README</a> has all the details, but I'll provide a brief overview of each feature below.</p>
+<p>First, a disclaimer:  I'm not a security expert and I'm certainly not a cryptographer.  I'm just interested in these issues and have read a lot about them.  I will not be held responsible if this app randomly boots users out of your site, slows your server to a crawl, or emails all your login details to North Korea.  Having said that, I've been using it on my own projects and I'm pretty confident it's doing what it's supposed to do – so on with the show:</p>
+<h3 id="session-key-cycling">Session Key Cycling</h3>
+<p>This is just what it sounds like – forcing the server to generate a fresh session key after a certain time has elapsed.  This means an attacker only has a certain amount of time to discover and exploit your session key before it is discarded by the server.  As an added bonus, it also makes brute-force attempts to guess a session key much more difficult.</p>
+<h3 id="http-header-fingerprinting">HTTP Header Fingerprinting</h3>
+<p>This technique records certain characteristics of your browser in the session data; commonly this will include your IP address and User-Agent string.  If a later request against your session does not match the recorded browser &quot;fingerprint&quot;, it is assumed to be a session-stealing attack and is rejected.</p>
+<p>Such fingerprinting can help prevent casual or accidental session-stealing, but will not stop a determined attacker – all information that the browser provides to the server can potentially be spoofed.  It also runs the risk of terminating legitimate user sessions, for example if your ISP has a habit of changing your IP address mid-session.  Nevertheless, many sites find this to be an acceptable compromise between security and user convenience.</p>
+<h3 id="per-request-nonces">Per-request Nonces</h3>
+<p>Using this technique, the server sends another piece of information in addition to the session key: a cryptographic &quot;nonce&quot; that changes with every request.  Like the session key, your browser must present the server with a valid nonce in order to be permitted access to the session.  Unlike the session key, each nonce can only be used for a single request.  To see how this works, consider again my attempt to hack your todo list:</p>
+<ul>
+<li>You login at the (hypothetical) Django-powered website <code>http://www.my-todo-list.com/</code>.</li>
+<li>The server stores your login details in its session database, sending back a session key of <code>123456</code> and a nonce of <code>ABCDE</code>.</li>
+<li>Using my l33t hacking skillz, I manage to sniff your session key and nonce.</li>
+<li>You send a request to update your todo list, presenting a session key of <code>123456</code> and a nonce of <code>ABCDE</code>.</li>
+<li>The server looks up <code>123456</code> in its session database and checks that the session is correctly logged in as you.</li>
+<li>The server checks that <code>ABCDE</code> is a valid nonce, records that this nonce has been used, and proceeds with the requested update.</li>
+<li>I send a request to delete your todo list, presenting a session key of <code>123456</code> and a nonce of <code>ABCDE</code>.</li>
+<li>The server looks up <code>123456</code> in its session database and checks that the session is correctly logged in as you.</li>
+<li>The server discovers that the nonce <code>ABCDE</code> has already been used, and rejects my request.</li>
+</ul>
+<p>Much better!  The use of nonces dramatically narrows the window in which session-stealing attacks can be performed – not only do I have to steal your session key and nonce, but I have to use the nonce before you do.  Even then, your next attempt to use the nonce will invalidate the stolen session and hence limit the damage I can do.</p>
+<p>Unfortunately things are not quite as simple as this example.  To allow a user to execute multiple overlapping requests, there must be a brief window during which duplicate nonces are accepted by the server.  django-paranoid-sessions lets you narrow or widen this window as you please, to find the appropriate compromise between security and user convenience for your application.</p>
+<h3 id="more">More?</h3>
+<p>That's about the limit of what I know when it comes to securing sessions, but I'm keen to pack as much goodness into this app as possible.  If you've got a favourite technique for squeezing a little more security out of your web apps, I'd love to hear about it.</p>
+
+
+  <hr />
+
+  <div class="related-pages">
+    <div><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;a-gil-adventure-threading2&#x2F;">A GIL Adventure (with a happy ending)</a></div>
+    <div><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;new-python-module-extprot&#x2F;">New Python module: extprot</a></div>
+  </div>
+
+    </main>
+  </body>
+</html>

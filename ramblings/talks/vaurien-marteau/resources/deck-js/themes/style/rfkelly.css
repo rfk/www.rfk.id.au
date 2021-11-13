@@ -1,0 +1,26 @@
+
+@import url("swiss.css");
+
+.deck-container {
+  font-size: 1.9em;
+}
+
+.deck-container .slide h1 {
+  font-size: 3.6em;
+}
+
+.deck-container .slide h2 {
+  font-size: 2em;
+  color: #c00;
+  border-bottom-color: #999;
+}
+
+.deck-container .slide blockquote {
+  font-size: 1em;
+  padding: 0em;
+  border: none;
+}
+
+.deck-container .slide a, .deck-container .slide a:hover, .deck-container .slide a:focus, .deck-container .slide a:active, .deck-container .slide a:visited {
+  color: #009;
+}

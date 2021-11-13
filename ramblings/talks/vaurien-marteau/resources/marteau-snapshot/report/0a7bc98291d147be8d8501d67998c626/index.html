@@ -1,0 +1,1549 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.11: http://docutils.sourceforge.net/" />
+<title>FunkLoad bench report</title>
+<meta name="date" content="2013-04-21 08:56:43" />
+<style type="text/css">
+
+
+@import url(http://fonts.googleapis.com/css?family=Quando);
+
+body {
+  font-family: 'Quando', serif;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+ text-decoration: none;
+ color: grey;
+}
+
+a:hover {
+ text-decoration: underline;
+}
+
+h1.title {
+  background-image: url("../../media/head.png");
+  height: 80px;
+  color: white;
+  border: none;
+  padding-left: 20px;
+  padding-top: 2px;
+  margin: 0px;
+}
+
+h1.title a {
+  color: white;
+}
+
+div.section, div.abstract, div.contents, table.docinfo {
+  padding-right: 20px;
+  padding-left: 20px;
+  color: black;
+}
+
+a.toc-backref {
+  color: black;
+}
+
+
+pre {
+    font-family: 'Consolas','Deja Vu Sans Mono','Bitstream Vera Sans Mono',monospace;
+    font-size: 0.95em;
+    letter-spacing: 0.015em;
+    line-height: 120%;
+    padding: 0.5em;
+    border: 1px solid rgb(204, 204, 204);
+    background-color: rgb(238, 238, 238);
+    border-radius: 6px 6px 6px 6px;
+    overflow-x: auto;
+}
+
+#header {
+  background-image: url("../../media/head.png");
+  color: white;
+  border: none;
+  padding-left: 20px;
+  padding-top: 2px;
+  margin: 0px;
+  vertical-align: middle;
+  display:block;
+}
+
+#header img {
+  display: inline-block;
+}
+
+
+#title {
+  font-size: 40px;
+  text-decoration: none;
+  color: white;
+}
+
+#subtitle {
+  font-size: 15px;
+  font-style: italic;
+}
+
+#body {
+  padding: 20px;
+  background-image: url("../../media/fade.png") repeat-x scroll -70% 0px transparent;
+
+}
+
+p {
+  font-style: italic;
+  color: grey;
+  font-size: 20px;
+}
+
+#right {
+ float:right;
+}
+
+div.resource {
+  margin-right: 5px;
+  padding: 12px;
+  border: 1px dotted rgb(203, 200, 185);
+  background: none repeat scroll 0% 0% rgb(246, 246, 242);
+}
+
+div.resource span {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+div.resource div {
+  font-style: italic;
+  margin-top: 6px;
+}
+
+#running, #pending, #failures, #successes {
+  float: left;
+  min-width: 400px;
+  padding: 10px;
+}
+
+#workers {
+ margin-bottom: 10px;
+ margin-top: 10px;
+}
+
+div.resource a {
+  float: right;
+}
+
+div.smallform {
+  width: 400px;
+  float: right;
+  margin-top: 10px;
+  border: 1px dotted rgb(203, 200, 185);
+  background: none repeat scroll 0% 0% rgb(246, 246, 242);
+  padding: 12px;
+  margin-right: 5px;
+}
+
+div.smallform input[type="text"]  {
+  width: 300px;
+}
+
+#form {
+  margin-top: 10px;
+  border: 1px dotted rgb(203, 200, 185);
+  background: none repeat scroll 0% 0% rgb(246, 246, 242);
+  padding: 12px;
+  margin-right: 5px;
+}
+
+#form input[type="text"]  {
+  width: 300px;
+}
+
+table.nodes {
+ text-align: center;
+ font-weight: normal;
+ color: #404040;
+ background: none repeat scroll 0% 0% rgb(246, 246, 242);
+ border: 1px dotted rgb(203, 200, 185);
+ border-collapse: collapse;
+ border-spacing: 10px;
+ padding: 10px;
+ min-width: 500px;
+}
+
+table.nodes th {
+    border-bottom: 1px dotted #6699CC;
+    color: #404040;
+    text-align: center;
+    padding: 5px;
+    background-color: white;
+}
+
+table.nodes td {
+    border-bottom: 1px dotted #6699CC;
+    color: #404040;
+    text-align: center;
+    padding: 5px;
+
+}
+
+.label {
+    font-size: 75%;
+    font-weight: bold;
+    line-height: 14px;
+    color: rgb(255, 255, 255);
+    text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.25);
+    white-space: nowrap;
+    vertical-align: baseline;
+    background-color: rgb(58, 135, 173);
+    padding: 1px 4px 2px;
+    border-radius: 3px 3px 3px 3px;
+}
+
+a.label {
+    text-decoration: none;
+}
+
+div.actions {
+  float: left;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+div.message {
+  margin-right: 25px;
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px dotted rgb(203, 200, 185);
+  background: none repeat scroll 0% 0% rgb(246, 246, 242);
+  float: right;
+  color: black;
+}
+
+div.login {
+  float: right;
+  margin-right: 20px;
+  margin-top: 5px;
+}
+
+form.job {
+/*  width: 100%*/
+}
+
+form.job label {
+  padding-left: 5px;
+}
+
+form.job input {
+}
+
+
+form.job fieldset
+{
+  position: relative;
+  margin-top: 15px;
+  margin: 0 0 1em 0;  
+  padding-top: 20px;
+  width: 93%;
+  border: 1px solid gray;
+}
+
+
+form.job fieldset legend 
+{
+  font-size: 140%;
+  font-weight: bold;
+}
+
+form.job fieldset ol 
+{
+    padding: 0 1em 0 1em;  
+    list-style: none;
+}
+
+form.job fieldset li 
+{
+    /* Control leading between rows. */
+    padding-bottom: .7em;
+}
+
+form.job fieldset ol li label {
+  float: left;
+  width: 10em;
+  margin-right: 1em;
+  font-size: 130%
+}
+
+input.button
+{
+  height: 2.5em;
+}
+
+div.buttonsContainer
+{
+    float: left;
+}
+
+
+</style>
+</head>
+<body>
+<div class="document" id="funkload-bench-report">
+<h1 class="title"><a class="reference external" href="http://funkload.nuxeo.org/">FunkLoad</a> bench report</h1>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr><th class="docinfo-name">Date:</th>
+<td>2013-04-21 08:56:43</td></tr>
+</tbody>
+</table>
+<div class="abstract topic">
+<p class="topic-title first">Abstract</p>
+<p>Simple users test
+Bench result of <tt class="docutils literal">MarketplaceTest.test_marketplace</tt>:
+No test description</p>
+</div>
+<div class="contents topic" id="table-of-contents">
+<p class="topic-title first">Table of contents</p>
+<ul class="auto-toc simple">
+<li><a class="reference internal" href="index.html#bench-configuration" id="id1">1&nbsp;&nbsp;&nbsp;Bench configuration</a></li>
+<li><a class="reference internal" href="index.html#bench-content" id="id2">2&nbsp;&nbsp;&nbsp;Bench content</a></li>
+<li><a class="reference internal" href="index.html#test-stats" id="id3">3&nbsp;&nbsp;&nbsp;Test stats</a></li>
+<li><a class="reference internal" href="index.html#page-stats" id="id4">4&nbsp;&nbsp;&nbsp;Page stats</a></li>
+<li><a class="reference internal" href="index.html#request-stats" id="id5">5&nbsp;&nbsp;&nbsp;Request stats</a></li>
+<li><a class="reference internal" href="index.html#slowest-requests" id="id6">6&nbsp;&nbsp;&nbsp;Slowest requests</a></li>
+<li><a class="reference internal" href="index.html#page-detail-stats" id="id7">7&nbsp;&nbsp;&nbsp;Page detail stats</a><ul class="auto-toc">
+<li><a class="reference internal" href="index.html#page-001" id="id8">7.1&nbsp;&nbsp;&nbsp;PAGE 001: /</a></li>
+<li><a class="reference internal" href="index.html#page-002-search-q-twi" id="id9">7.2&nbsp;&nbsp;&nbsp;PAGE 002: /search/?q=twi</a></li>
+<li><a class="reference internal" href="index.html#page-003-search-q-facebook-web" id="id10">7.3&nbsp;&nbsp;&nbsp;PAGE 003: /search/?q=facebook-web</a></li>
+<li><a class="reference internal" href="index.html#page-004-search-q-weather-me" id="id11">7.4&nbsp;&nbsp;&nbsp;PAGE 004: /search/?q=weather-me</a></li>
+<li><a class="reference internal" href="index.html#page-005-search-q-jauntly" id="id12">7.5&nbsp;&nbsp;&nbsp;PAGE 005: /search/?q=jauntly</a></li>
+<li><a class="reference internal" href="index.html#page-006-search-q-wiredcom" id="id13">7.6&nbsp;&nbsp;&nbsp;PAGE 006: /search/?q=wiredcom</a></li>
+<li><a class="reference internal" href="index.html#page-007-search-q-twitter" id="id14">7.7&nbsp;&nbsp;&nbsp;PAGE 007: /search/?q=twitter</a></li>
+<li><a class="reference internal" href="index.html#page-008-en-us-api-apps-category" id="id15">7.8&nbsp;&nbsp;&nbsp;PAGE 008: /en-US/api/apps/category/</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="index.html#failures-and-errors" id="id16">8&nbsp;&nbsp;&nbsp;Failures and Errors</a><ul class="auto-toc">
+<li><a class="reference internal" href="index.html#failures" id="id17">8.1&nbsp;&nbsp;&nbsp;Failures</a></li>
+<li><a class="reference internal" href="index.html#errors" id="id18">8.2&nbsp;&nbsp;&nbsp;Errors</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="bench-configuration">
+<h1><a class="toc-backref" href="index.html#id1">1&nbsp;&nbsp;&nbsp;Bench configuration</a></h1>
+<ul class="simple">
+<li>Launched: 2013-04-21 08:56:43</li>
+<li>From: ip-10-250-27-168, ip-10-249-34-62</li>
+<li>Test: <tt class="docutils literal">loadtest.py MarketplaceTest.test_marketplace</tt></li>
+<li>Target server: <a class="reference external" href="https://marketplace.allizom.org">https://marketplace.allizom.org</a></li>
+<li>Cycles of concurrent users: [20, 40, 60]</li>
+<li>Cycle duration: 10s</li>
+<li>Sleeptime between request: from 0.0s to 0.5s</li>
+<li>Sleeptime between test case: 0.0s</li>
+<li>Startup delay between thread: 0.0s</li>
+<li>Apdex: <sub>1.5</sub></li>
+<li><a class="reference external" href="http://funkload.nuxeo.org/">FunkLoad</a> version: 1.17.0</li>
+</ul>
+</div>
+<div class="section" id="bench-content">
+<h1><a class="toc-backref" href="index.html#id2">2&nbsp;&nbsp;&nbsp;Bench content</a></h1>
+<p>The test <tt class="docutils literal">MarketplaceTest.test_marketplace</tt> contains:</p>
+<ul class="simple">
+<li>0 page(s)</li>
+<li>0 redirect(s)</li>
+<li>0 link(s)</li>
+<li>0 image(s)</li>
+<li>0 XML RPC call(s)</li>
+</ul>
+<p>The bench contains:</p>
+<ul class="simple">
+<li>165 tests, 161 error(s)</li>
+<li>1882 pages, 43 error(s)</li>
+<li>1882 requests, 43 error(s)</li>
+</ul>
+</div>
+<div class="section" id="test-stats">
+<h1><a class="toc-backref" href="index.html#id3">3&nbsp;&nbsp;&nbsp;Test stats</a></h1>
+<p>The number of Successful <strong>Tests</strong> Per Second (STPS) over Concurrent Users (CUs).</p>
+<blockquote>
+<img alt="tests.png" src="tests.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">STPS</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>20</td>
+<td>0.100</td>
+<td>29</td>
+<td>1</td>
+<td>96.55%</td>
+</tr>
+<tr><td>40</td>
+<td>0.300</td>
+<td>58</td>
+<td>3</td>
+<td>94.83%</td>
+</tr>
+<tr><td>60</td>
+<td>0.000</td>
+<td>78</td>
+<td>0</td>
+<td>100.00%</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+</div>
+<div class="section" id="page-stats">
+<h1><a class="toc-backref" href="index.html#id4">4&nbsp;&nbsp;&nbsp;Page stats</a></h1>
+<p>The number of Successful <strong>Pages</strong> Per Second (SPPS) over Concurrent Users (CUs).
+Note that an XML RPC call count like a page.</p>
+<blockquote>
+<img alt="pages_spps.png" src="pages_spps.png" />
+<img alt="pages.png" src="pages.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">SPPS</th>
+<th class="head">maxSPPS</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>20</td>
+<td>0.983</td>
+<td>Excellent</td>
+<td>27.800</td>
+<td>41.000</td>
+<td>287</td>
+<td>278</td>
+<td>3.14%</td>
+<td>0.172</td>
+<td>0.452</td>
+<td>1.834</td>
+<td>0.230</td>
+<td>0.292</td>
+<td>1.263</td>
+<td>1.406</td>
+</tr>
+<tr><td>40</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>61.800</td>
+<td>76.000</td>
+<td>634</td>
+<td>618</td>
+<td>2.52%</td>
+<td>0.169</td>
+<td>0.375</td>
+<td>1.337</td>
+<td>0.233</td>
+<td>0.288</td>
+<td>0.522</td>
+<td>1.113</td>
+</tr>
+<tr><td>60</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>94.300</td>
+<td>121.000</td>
+<td>961</td>
+<td>943</td>
+<td>1.87%</td>
+<td>0.168</td>
+<td>0.375</td>
+<td>1.344</td>
+<td>0.233</td>
+<td>0.286</td>
+<td>0.531</td>
+<td>1.093</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</div>
+<div class="section" id="request-stats">
+<h1><a class="toc-backref" href="index.html#id5">5&nbsp;&nbsp;&nbsp;Request stats</a></h1>
+<p>The number of <strong>Requests</strong> Per Second (RPS) successful or not over Concurrent Users (CUs).</p>
+<blockquote>
+<img alt="requests_rps.png" src="requests_rps.png" />
+<img alt="requests.png" src="requests.png" />
+<img alt="time_rps.png" src="time_rps.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating*</th>
+<th class="head">RPS</th>
+<th class="head">maxRPS</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>20</td>
+<td>0.983</td>
+<td>Excellent</td>
+<td>28.700</td>
+<td>42.000</td>
+<td>287</td>
+<td>278</td>
+<td>3.14%</td>
+<td>0.172</td>
+<td>0.461</td>
+<td>1.834</td>
+<td>0.221</td>
+<td>0.291</td>
+<td>1.262</td>
+<td>1.402</td>
+</tr>
+<tr><td>40</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>63.400</td>
+<td>76.000</td>
+<td>634</td>
+<td>618</td>
+<td>2.52%</td>
+<td>0.169</td>
+<td>0.383</td>
+<td>1.337</td>
+<td>0.232</td>
+<td>0.288</td>
+<td>0.521</td>
+<td>1.099</td>
+</tr>
+<tr><td>60</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>96.100</td>
+<td>121.000</td>
+<td>961</td>
+<td>943</td>
+<td>1.87%</td>
+<td>0.168</td>
+<td>0.381</td>
+<td>1.344</td>
+<td>0.233</td>
+<td>0.286</td>
+<td>0.526</td>
+<td>1.090</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</div>
+<div class="section" id="slowest-requests">
+<h1><a class="toc-backref" href="index.html#id6">6&nbsp;&nbsp;&nbsp;Slowest requests</a></h1>
+<p>The 5 slowest average response time during the best cycle with <strong>60</strong> CUs:</p>
+<ul class="simple">
+<li>In page 003, Apdex rating: Excellent, avg response time: 0.67s, get: <tt class="docutils literal"><span class="pre">/search/?q=evernote-web</span></tt>
+``</li>
+<li>In page 007, Apdex rating: Excellent, avg response time: 0.49s, get: <tt class="docutils literal"><span class="pre">/apps/entertainment-sports</span></tt>
+``</li>
+<li>In page 001, Apdex rating: Excellent, avg response time: 0.45s, get: <tt class="docutils literal">/</tt>
+``</li>
+<li>In page 003, Apdex rating: Excellent, avg response time: 0.43s, get: <tt class="docutils literal">/developers/submit/</tt>
+``</li>
+<li>In page 004, Apdex rating: Excellent, avg response time: 0.31s, get: <tt class="docutils literal"><span class="pre">/search/?q=wiredcom</span></tt>
+``</li>
+</ul>
+</div>
+<div class="section" id="page-detail-stats">
+<h1><a class="toc-backref" href="index.html#id7">7&nbsp;&nbsp;&nbsp;Page detail stats</a></h1>
+<div class="section" id="page-001">
+<h2><a class="toc-backref" href="index.html#id8">7.1&nbsp;&nbsp;&nbsp;PAGE 001: /</a></h2>
+<ul>
+<li><p class="first">Req: 001, get, url <tt class="docutils literal">/</tt></p>
+<blockquote>
+<img alt="request_001.001.png" src="request_001.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>20</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>47</td>
+<td>47</td>
+<td>0.00%</td>
+<td>0.392</td>
+<td>0.802</td>
+<td>1.288</td>
+<td>0.424</td>
+<td>0.497</td>
+<td>1.278</td>
+<td>1.281</td>
+</tr>
+<tr><td>40</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>95</td>
+<td>95</td>
+<td>0.00%</td>
+<td>0.388</td>
+<td>0.466</td>
+<td>0.726</td>
+<td>0.407</td>
+<td>0.456</td>
+<td>0.511</td>
+<td>0.536</td>
+</tr>
+<tr><td>60</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>138</td>
+<td>138</td>
+<td>0.00%</td>
+<td>0.356</td>
+<td>0.455</td>
+<td>0.573</td>
+<td>0.395</td>
+<td>0.450</td>
+<td>0.514</td>
+<td>0.524</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-002-search-q-twi">
+<h2><a class="toc-backref" href="index.html#id9">7.2&nbsp;&nbsp;&nbsp;PAGE 002: /search/?q=twi</a></h2>
+<ul>
+<li><p class="first">Req: 001, get, url <tt class="docutils literal"><span class="pre">/search/?q=twi</span></tt></p>
+<blockquote>
+<img alt="request_002.001.png" src="request_002.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>20</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>46</td>
+<td>46</td>
+<td>0.00%</td>
+<td>0.230</td>
+<td>0.270</td>
+<td>0.450</td>
+<td>0.234</td>
+<td>0.265</td>
+<td>0.297</td>
+<td>0.384</td>
+</tr>
+<tr><td>40</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>93</td>
+<td>93</td>
+<td>0.00%</td>
+<td>0.231</td>
+<td>0.258</td>
+<td>0.332</td>
+<td>0.236</td>
+<td>0.257</td>
+<td>0.283</td>
+<td>0.290</td>
+</tr>
+<tr><td>60</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>137</td>
+<td>137</td>
+<td>0.00%</td>
+<td>0.230</td>
+<td>0.260</td>
+<td>0.379</td>
+<td>0.234</td>
+<td>0.261</td>
+<td>0.286</td>
+<td>0.313</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-003-search-q-facebook-web">
+<h2><a class="toc-backref" href="index.html#id10">7.3&nbsp;&nbsp;&nbsp;PAGE 003: /search/?q=facebook-web</a></h2>
+<ul>
+<li><p class="first">Req: 001, get, url <tt class="docutils literal"><span class="pre">/search/?q=facebook-web</span></tt></p>
+<blockquote>
+<img alt="request_003.001.png" src="request_003.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>20</td>
+<td>0.884</td>
+<td>Good</td>
+<td>43</td>
+<td>40</td>
+<td>6.98%</td>
+<td>0.181</td>
+<td>0.836</td>
+<td>1.834</td>
+<td>0.195</td>
+<td>0.398</td>
+<td>1.623</td>
+<td>1.718</td>
+</tr>
+<tr><td>40</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>89</td>
+<td>84</td>
+<td>5.62%</td>
+<td>0.172</td>
+<td>0.679</td>
+<td>1.337</td>
+<td>0.188</td>
+<td>0.386</td>
+<td>1.253</td>
+<td>1.297</td>
+</tr>
+<tr><td>60</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>135</td>
+<td>130</td>
+<td>3.70%</td>
+<td>0.174</td>
+<td>0.673</td>
+<td>1.344</td>
+<td>0.218</td>
+<td>0.437</td>
+<td>1.212</td>
+<td>1.255</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+<li><p class="first">Req: 002, get, url <tt class="docutils literal"><span class="pre">/app/evernote-web/</span></tt></p>
+<blockquote>
+<img alt="request_003.002.png" src="request_003.002.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>20</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>7</td>
+<td>7</td>
+<td>0.00%</td>
+<td>0.243</td>
+<td>0.353</td>
+<td>0.555</td>
+<td>0.243</td>
+<td>0.324</td>
+<td>0.555</td>
+<td>0.555</td>
+</tr>
+<tr><td>40</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>13</td>
+<td>13</td>
+<td>0.00%</td>
+<td>0.236</td>
+<td>0.392</td>
+<td>0.665</td>
+<td>0.243</td>
+<td>0.287</td>
+<td>0.607</td>
+<td>0.665</td>
+</tr>
+<tr><td>60</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>13</td>
+<td>13</td>
+<td>0.00%</td>
+<td>0.241</td>
+<td>0.427</td>
+<td>0.898</td>
+<td>0.249</td>
+<td>0.341</td>
+<td>0.633</td>
+<td>0.898</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-004-search-q-weather-me">
+<h2><a class="toc-backref" href="index.html#id11">7.4&nbsp;&nbsp;&nbsp;PAGE 004: /search/?q=weather-me</a></h2>
+<ul>
+<li><p class="first">Req: 001, get, url <tt class="docutils literal"><span class="pre">/search/?q=weather-me</span></tt></p>
+<blockquote>
+<img alt="request_004.001.png" src="request_004.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>20</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>37</td>
+<td>31</td>
+<td>16.22%</td>
+<td>0.234</td>
+<td>0.352</td>
+<td>0.548</td>
+<td>0.256</td>
+<td>0.319</td>
+<td>0.481</td>
+<td>0.520</td>
+</tr>
+<tr><td>40</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>80</td>
+<td>69</td>
+<td>13.75%</td>
+<td>0.236</td>
+<td>0.331</td>
+<td>0.561</td>
+<td>0.259</td>
+<td>0.296</td>
+<td>0.485</td>
+<td>0.512</td>
+</tr>
+<tr><td>60</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>123</td>
+<td>110</td>
+<td>10.57%</td>
+<td>0.218</td>
+<td>0.312</td>
+<td>0.504</td>
+<td>0.239</td>
+<td>0.288</td>
+<td>0.440</td>
+<td>0.473</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-005-search-q-jauntly">
+<h2><a class="toc-backref" href="index.html#id12">7.5&nbsp;&nbsp;&nbsp;PAGE 005: /search/?q=jauntly</a></h2>
+<ul>
+<li><p class="first">Req: 001, get, url <tt class="docutils literal"><span class="pre">/search/?q=jauntly</span></tt></p>
+<blockquote>
+<img alt="request_005.001.png" src="request_005.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>20</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>28</td>
+<td>28</td>
+<td>0.00%</td>
+<td>0.239</td>
+<td>0.289</td>
+<td>0.369</td>
+<td>0.248</td>
+<td>0.272</td>
+<td>0.353</td>
+<td>0.361</td>
+</tr>
+<tr><td>40</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>67</td>
+<td>67</td>
+<td>0.00%</td>
+<td>0.230</td>
+<td>0.314</td>
+<td>0.502</td>
+<td>0.246</td>
+<td>0.288</td>
+<td>0.405</td>
+<td>0.486</td>
+</tr>
+<tr><td>60</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>108</td>
+<td>108</td>
+<td>0.00%</td>
+<td>0.225</td>
+<td>0.302</td>
+<td>0.494</td>
+<td>0.241</td>
+<td>0.289</td>
+<td>0.372</td>
+<td>0.434</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-006-search-q-wiredcom">
+<h2><a class="toc-backref" href="index.html#id13">7.6&nbsp;&nbsp;&nbsp;PAGE 006: /search/?q=wiredcom</a></h2>
+<ul>
+<li><p class="first">Req: 001, get, url <tt class="docutils literal"><span class="pre">/search/?q=wiredcom</span></tt></p>
+<blockquote>
+<img alt="request_006.001.png" src="request_006.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>20</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>22</td>
+<td>22</td>
+<td>0.00%</td>
+<td>0.245</td>
+<td>0.370</td>
+<td>0.794</td>
+<td>0.255</td>
+<td>0.322</td>
+<td>0.706</td>
+<td>0.721</td>
+</tr>
+<tr><td>40</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>66</td>
+<td>66</td>
+<td>0.00%</td>
+<td>0.230</td>
+<td>0.300</td>
+<td>0.486</td>
+<td>0.243</td>
+<td>0.290</td>
+<td>0.367</td>
+<td>0.429</td>
+</tr>
+<tr><td>60</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>105</td>
+<td>105</td>
+<td>0.00%</td>
+<td>0.232</td>
+<td>0.308</td>
+<td>0.540</td>
+<td>0.242</td>
+<td>0.287</td>
+<td>0.420</td>
+<td>0.444</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-007-search-q-twitter">
+<h2><a class="toc-backref" href="index.html#id14">7.7&nbsp;&nbsp;&nbsp;PAGE 007: /search/?q=twitter</a></h2>
+<ul>
+<li><p class="first">Req: 001, get, url <tt class="docutils literal"><span class="pre">/search/?q=twitter</span></tt></p>
+<blockquote>
+<img alt="request_007.001.png" src="request_007.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>20</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>19</td>
+<td>19</td>
+<td>0.00%</td>
+<td>0.238</td>
+<td>0.314</td>
+<td>0.463</td>
+<td>0.246</td>
+<td>0.283</td>
+<td>0.463</td>
+<td>0.463</td>
+</tr>
+<tr><td>40</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>51</td>
+<td>51</td>
+<td>0.00%</td>
+<td>0.234</td>
+<td>0.466</td>
+<td>1.113</td>
+<td>0.265</td>
+<td>0.330</td>
+<td>0.969</td>
+<td>1.019</td>
+</tr>
+<tr><td>60</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>79</td>
+<td>79</td>
+<td>0.00%</td>
+<td>0.234</td>
+<td>0.488</td>
+<td>1.128</td>
+<td>0.244</td>
+<td>0.327</td>
+<td>1.085</td>
+<td>1.102</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-008-en-us-api-apps-category">
+<h2><a class="toc-backref" href="index.html#id15">7.8&nbsp;&nbsp;&nbsp;PAGE 008: /en-US/api/apps/category/</a></h2>
+<ul>
+<li><p class="first">Req: 001, get, url <tt class="docutils literal"><span class="pre">/en-US/api/apps/category/</span></tt></p>
+<blockquote>
+<img alt="request_008.001.png" src="request_008.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>20</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>19</td>
+<td>19</td>
+<td>0.00%</td>
+<td>0.172</td>
+<td>0.198</td>
+<td>0.221</td>
+<td>0.172</td>
+<td>0.206</td>
+<td>0.216</td>
+<td>0.221</td>
+</tr>
+<tr><td>40</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>40</td>
+<td>40</td>
+<td>0.00%</td>
+<td>0.169</td>
+<td>0.196</td>
+<td>0.220</td>
+<td>0.173</td>
+<td>0.206</td>
+<td>0.215</td>
+<td>0.219</td>
+</tr>
+<tr><td>60</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>63</td>
+<td>63</td>
+<td>0.00%</td>
+<td>0.168</td>
+<td>0.218</td>
+<td>0.723</td>
+<td>0.174</td>
+<td>0.202</td>
+<td>0.215</td>
+<td>0.218</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+<li><p class="first">Req: 002, get, url <tt class="docutils literal"><span class="pre">/api/apps/category/?lang=en-us</span></tt></p>
+<blockquote>
+<img alt="request_008.002.png" src="request_008.002.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>20</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>19</td>
+<td>19</td>
+<td>0.00%</td>
+<td>0.209</td>
+<td>0.252</td>
+<td>0.279</td>
+<td>0.229</td>
+<td>0.246</td>
+<td>0.271</td>
+<td>0.279</td>
+</tr>
+<tr><td>40</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>40</td>
+<td>40</td>
+<td>0.00%</td>
+<td>0.233</td>
+<td>0.258</td>
+<td>0.290</td>
+<td>0.237</td>
+<td>0.256</td>
+<td>0.283</td>
+<td>0.288</td>
+</tr>
+<tr><td>60</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>60</td>
+<td>60</td>
+<td>0.00%</td>
+<td>0.213</td>
+<td>0.263</td>
+<td>0.326</td>
+<td>0.242</td>
+<td>0.269</td>
+<td>0.282</td>
+<td>0.285</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="failures-and-errors">
+<h1><a class="toc-backref" href="index.html#id16">8&nbsp;&nbsp;&nbsp;Failures and Errors</a></h1>
+<div class="section" id="failures">
+<h2><a class="toc-backref" href="index.html#id17">8.1&nbsp;&nbsp;&nbsp;Failures</a></h2>
+<ul>
+<li><p class="first">13 time(s), code: 401:</p>
+<pre class="literal-block">
+No traceback.
+</pre>
+</li>
+<li><p class="first">24 time(s), code: 403:</p>
+<pre class="literal-block">
+No traceback.
+</pre>
+</li>
+</ul>
+</div>
+<div class="section" id="errors">
+<h2><a class="toc-backref" href="index.html#id18">8.2&nbsp;&nbsp;&nbsp;Errors</a></h2>
+<ul>
+<li><p class="first">6 time(s), code: -1:</p>
+<pre class="literal-block">
+Traceback (most recent call last):
+
+File &quot;build/bdist.linux-x86_64/egg/funkload/FunkLoadTestCase.py&quot;, line 208, in _connect
+cert_file=self._certfile_path, method=rtype, consumer=consumer)
+
+File &quot;build/bdist.linux-x86_64/egg/funkload/PatchWebunit.py&quot;, line 490, in WF_fetch
+decodeCookies(url, server, headers, self.cookies)
+
+File &quot;build/bdist.linux-x86_64/egg/funkload/PatchWebunit.py&quot;, line 221, in decodeCookies
+expire = now + timedelta
+</pre>
+</li>
+</ul>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">/home/marteau/marteau-web/work/0a7bc98291d147be8d8501d67998c626/index.rst</tt>, line 318)</p>
+Bullet list ends without a blank line; unexpected unindent.</div>
+<blockquote>
+TypeError: unsupported operand type(s) for +: 'datetime.datetime' and 'int'</blockquote>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr class="footer" />
+Generated on: 2013-04-21 09:00 UTC.
+
+</div>
+</body>
+</html>

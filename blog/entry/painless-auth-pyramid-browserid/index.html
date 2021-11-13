@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;painless-auth-pyramid-browserid&#x2F;" />
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:creator" content="@rfkelly">
+    <meta name="twitter:site" content="@rfkelly">
+
+    
+      <meta name="twitter:title" content="Painless Authentication with Pyramid and BrowserID">
+      <title>Painless Authentication with Pyramid and BrowserID</title>
+    
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+     
+  </head>
+  <body>
+    
+      <header>
+        <a class="profile-icon" href="/">
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+        </a>
+        <nav>
+            <a href="/about/">About</a>
+            <a href="/blog/">Blog</a>
+            <a href="https://github.com/rfk">GitHub</a>
+            <a href="https://twitter.com/rfkelly">Twitter</a>
+        </nav>
+      </header>
+    
+    <main>
+    
+  <h1>Painless Authentication with Pyramid and BrowserID</h1>
+  <div class="item-meta">
+    
+    <div class="item-date">October 20, 2011</div>
+    
+      <div class="item-tags">
+        [ 
+        
+          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+          
+        
+        ]
+      </div>
+    
+    
+  </div>
+
+  <p>There are a couple of really exciting projects underway at Mozilla right now.</p>
+<p>The first is <a href="https://browserid.org/">BrowserID</a>, a distributed single-signon system from the <a href="http://identity.mozilla.com/">Mozilla Identity Team</a>.  BrowserID sports a very slick sign-in process, simple integration with your existing software stack, and is designed from the ground up to provide strong <a href="http://identity.mozilla.com/post/7899984443/privacy-and-browserid">user privacy</a> guarantees.</p>
+<p>The second is <a href="https://wiki.mozilla.org/Services/Sagrada">Project Sagrada</a>, a platform for quickly building secure, scalable web applications from the folks I work with on the <a href="http://blog.mozilla.com/services/">Mozilla Services Team</a>.  While initial development is being driven by Mozilla's internal projects and needs, the hope is that one day developers will be able to just <a href="https://tarekziade.wordpress.com/2011/09/22/sagrada-creation-and-hosting-of-web-services/">write some simple service definitions</a> then deploy their applications across Mozilla's infrastructure.</p>
+<p>Of course, we're not there yet, but we're building up to it piece by piece.  One piece I've been working on, and which is coming along quite nicely if I do say so myself, is authentication.  We are building a secure, flexible and efficient authentication stack on top of some key Python web technologies such a <a href="http://www.pylonsproject.org/projects/pyramid/about">Pyramid</a> and <a href="http://pypi.python.org/pypi/repoze.who/">repoze.who</a>.</p>
+<p>So without further ado, here's a glimpse of my first tiny piece of Project Sagrada: adding BrowserID support to a Pyramid app with just a few lines of configuration.</p>
+<span id="continue-reading"></span>
+<p>Let's start with a simple &quot;hello world&quot; program in Pyramid:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-python" data-lang="python"><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">paste.httpserver </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">serve
+</span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">pyramid.config </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">Configurator
+</span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">pyramid.response </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">Response
+
+
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">hello_world</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">request</span><span style="color:#c0c5ce;">):
+    </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">Response</span><span style="color:#c0c5ce;">(&#39;</span><span style="color:#a3be8c;">Hello World!</span><span style="color:#c0c5ce;">&#39;)
+
+
+</span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">__name__ == &#39;</span><span style="color:#a3be8c;">__main__</span><span style="color:#c0c5ce;">&#39;:
+    config = </span><span style="color:#bf616a;">Configurator</span><span style="color:#c0c5ce;">()
+    config.</span><span style="color:#bf616a;">add_route</span><span style="color:#c0c5ce;">(&#39;</span><span style="color:#a3be8c;">hello</span><span style="color:#c0c5ce;">&#39;, &#39;</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">&#39;)
+    config.</span><span style="color:#bf616a;">add_view</span><span style="color:#c0c5ce;">(hello_world, </span><span style="color:#bf616a;">route_name</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">hello</span><span style="color:#c0c5ce;">&#39;)
+    app = config.</span><span style="color:#bf616a;">make_wsgi_app</span><span style="color:#c0c5ce;">()
+    </span><span style="color:#bf616a;">serve</span><span style="color:#c0c5ce;">(app, </span><span style="color:#bf616a;">host</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">0.0.0.0</span><span style="color:#c0c5ce;">&#39;)
+</span></code></pre>
+<p>Run this as a script and you'll get a delightful little webpage that says &quot;Hello World!&quot;, like this:</p>
+<p><img src="./hello1.png" style="padding: 1em; align: center"></img></p>
+<p>Exciting stuff.</p>
+<p>Now let's say you want to spice this up a little by including the user's name in the welcome message.  Pyramid provides the function &quot;authenticated_userid&quot; to obtain the username of the currently logged-in user, so we can change our &quot;hello_world&quot; view function to the following:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-python" data-lang="python"><span style="color:#c0c5ce;">
+</span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">pyramid.response </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">Response
+</span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">pyramid.security </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">authenticated_userid
+
+
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">hello_world</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">request</span><span style="color:#c0c5ce;">):
+    userid = </span><span style="color:#bf616a;">authenticated_userid</span><span style="color:#c0c5ce;">(request)
+    </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">Response</span><span style="color:#c0c5ce;">(&#39;</span><span style="color:#a3be8c;">Hello </span><span style="color:#d08770;">%s</span><span style="color:#a3be8c;">!</span><span style="color:#c0c5ce;">&#39; % (userid,))
+</span></code></pre>
+<p>Restart the script and you will now be greeted with:</p>
+<p><img src="./hello2.png" style="padding: 1em; align: center"></img></p>
+<p>Oops.  In order to report back your username, we first have to get you to log in.  Pyramid provides a <a href="http://docs.pylonsproject.org/projects/pyramid/1.2/narr/security.html">sophisticated permission-based security system</a>, but for the purposes of this demonstration, let's just forbid access unless you are logged in:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-python" data-lang="python"><span style="color:#c0c5ce;">
+</span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">pyramid.response </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">Response
+</span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">pyramid.security </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">authenticated_userid
+</span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">pyramid.exceptions </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">Forbidden
+
+
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">hello_world</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">request</span><span style="color:#c0c5ce;">):
+    userid = </span><span style="color:#bf616a;">authenticated_userid</span><span style="color:#c0c5ce;">(request)
+    </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">userid is </span><span style="color:#d08770;">None</span><span style="color:#c0c5ce;">:
+        </span><span style="color:#b48ead;">raise </span><span style="color:#bf616a;">Forbidden</span><span style="color:#c0c5ce;">()
+    </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">Response</span><span style="color:#c0c5ce;">(&#39;</span><span style="color:#a3be8c;">Hello </span><span style="color:#d08770;">%s</span><span style="color:#a3be8c;">!</span><span style="color:#c0c5ce;">&#39; % (userid,))
+</span></code></pre>
+<p>Restart the script again and...</p>
+<p><img src="./hello3.png" style="padding: 1em; align: center"></img></p>
+<p>Almost.  The final piece of the puzzle is configuring the authentication system.  For that, we're going to use the <a href="https://github.com/mozilla-services/pyramid_whoauth">pyramid_whoauth</a><sup class="footnote-reference"><a href="#1">1</a></sup> package to set up a <a href="http://pypi.python.org/pypi/repoze.who/">repoze.who</a> authentication stack, and the <a href="https://github.com/mozilla-services/repoze.who.plugins.browserid">repoze.who browserid plugin</a> to activate support for BrowserID.</p>
+<p>Sounds complicated?  There are a few moving parts, but the end result is really quite simple and elegant.</p>
+<p>Here's the important point: our view code <em>does not need to change</em>.  Instead we simply tweak the configuration of our pyramid app to hook up the necessary components:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-python" data-lang="python"><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">__name__ == &#39;</span><span style="color:#a3be8c;">__main__</span><span style="color:#c0c5ce;">&#39;:
+    settings = {
+      </span><span style="color:#65737e;"># The &quot;auth_tkt&quot; plugin implements signed login cookies.
+      # Use it to remember the login so that you don&#39;t have to
+      # click through the BrowserID dialog over and over.
+      </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">who.plugin.authtkt.use</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">repoze.who.plugins.auth_tkt:make_plugin</span><span style="color:#c0c5ce;">&quot;,
+      &quot;</span><span style="color:#a3be8c;">who.plugin.authtkt.secret</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">OH_SO_SECRET</span><span style="color:#c0c5ce;">&quot;,
+
+      </span><span style="color:#65737e;"># The &quot;browserid&quot; plugin lets you login with BrowserID.
+      </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">who.plugin.browserid.use</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">repoze.who.plugins.browserid:make_plugin</span><span style="color:#c0c5ce;">&quot;,
+      &quot;</span><span style="color:#a3be8c;">who.plugin.browserid.audiences</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">localhost:8080</span><span style="color:#c0c5ce;">&quot;,
+      &quot;</span><span style="color:#a3be8c;">who.plugin.browserid.postback_url</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">/login</span><span style="color:#c0c5ce;">&quot;,
+
+      </span><span style="color:#65737e;"># Assign plugins to each phase of the authentication process.
+      </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">who.identifiers.plugins</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">authtkt browserid</span><span style="color:#c0c5ce;">&quot;,
+      &quot;</span><span style="color:#a3be8c;">who.authenticators.plugins</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">authtkt browserid</span><span style="color:#c0c5ce;">&quot;,
+      &quot;</span><span style="color:#a3be8c;">who.challengers.plugins</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">browserid</span><span style="color:#c0c5ce;">&quot;,
+    }
+
+    </span><span style="color:#65737e;"># Include pyramid_whoauth as part of the config.
+    # It will plug itself in and take over authentication duties.
+    </span><span style="color:#c0c5ce;">config = </span><span style="color:#bf616a;">Configurator</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">settings</span><span style="color:#c0c5ce;">=settings)
+    config.</span><span style="color:#bf616a;">include</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">pyramid_whoauth</span><span style="color:#c0c5ce;">&quot;)
+    </span><span style="color:#65737e;"># Then continue with config as normal.
+    </span><span style="color:#c0c5ce;">config.</span><span style="color:#bf616a;">add_route</span><span style="color:#c0c5ce;">(&#39;</span><span style="color:#a3be8c;">hello</span><span style="color:#c0c5ce;">&#39;, &#39;</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">&#39;)
+    config.</span><span style="color:#bf616a;">add_view</span><span style="color:#c0c5ce;">(hello_world, </span><span style="color:#bf616a;">route_name</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">hello</span><span style="color:#c0c5ce;">&#39;)
+    app = config.</span><span style="color:#bf616a;">make_wsgi_app</span><span style="color:#c0c5ce;">()
+</span></code></pre>
+<p>The <code>settings</code> dict is used to tell repoze.who what authentication plugins it should use, and how to stitch them all together during the various phases of authentication.  In a real application these settings would be read from e.g. a PasteDeploy ini-file.</p>
+<p>Notice that we have used the <code>audiences</code> parameter to tell BrowserID the expected URL of the site.  This may seem a little cumbersome but is an <a href="https://developer.mozilla.org/en/BrowserID/Security_Considerations#Specify_the_audience_parameter_explicitly">important security feature</a>.  You can specify a list of addresses and/or use
+wildcards in this setting to make this a little easier during deployment. </p>
+<p>Restart the script again and you'll finally be greeted by a page telling you to sign in with BrowserID:</p>
+<p><img src="./hello4.png" style="padding: 1em; align: center"></img></p>
+<p>Yeah, it's ugly, nevermind that for now.  Click the button, walk through the slick BrowserID login process, and you will be rewarded with the end result:</p>
+<p><img src="./hello5.png" style="padding: 1em; align: center"></img></p>
+<p>By adding one line of code and a handful of configuration options, we've just enabled a complete login and authentication system for our pyramid app.  Thanks to BrowserID, we didn't need to set up a user database, store passwords or confirm email addresses.  Thanks to Pyramid, we didn't have to weave authentication boilerplate through all of our view functions.  And thanks to repoze.who, we can configure and tweak the authentication stack to precisely suit our needs (for example, you might like to add <a href="http://quantumcore.org/docs/repoze.who.plugins.openid/">OpenID support</a> as well).</p>
+<p>To me, that's pretty magic.</p>
+<p>By itself this isn't exactly earth-shattering.  It's a couple of neat plugins built on top of existing python libraries.  But this is exactly the sort of thing I hope to see coming out of Project Sagrada as it picks up steam – a continuous stream of small victories, useful abstractions and simplifying frameworks that, when you add them all together, build up to a compelling development and deployment infrastructure for web services applications.</p>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p>By the way, there's an existing pyramid plugin called <a href="https://pypi.org/project/pyramid_who/">pyramid_who</a> that also provides hooks between pyramid and repoze.who; pyramid_whoauth tries to provide more functionality out of the box, and hence makes more decisions for you up front.  This may or may not be what you want.</p>
+</div>
+
+
+  <hr />
+
+  <div class="related-pages">
+    <div><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;persona-identity-provider&#x2F;">rfk.id.au is now a Persona Identity Provider</a></div>
+    <div><a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;blog&#x2F;entry&#x2F;what-i-like-about-browserid&#x2F;">What I like about BrowserID</a></div>
+  </div>
+
+    </main>
+  </body>
+</html>

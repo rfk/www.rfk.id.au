@@ -1,0 +1,1072 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.11: http://docutils.sourceforge.net/" />
+<title>FunkLoad bench report</title>
+<meta name="date" content="2013-05-01 03:41:00" />
+<style type="text/css">
+
+
+@import url(http://fonts.googleapis.com/css?family=Quando);
+
+body {
+  font-family: 'Quando', serif;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+ text-decoration: none;
+ color: grey;
+}
+
+a:hover {
+ text-decoration: underline;
+}
+
+h1.title {
+  background-image: url("../../media/head.png");
+  height: 80px;
+  color: white;
+  border: none;
+  padding-left: 20px;
+  padding-top: 2px;
+  margin: 0px;
+}
+
+h1.title a {
+  color: white;
+}
+
+div.section, div.abstract, div.contents, table.docinfo {
+  padding-right: 20px;
+  padding-left: 20px;
+  color: black;
+}
+
+a.toc-backref {
+  color: black;
+}
+
+
+pre {
+    font-family: 'Consolas','Deja Vu Sans Mono','Bitstream Vera Sans Mono',monospace;
+    font-size: 0.95em;
+    letter-spacing: 0.015em;
+    line-height: 120%;
+    padding: 0.5em;
+    border: 1px solid rgb(204, 204, 204);
+    background-color: rgb(238, 238, 238);
+    border-radius: 6px 6px 6px 6px;
+    overflow-x: auto;
+}
+
+#header {
+  background-image: url("../../media/head.png");
+  color: white;
+  border: none;
+  padding-left: 20px;
+  padding-top: 2px;
+  margin: 0px;
+  vertical-align: middle;
+  display:block;
+}
+
+#header img {
+  display: inline-block;
+}
+
+
+#title {
+  font-size: 40px;
+  text-decoration: none;
+  color: white;
+}
+
+#subtitle {
+  font-size: 15px;
+  font-style: italic;
+}
+
+#body {
+  padding: 20px;
+  background-image: url("../../media/fade.png") repeat-x scroll -70% 0px transparent;
+
+}
+
+p {
+  font-style: italic;
+  color: grey;
+  font-size: 20px;
+}
+
+#right {
+ float:right;
+}
+
+div.resource {
+  margin-right: 5px;
+  padding: 12px;
+  border: 1px dotted rgb(203, 200, 185);
+  background: none repeat scroll 0% 0% rgb(246, 246, 242);
+}
+
+div.resource span {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+div.resource div {
+  font-style: italic;
+  margin-top: 6px;
+}
+
+#running, #pending, #failures, #successes {
+  float: left;
+  min-width: 400px;
+  padding: 10px;
+}
+
+#workers {
+ margin-bottom: 10px;
+ margin-top: 10px;
+}
+
+div.resource a {
+  float: right;
+}
+
+div.smallform {
+  width: 400px;
+  float: right;
+  margin-top: 10px;
+  border: 1px dotted rgb(203, 200, 185);
+  background: none repeat scroll 0% 0% rgb(246, 246, 242);
+  padding: 12px;
+  margin-right: 5px;
+}
+
+div.smallform input[type="text"]  {
+  width: 300px;
+}
+
+#form {
+  margin-top: 10px;
+  border: 1px dotted rgb(203, 200, 185);
+  background: none repeat scroll 0% 0% rgb(246, 246, 242);
+  padding: 12px;
+  margin-right: 5px;
+}
+
+#form input[type="text"]  {
+  width: 300px;
+}
+
+table.nodes {
+ text-align: center;
+ font-weight: normal;
+ color: #404040;
+ background: none repeat scroll 0% 0% rgb(246, 246, 242);
+ border: 1px dotted rgb(203, 200, 185);
+ border-collapse: collapse;
+ border-spacing: 10px;
+ padding: 10px;
+ min-width: 500px;
+}
+
+table.nodes th {
+    border-bottom: 1px dotted #6699CC;
+    color: #404040;
+    text-align: center;
+    padding: 5px;
+    background-color: white;
+}
+
+table.nodes td {
+    border-bottom: 1px dotted #6699CC;
+    color: #404040;
+    text-align: center;
+    padding: 5px;
+
+}
+
+.label {
+    font-size: 75%;
+    font-weight: bold;
+    line-height: 14px;
+    color: rgb(255, 255, 255);
+    text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.25);
+    white-space: nowrap;
+    vertical-align: baseline;
+    background-color: rgb(58, 135, 173);
+    padding: 1px 4px 2px;
+    border-radius: 3px 3px 3px 3px;
+}
+
+a.label {
+    text-decoration: none;
+}
+
+div.actions {
+  float: left;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+div.message {
+  margin-right: 25px;
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px dotted rgb(203, 200, 185);
+  background: none repeat scroll 0% 0% rgb(246, 246, 242);
+  float: right;
+  color: black;
+}
+
+div.login {
+  float: right;
+  margin-right: 20px;
+  margin-top: 5px;
+}
+
+form.job {
+/*  width: 100%*/
+}
+
+form.job label {
+  padding-left: 5px;
+}
+
+form.job input {
+}
+
+
+form.job fieldset
+{
+  position: relative;
+  margin-top: 15px;
+  margin: 0 0 1em 0;  
+  padding-top: 20px;
+  width: 93%;
+  border: 1px solid gray;
+}
+
+
+form.job fieldset legend 
+{
+  font-size: 140%;
+  font-weight: bold;
+}
+
+form.job fieldset ol 
+{
+    padding: 0 1em 0 1em;  
+    list-style: none;
+}
+
+form.job fieldset li 
+{
+    /* Control leading between rows. */
+    padding-bottom: .7em;
+}
+
+form.job fieldset ol li label {
+  float: left;
+  width: 10em;
+  margin-right: 1em;
+  font-size: 130%
+}
+
+input.button
+{
+  height: 2.5em;
+}
+
+div.buttonsContainer
+{
+    float: left;
+}
+
+
+</style>
+</head>
+<body>
+<div class="document" id="funkload-bench-report">
+<h1 class="title"><a class="reference external" href="http://funkload.nuxeo.org/">FunkLoad</a> bench report</h1>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr><th class="docinfo-name">Date:</th>
+<td>2013-05-01 03:41:00</td></tr>
+</tbody>
+</table>
+<div class="abstract topic">
+<p class="topic-title first">Abstract</p>
+<p>Simple PICL Server Test
+Bench result of <tt class="docutils literal">StressTest.test_syncstore_read_and_write</tt>:
+No test description</p>
+</div>
+<div class="contents topic" id="table-of-contents">
+<p class="topic-title first">Table of contents</p>
+<ul class="auto-toc simple">
+<li><a class="reference internal" href="index.html#bench-configuration" id="id1">1&nbsp;&nbsp;&nbsp;Bench configuration</a></li>
+<li><a class="reference internal" href="index.html#bench-content" id="id2">2&nbsp;&nbsp;&nbsp;Bench content</a></li>
+<li><a class="reference internal" href="index.html#test-stats" id="id3">3&nbsp;&nbsp;&nbsp;Test stats</a></li>
+<li><a class="reference internal" href="index.html#page-stats" id="id4">4&nbsp;&nbsp;&nbsp;Page stats</a></li>
+<li><a class="reference internal" href="index.html#request-stats" id="id5">5&nbsp;&nbsp;&nbsp;Request stats</a></li>
+<li><a class="reference internal" href="index.html#slowest-requests" id="id6">6&nbsp;&nbsp;&nbsp;Slowest requests</a></li>
+<li><a class="reference internal" href="index.html#page-detail-stats" id="id7">7&nbsp;&nbsp;&nbsp;Page detail stats</a><ul class="auto-toc">
+<li><a class="reference internal" href="index.html#page-001-7b20f13a432940cdb527f5eba3df3883-info-collections" id="id8">7.1&nbsp;&nbsp;&nbsp;PAGE 001: /7b20f13a432940cdb527f5eba3df3883/info/collections</a></li>
+<li><a class="reference internal" href="index.html#page-002-3e2a9c8e34f040f381f5a462776f96c2-storage-history" id="id9">7.2&nbsp;&nbsp;&nbsp;PAGE 002: /3e2a9c8e34f040f381f5a462776f96c2/storage/history</a></li>
+<li><a class="reference internal" href="index.html#page-003-28b661b56d114fdd8123126fe7f0b0f5-storage-bookmarks" id="id10">7.3&nbsp;&nbsp;&nbsp;PAGE 003: /28b661b56d114fdd8123126fe7f0b0f5/storage/bookmarks</a></li>
+<li><a class="reference internal" href="index.html#page-004-6528dc046a60483e87b5f82751aceea0-info-collections" id="id11">7.4&nbsp;&nbsp;&nbsp;PAGE 004: /6528dc046a60483e87b5f82751aceea0/info/collections</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="bench-configuration">
+<h1><a class="toc-backref" href="index.html#id1">1&nbsp;&nbsp;&nbsp;Bench configuration</a></h1>
+<ul class="simple">
+<li>Launched: 2013-05-01 03:41:00</li>
+<li>From: ip-10-250-42-233, ip-10-250-26-199, ip-10-250-53-246, ip-10-250-40-45</li>
+<li>Test: <tt class="docutils literal">stress.py StressTest.test_syncstore_read_and_write</tt></li>
+<li>Target server: <a class="reference external" href="http://loadtest.storage.profileinthecloud.net/">http://loadtest.storage.profileinthecloud.net/</a></li>
+<li>Cycles of concurrent users: [40, 80, 120, 200]</li>
+<li>Cycle duration: 60s</li>
+<li>Sleeptime between request: from 0.0s to 0.1s</li>
+<li>Sleeptime between test case: 0.01s</li>
+<li>Startup delay between thread: 0.05s</li>
+<li>Apdex: <sub>1.5</sub></li>
+<li><a class="reference external" href="http://funkload.nuxeo.org/">FunkLoad</a> version: 1.17.0</li>
+</ul>
+</div>
+<div class="section" id="bench-content">
+<h1><a class="toc-backref" href="index.html#id2">2&nbsp;&nbsp;&nbsp;Bench content</a></h1>
+<p>The test <tt class="docutils literal">StressTest.test_syncstore_read_and_write</tt> contains:</p>
+<ul class="simple">
+<li>4 page(s)</li>
+<li>0 redirect(s)</li>
+<li>0 link(s)</li>
+<li>0 image(s)</li>
+<li>0 XML RPC call(s)</li>
+</ul>
+<p>The bench contains:</p>
+<ul class="simple">
+<li>9749 tests</li>
+<li>39227 pages</li>
+<li>39227 requests</li>
+</ul>
+</div>
+<div class="section" id="test-stats">
+<h1><a class="toc-backref" href="index.html#id3">3&nbsp;&nbsp;&nbsp;Test stats</a></h1>
+<p>The number of Successful <strong>Tests</strong> Per Second (STPS) over Concurrent Users (CUs).</p>
+<blockquote>
+<img alt="tests.png" src="tests.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">STPS</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>40</td>
+<td>36.733</td>
+<td>2204</td>
+<td>2204</td>
+<td>0.00%</td>
+</tr>
+<tr><td>80</td>
+<td>41.300</td>
+<td>2478</td>
+<td>2478</td>
+<td>0.00%</td>
+</tr>
+<tr><td>120</td>
+<td>40.633</td>
+<td>2438</td>
+<td>2438</td>
+<td>0.00%</td>
+</tr>
+<tr><td>200</td>
+<td>43.817</td>
+<td>2629</td>
+<td>2629</td>
+<td>0.00%</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+</div>
+<div class="section" id="page-stats">
+<h1><a class="toc-backref" href="index.html#id4">4&nbsp;&nbsp;&nbsp;Page stats</a></h1>
+<p>The number of Successful <strong>Pages</strong> Per Second (SPPS) over Concurrent Users (CUs).
+Note that an XML RPC call count like a page.</p>
+<blockquote>
+<img alt="pages_spps.png" src="pages_spps.png" />
+<img alt="pages.png" src="pages.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">SPPS</th>
+<th class="head">maxSPPS</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>40</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>147.967</td>
+<td>162.000</td>
+<td>8878</td>
+<td>8878</td>
+<td>0.00%</td>
+<td>0.151</td>
+<td>0.218</td>
+<td>1.022</td>
+<td>0.165</td>
+<td>0.182</td>
+<td>0.293</td>
+<td>0.347</td>
+</tr>
+<tr><td>80</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>165.833</td>
+<td>202.000</td>
+<td>9950</td>
+<td>9950</td>
+<td>0.00%</td>
+<td>0.166</td>
+<td>0.428</td>
+<td>3.704</td>
+<td>0.244</td>
+<td>0.337</td>
+<td>0.774</td>
+<td>0.856</td>
+</tr>
+<tr><td>120</td>
+<td>0.983</td>
+<td>Excellent</td>
+<td>163.467</td>
+<td>199.000</td>
+<td>9808</td>
+<td>9808</td>
+<td>0.00%</td>
+<td>0.220</td>
+<td>0.680</td>
+<td>2.162</td>
+<td>0.382</td>
+<td>0.487</td>
+<td>1.327</td>
+<td>1.425</td>
+</tr>
+<tr><td>200</td>
+<td>0.877</td>
+<td>Good</td>
+<td>176.517</td>
+<td>233.000</td>
+<td>10591</td>
+<td>10591</td>
+<td>0.00%</td>
+<td>0.517</td>
+<td>1.077</td>
+<td>2.809</td>
+<td>0.718</td>
+<td>0.864</td>
+<td>1.817</td>
+<td>1.911</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</div>
+<div class="section" id="request-stats">
+<h1><a class="toc-backref" href="index.html#id5">5&nbsp;&nbsp;&nbsp;Request stats</a></h1>
+<p>The number of <strong>Requests</strong> Per Second (RPS) successful or not over Concurrent Users (CUs).</p>
+<blockquote>
+<img alt="requests_rps.png" src="requests_rps.png" />
+<img alt="requests.png" src="requests.png" />
+<img alt="time_rps.png" src="time_rps.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating*</th>
+<th class="head">RPS</th>
+<th class="head">maxRPS</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>40</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>147.967</td>
+<td>162.000</td>
+<td>8878</td>
+<td>8878</td>
+<td>0.00%</td>
+<td>0.151</td>
+<td>0.218</td>
+<td>1.022</td>
+<td>0.165</td>
+<td>0.182</td>
+<td>0.293</td>
+<td>0.347</td>
+</tr>
+<tr><td>80</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>165.833</td>
+<td>202.000</td>
+<td>9950</td>
+<td>9950</td>
+<td>0.00%</td>
+<td>0.166</td>
+<td>0.428</td>
+<td>3.704</td>
+<td>0.244</td>
+<td>0.337</td>
+<td>0.774</td>
+<td>0.856</td>
+</tr>
+<tr><td>120</td>
+<td>0.983</td>
+<td>Excellent</td>
+<td>163.467</td>
+<td>199.000</td>
+<td>9808</td>
+<td>9808</td>
+<td>0.00%</td>
+<td>0.220</td>
+<td>0.680</td>
+<td>2.162</td>
+<td>0.382</td>
+<td>0.487</td>
+<td>1.327</td>
+<td>1.425</td>
+</tr>
+<tr><td>200</td>
+<td>0.877</td>
+<td>Good</td>
+<td>176.517</td>
+<td>233.000</td>
+<td>10591</td>
+<td>10591</td>
+<td>0.00%</td>
+<td>0.517</td>
+<td>1.077</td>
+<td>2.809</td>
+<td>0.718</td>
+<td>0.864</td>
+<td>1.817</td>
+<td>1.911</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</div>
+<div class="section" id="slowest-requests">
+<h1><a class="toc-backref" href="index.html#id6">6&nbsp;&nbsp;&nbsp;Slowest requests</a></h1>
+<p>The 5 slowest average response time during the best cycle with <strong>80</strong> CUs:</p>
+<ul class="simple">
+<li>In page 003, Apdex rating: Excellent, avg response time: 0.76s, post: <tt class="docutils literal">/d8bfcd6aabcf43baa8c6ad14516e4f5b/storage/passwords</tt>
+``</li>
+<li>In page 004, Apdex rating: Excellent, avg response time: 0.32s, get: <tt class="docutils literal">/4e6c54fbf58c4ebc8d26820a6d9b4ed6/info/collections</tt>
+``</li>
+<li>In page 002, Apdex rating: Excellent, avg response time: 0.32s, get: <tt class="docutils literal">/9ebcc251137949648d8506943f380ab3/storage/passwords</tt>
+``</li>
+<li>In page 001, Apdex rating: Excellent, avg response time: 0.32s, get: <tt class="docutils literal">/4f20b3bf6dca451c91c241b635940555/info/collections</tt>
+``</li>
+</ul>
+</div>
+<div class="section" id="page-detail-stats">
+<h1><a class="toc-backref" href="index.html#id7">7&nbsp;&nbsp;&nbsp;Page detail stats</a></h1>
+<div class="section" id="page-001-7b20f13a432940cdb527f5eba3df3883-info-collections">
+<h2><a class="toc-backref" href="index.html#id8">7.1&nbsp;&nbsp;&nbsp;PAGE 001: /7b20f13a432940cdb527f5eba3df3883/info/collections</a></h2>
+<ul>
+<li><p class="first">Req: 001, get, url <tt class="docutils literal">/7b20f13a432940cdb527f5eba3df3883/info/collections</tt></p>
+<blockquote>
+<img alt="request_001.001.png" src="request_001.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>40</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>2227</td>
+<td>2227</td>
+<td>0.00%</td>
+<td>0.151</td>
+<td>0.190</td>
+<td>0.986</td>
+<td>0.164</td>
+<td>0.178</td>
+<td>0.222</td>
+<td>0.245</td>
+</tr>
+<tr><td>80</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>2483</td>
+<td>2483</td>
+<td>0.00%</td>
+<td>0.166</td>
+<td>0.316</td>
+<td>1.367</td>
+<td>0.233</td>
+<td>0.308</td>
+<td>0.397</td>
+<td>0.437</td>
+</tr>
+<tr><td>120</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>2454</td>
+<td>2454</td>
+<td>0.00%</td>
+<td>0.220</td>
+<td>0.471</td>
+<td>0.889</td>
+<td>0.373</td>
+<td>0.458</td>
+<td>0.573</td>
+<td>0.648</td>
+</tr>
+<tr><td>200</td>
+<td>0.999</td>
+<td>Excellent</td>
+<td>2645</td>
+<td>2645</td>
+<td>0.00%</td>
+<td>0.523</td>
+<td>0.834</td>
+<td>1.890</td>
+<td>0.700</td>
+<td>0.816</td>
+<td>0.983</td>
+<td>1.058</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-002-3e2a9c8e34f040f381f5a462776f96c2-storage-history">
+<h2><a class="toc-backref" href="index.html#id9">7.2&nbsp;&nbsp;&nbsp;PAGE 002: /3e2a9c8e34f040f381f5a462776f96c2/storage/history</a></h2>
+<ul>
+<li><p class="first">Req: 001, get, url <tt class="docutils literal">/3e2a9c8e34f040f381f5a462776f96c2/storage/history</tt></p>
+<blockquote>
+<img alt="request_002.001.png" src="request_002.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>40</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>2228</td>
+<td>2228</td>
+<td>0.00%</td>
+<td>0.151</td>
+<td>0.189</td>
+<td>0.617</td>
+<td>0.164</td>
+<td>0.178</td>
+<td>0.228</td>
+<td>0.259</td>
+</tr>
+<tr><td>80</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>2497</td>
+<td>2497</td>
+<td>0.00%</td>
+<td>0.173</td>
+<td>0.318</td>
+<td>0.723</td>
+<td>0.236</td>
+<td>0.310</td>
+<td>0.397</td>
+<td>0.444</td>
+</tr>
+<tr><td>120</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>2464</td>
+<td>2464</td>
+<td>0.00%</td>
+<td>0.244</td>
+<td>0.464</td>
+<td>0.876</td>
+<td>0.370</td>
+<td>0.453</td>
+<td>0.560</td>
+<td>0.605</td>
+</tr>
+<tr><td>200</td>
+<td>0.999</td>
+<td>Excellent</td>
+<td>2668</td>
+<td>2668</td>
+<td>0.00%</td>
+<td>0.517</td>
+<td>0.836</td>
+<td>1.901</td>
+<td>0.700</td>
+<td>0.817</td>
+<td>0.979</td>
+<td>1.060</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-003-28b661b56d114fdd8123126fe7f0b0f5-storage-bookmarks">
+<h2><a class="toc-backref" href="index.html#id10">7.3&nbsp;&nbsp;&nbsp;PAGE 003: /28b661b56d114fdd8123126fe7f0b0f5/storage/bookmarks</a></h2>
+<ul>
+<li><p class="first">Req: 001, post, url <tt class="docutils literal">/28b661b56d114fdd8123126fe7f0b0f5/storage/bookmarks</tt></p>
+<blockquote>
+<img alt="request_003.001.png" src="request_003.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>40</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>2217</td>
+<td>2217</td>
+<td>0.00%</td>
+<td>0.232</td>
+<td>0.305</td>
+<td>1.022</td>
+<td>0.255</td>
+<td>0.278</td>
+<td>0.377</td>
+<td>0.419</td>
+</tr>
+<tr><td>80</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>2491</td>
+<td>2491</td>
+<td>0.00%</td>
+<td>0.261</td>
+<td>0.756</td>
+<td>3.704</td>
+<td>0.600</td>
+<td>0.743</td>
+<td>0.921</td>
+<td>0.991</td>
+</tr>
+<tr><td>120</td>
+<td>0.932</td>
+<td>Good</td>
+<td>2446</td>
+<td>2446</td>
+<td>0.00%</td>
+<td>0.745</td>
+<td>1.318</td>
+<td>2.162</td>
+<td>1.125</td>
+<td>1.287</td>
+<td>1.576</td>
+<td>1.694</td>
+</tr>
+<tr><td>200</td>
+<td>0.511</td>
+<td>POOR</td>
+<td>2650</td>
+<td>2650</td>
+<td>0.00%</td>
+<td>1.314</td>
+<td>1.798</td>
+<td>2.809</td>
+<td>1.595</td>
+<td>1.777</td>
+<td>2.002</td>
+<td>2.150</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="page-004-6528dc046a60483e87b5f82751aceea0-info-collections">
+<h2><a class="toc-backref" href="index.html#id11">7.4&nbsp;&nbsp;&nbsp;PAGE 004: /6528dc046a60483e87b5f82751aceea0/info/collections</a></h2>
+<ul>
+<li><p class="first">Req: 001, get, url <tt class="docutils literal">/6528dc046a60483e87b5f82751aceea0/info/collections</tt></p>
+<blockquote>
+<img alt="request_004.001.png" src="request_004.001.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">CUs</th>
+<th class="head">Apdex*</th>
+<th class="head">Rating</th>
+<th class="head">TOTAL</th>
+<th class="head">SUCCESS</th>
+<th class="head">ERROR</th>
+<th class="head">MIN</th>
+<th class="head">AVG</th>
+<th class="head">MAX</th>
+<th class="head">P10</th>
+<th class="head">MED</th>
+<th class="head">P90</th>
+<th class="head">P95</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>40</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>2206</td>
+<td>2206</td>
+<td>0.00%</td>
+<td>0.151</td>
+<td>0.188</td>
+<td>0.604</td>
+<td>0.164</td>
+<td>0.179</td>
+<td>0.225</td>
+<td>0.250</td>
+</tr>
+<tr><td>80</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>2479</td>
+<td>2479</td>
+<td>0.00%</td>
+<td>0.175</td>
+<td>0.321</td>
+<td>3.255</td>
+<td>0.237</td>
+<td>0.310</td>
+<td>0.399</td>
+<td>0.438</td>
+</tr>
+<tr><td>120</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>2444</td>
+<td>2444</td>
+<td>0.00%</td>
+<td>0.237</td>
+<td>0.469</td>
+<td>0.996</td>
+<td>0.372</td>
+<td>0.457</td>
+<td>0.563</td>
+<td>0.628</td>
+</tr>
+<tr><td>200</td>
+<td>1.000</td>
+<td>Excellent</td>
+<td>2628</td>
+<td>2628</td>
+<td>0.00%</td>
+<td>0.526</td>
+<td>0.839</td>
+<td>1.490</td>
+<td>0.708</td>
+<td>0.818</td>
+<td>0.988</td>
+<td>1.057</td>
+</tr>
+</tbody>
+</table>
+<p>* Apdex <sub>1.5</sub></p>
+</blockquote>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr class="footer" />
+Generated on: 2013-05-01 03:46 UTC.
+
+</div>
+</body>
+</html>
