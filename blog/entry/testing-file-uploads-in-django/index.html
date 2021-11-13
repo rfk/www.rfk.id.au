@@ -21,17 +21,19 @@
       <title>Testing file uploads in Django</title>
     
     
-    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
-    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+    <link rel="stylesheet" href="https://www.rfk.id.au/main.css">
      
   </head>
   <body>
     
       <header>
         <a class="profile-icon" href="/">
-          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+          
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" alt="profile picture">
         </a>
         <nav>
             <a href="/about/">About</a>
@@ -51,13 +53,13 @@
       <div class="item-tags">
         [ 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;software&#x2F;">software</a>
+          <a href="https://www.rfk.id.au/tags/software/">software</a>
            | 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+          <a href="https://www.rfk.id.au/tags/python/">python</a>
            | 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;django&#x2F;">django</a>
+          <a href="https://www.rfk.id.au/tags/django/">django</a>
           
         
         ]
@@ -72,34 +74,32 @@
 <p>But like any convincing fakery, the details are never that simple in practice.  Uploading a big file from a web browser will take a long time, but could be nearly instantaneous if you fake it using a server-side file.  And what if you have custom upload handlers to enable things like <a href="http://www.fairviewcomputing.com/blog/2008/10/21/ajax-upload-progress-bars-jquery-django-nginx/">upload progress reporting</a>?  How can we make fake file uploads as transparent and convincing as possible?</p>
 <p>Presenting <a href="http://www.djangosnippets.org/snippets/1300/"><code>FakeFileUploadMiddleware</code></a>.</p>
 <p>This middleware class hooks into the standard Django file upload mechanism, re-writing requests and responses to transparently provide support for fake file uploads.  At the heart of its operation is the setting <code>FAKEUPLOAD_FILE_SPEC</code>, which specifies a set of available files for fake upload.  Here's a representative example:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-python" data-lang="python"><span style="color:#bf616a;">FAKEUPLOAD_FILE_SPEC </span><span style="color:#c0c5ce;">= {
-
-  &quot;</span><span style="color:#a3be8c;">smallfile</span><span style="color:#c0c5ce;">&quot;:  { &quot;</span><span style="color:#a3be8c;">filename</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">test1.txt</span><span style="color:#c0c5ce;">&quot;,
-                      &quot;</span><span style="color:#a3be8c;">contents</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">I am a small text file</span><span style="color:#c0c5ce;">&quot;},
-  &quot;</span><span style="color:#a3be8c;">slowfile</span><span style="color:#c0c5ce;">&quot;:   { &quot;</span><span style="color:#a3be8c;">filename</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">example.bin</span><span style="color:#c0c5ce;">&quot;,
-                      &quot;</span><span style="color:#a3be8c;">file</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">/path/on/server/to/example.bin</span><span style="color:#c0c5ce;">&quot;,
-                      &quot;</span><span style="color:#a3be8c;">chunk_size</span><span style="color:#c0c5ce;">&quot;: </span><span style="color:#d08770;">1024</span><span style="color:#c0c5ce;">,
-                      &quot;</span><span style="color:#a3be8c;">sleep_time</span><span style="color:#c0c5ce;">&quot;: </span><span style="color:#d08770;">1 </span><span style="color:#c0c5ce;">}
-}```
-
-This specifies two fake files.  The one </span><span style="color:#b48ead;">with </span><span style="color:#96b5b4;">id </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">smallfile</span><span style="color:#c0c5ce;">&quot; is a simple text file whose contents are specified directly.  The one </span><span style="background-color:#bf616a;color:#2b303b;">with</span><span style="color:#c0c5ce;"> </span><span style="color:#96b5b4;">id </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">slowfile</span><span style="color:#c0c5ce;">&quot; takes its contents </span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">a file on the server, will read </span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">this file </span><span style="background-color:#bf616a;color:#2b303b;">in</span><span style="color:#c0c5ce;"> 1KB chunks, and will sleep </span><span style="color:#b48ead;">for</span><span style="color:#c0c5ce;"> 1 second between each read </span><span style="background-color:#bf616a;color:#2b303b;">from</span><span style="color:#c0c5ce;"> the file.  As you can probably guess, this makes the simulated upload quite slow-</span><span style="background-color:#bf616a;color:#2b303b;">and</span><span style="color:#c0c5ce;">-steady, which </span><span style="background-color:#bf616a;color:#2b303b;">is</span><span style="color:#c0c5ce;"> very useful </span><span style="background-color:#bf616a;color:#2b303b;">for</span><span style="color:#c0c5ce;"> testing the behaviour of </span><span style="color:#96b5b4;">any </span><span style="color:#c0c5ce;">fancy </span><span style="color:#bf616a;">AJAX </span><span style="color:#c0c5ce;">progress bars you might have on the site.
-
-Internally, the middleware manages fake uploads by inserting additional fields into </span><span style="color:#96b5b4;">any </span><span style="color:#c0c5ce;">forms being sent to the client.  Suppose we have this simple form:
-
-```html 
-&lt;form method=&#39;</span><span style="color:#a3be8c;">POST</span><span style="color:#c0c5ce;">&#39; enctype=&#39;</span><span style="color:#a3be8c;">multipart/form-data</span><span style="color:#c0c5ce;">&#39;&gt;
-  &lt;</span><span style="color:#96b5b4;">input type</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">file</span><span style="color:#c0c5ce;">&#39; name=&#39;</span><span style="color:#a3be8c;">myfile</span><span style="color:#c0c5ce;">&#39; /&gt;
-  &lt;</span><span style="color:#96b5b4;">input type</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">submit</span><span style="color:#c0c5ce;">&#39; name=&#39;</span><span style="color:#a3be8c;">upload</span><span style="color:#c0c5ce;">&#39; value=&#39;</span><span style="color:#a3be8c;">upload</span><span style="color:#c0c5ce;">&#39; /&gt;
-&lt;/form&gt;
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#bf616a;">FAKEUPLOAD_FILE_SPEC </span><span>= {
+</span><span>
+</span><span>  &quot;</span><span style="color:#a3be8c;">smallfile</span><span>&quot;:  { &quot;</span><span style="color:#a3be8c;">filename</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">test1.txt</span><span>&quot;,
+</span><span>                      &quot;</span><span style="color:#a3be8c;">contents</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">I am a small text file</span><span>&quot;},
+</span><span>  &quot;</span><span style="color:#a3be8c;">slowfile</span><span>&quot;:   { &quot;</span><span style="color:#a3be8c;">filename</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">example.bin</span><span>&quot;,
+</span><span>                      &quot;</span><span style="color:#a3be8c;">file</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">/path/on/server/to/example.bin</span><span>&quot;,
+</span><span>                      &quot;</span><span style="color:#a3be8c;">chunk_size</span><span>&quot;: </span><span style="color:#d08770;">1024</span><span>,
+</span><span>                      &quot;</span><span style="color:#a3be8c;">sleep_time</span><span>&quot;: </span><span style="color:#d08770;">1 </span><span>}
+</span><span>}```
+</span><span>
+</span><span>This specifies two fake files.  The one </span><span style="color:#b48ead;">with </span><span style="color:#96b5b4;">id </span><span>&quot;</span><span style="color:#a3be8c;">smallfile</span><span>&quot; is a simple text file whose contents are specified directly.  The one </span><span style="background-color:#bf616a;color:#2b303b;">with</span><span> </span><span style="color:#96b5b4;">id </span><span>&quot;</span><span style="color:#a3be8c;">slowfile</span><span>&quot; takes its contents </span><span style="color:#b48ead;">from </span><span>a file on the server, will read </span><span style="color:#b48ead;">from </span><span>this file </span><span style="background-color:#bf616a;color:#2b303b;">in</span><span> 1KB chunks, and will sleep </span><span style="color:#b48ead;">for</span><span> 1 second between each read </span><span style="background-color:#bf616a;color:#2b303b;">from</span><span> the file.  As you can probably guess, this makes the simulated upload quite slow-</span><span style="background-color:#bf616a;color:#2b303b;">and</span><span>-steady, which </span><span style="background-color:#bf616a;color:#2b303b;">is</span><span> very useful </span><span style="background-color:#bf616a;color:#2b303b;">for</span><span> testing the behaviour of </span><span style="color:#96b5b4;">any </span><span>fancy </span><span style="color:#bf616a;">AJAX </span><span>progress bars you might have on the site.
+</span><span>
+</span><span>Internally, the middleware manages fake uploads by inserting additional fields into </span><span style="color:#96b5b4;">any </span><span>forms being sent to the client.  Suppose we have this simple form:
+</span><span>
+</span><span>```html 
+</span><span>&lt;form method=&#39;</span><span style="color:#a3be8c;">POST</span><span>&#39; enctype=&#39;</span><span style="color:#a3be8c;">multipart/form-data</span><span>&#39;&gt;
+</span><span>  &lt;</span><span style="color:#96b5b4;">input type</span><span>=&#39;</span><span style="color:#a3be8c;">file</span><span>&#39; name=&#39;</span><span style="color:#a3be8c;">myfile</span><span>&#39; /&gt;
+</span><span>  &lt;</span><span style="color:#96b5b4;">input type</span><span>=&#39;</span><span style="color:#a3be8c;">submit</span><span>&#39; name=&#39;</span><span style="color:#a3be8c;">upload</span><span>&#39; value=&#39;</span><span style="color:#a3be8c;">upload</span><span>&#39; /&gt;
+</span><span>&lt;/form&gt;
 </span></code></pre>
 <p>As it passes through FakeFileUploadMiddleware on its way to the client, it will be re-written to:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-html" data-lang="html"><span style="color:#c0c5ce;">&lt;</span><span style="color:#bf616a;">form </span><span style="color:#d08770;">method</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">POST</span><span style="color:#c0c5ce;">&#39; </span><span style="color:#d08770;">enctype</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">multipart/form-data</span><span style="color:#c0c5ce;">&#39;&gt;
-  &lt;</span><span style="color:#bf616a;">input </span><span style="color:#d08770;">type</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">hidden</span><span style="color:#c0c5ce;">&#39; </span><span style="color:#d08770;">name</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">fakefile_myfile</span><span style="color:#c0c5ce;">&#39; /&gt;
-  &lt;</span><span style="color:#bf616a;">input </span><span style="color:#d08770;">type</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">file</span><span style="color:#c0c5ce;">&#39; </span><span style="color:#d08770;">name</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">myfile</span><span style="color:#c0c5ce;">&#39; /&gt;
-  &lt;</span><span style="color:#bf616a;">input </span><span style="color:#d08770;">type</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">submit</span><span style="color:#c0c5ce;">&#39; </span><span style="color:#d08770;">name</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">upload</span><span style="color:#c0c5ce;">&#39; </span><span style="color:#d08770;">value</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">upload</span><span style="color:#c0c5ce;">&#39; /&gt;
-&lt;/</span><span style="color:#bf616a;">form</span><span style="color:#c0c5ce;">&gt;
+<pre data-lang="html" style="background-color:#2b303b;color:#c0c5ce;" class="language-html "><code class="language-html" data-lang="html"><span>&lt;</span><span style="color:#bf616a;">form </span><span style="color:#d08770;">method</span><span>=&#39;</span><span style="color:#a3be8c;">POST</span><span>&#39; </span><span style="color:#d08770;">enctype</span><span>=&#39;</span><span style="color:#a3be8c;">multipart/form-data</span><span>&#39;&gt;
+</span><span>  &lt;</span><span style="color:#bf616a;">input </span><span style="color:#d08770;">type</span><span>=&#39;</span><span style="color:#a3be8c;">hidden</span><span>&#39; </span><span style="color:#d08770;">name</span><span>=&#39;</span><span style="color:#a3be8c;">fakefile_myfile</span><span>&#39; /&gt;
+</span><span>  &lt;</span><span style="color:#bf616a;">input </span><span style="color:#d08770;">type</span><span>=&#39;</span><span style="color:#a3be8c;">file</span><span>&#39; </span><span style="color:#d08770;">name</span><span>=&#39;</span><span style="color:#a3be8c;">myfile</span><span>&#39; /&gt;
+</span><span>  &lt;</span><span style="color:#bf616a;">input </span><span style="color:#d08770;">type</span><span>=&#39;</span><span style="color:#a3be8c;">submit</span><span>&#39; </span><span style="color:#d08770;">name</span><span>=&#39;</span><span style="color:#a3be8c;">upload</span><span>&#39; </span><span style="color:#d08770;">value</span><span>=&#39;</span><span style="color:#a3be8c;">upload</span><span>&#39; /&gt;
+</span><span>&lt;/</span><span style="color:#bf616a;">form</span><span>&gt;
 </span></code></pre>
 <p>In-browser test scripts can then set the value of this hidden form field to the id of a fake file (&quot;smallfile&quot; or &quot;slowfile&quot; in the example specification above).  When these fields are received by the middleware, they are translated into raw file upload data which is then passed through the standard Django file upload mechanism.  The resulting request object is just about indistinguishable from a real file upload.</p>
 <p>I implemented this as middleware so that I can use it in true set-and-forget fashion – I simply include FakeFileUploadMiddleware in the middleware list on my testing server, but remove it on the deployment servers.  None of the rest of the application needs to be modified to support fake uploads.  Of course, if you want to apply this ability to just a specific view function, you can always use the <code>decorator_from_middleware</code> function to do so.</p>

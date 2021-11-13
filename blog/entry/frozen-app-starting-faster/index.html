@@ -21,17 +21,19 @@
       <title>Starting Faster for Frozen Python Apps</title>
     
     
-    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
-    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+    <link rel="stylesheet" href="https://www.rfk.id.au/main.css">
      
   </head>
   <body>
     
       <header>
         <a class="profile-icon" href="/">
-          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+          
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" alt="profile picture">
         </a>
         <nav>
             <a href="/about/">About</a>
@@ -51,10 +53,10 @@
       <div class="item-tags">
         [ 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;software&#x2F;">software</a>
+          <a href="https://www.rfk.id.au/tags/software/">software</a>
            | 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+          <a href="https://www.rfk.id.au/tags/python/">python</a>
           
         
         ]
@@ -70,49 +72,44 @@
 <p>I first learned how important lazy imports can be from <a href="http://bemusement.org/">Andrew Bennetts</a>, who works for Canonical on the <a href="http://bazaar.canonical.com">Bazaar</a> version control system.  Most Python-related conferences in Australia feature Andrew giving a presentation on performance (most recently it was at PyCon AU with <a href="http://pyconau.blip.tv/file/3838190/">Making your python code fast</a>) and he always mentions the lazy import mechanism used by Bazaar.</p>
 <p>The idea is simple:  declare your imports at the top of each file as usual, but arrange for the actual import process to take place only when needed.  This lets the program get up and running without paying the overhead of module search and initialisation for <em>all</em> its dependencies at start time.  And if it turns out that a certain module isn't actually needed this time around, so much the better - you don't pay the overhead of importing that module at all.</p>
 <p>A good idea, but most implementations of it annoy me.  They tend to create a little mini-language for declaring the imports, which you provide as a string in your source file.  Compare this example from the <a href="http://peak.telecommunity.com/DevCenter/Importing">Importing</a> module:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-python" data-lang="python"><span style="color:#c0c5ce;">sdist = </span><span style="color:#bf616a;">lazyModule</span><span style="color:#c0c5ce;">(&#39;</span><span style="color:#a3be8c;">distutils.command.sdist</span><span style="color:#c0c5ce;">&#39;)
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span>sdist = </span><span style="color:#bf616a;">lazyModule</span><span>(&#39;</span><span style="color:#a3be8c;">distutils.command.sdist</span><span>&#39;)
 </span></code></pre>
 <p>And this one using <a href="http://people.canonical.com/%7Emwh/bzrlibapi/bzrlib.lazy_import.html">bzrlib.lazy_import</a>:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-python" data-lang="python"><span style="color:#bf616a;">lazy_import</span><span style="color:#c0c5ce;">(</span><span style="color:#96b5b4;">globals</span><span style="color:#c0c5ce;">(), &#39;&#39;&#39;
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#bf616a;">lazy_import</span><span>(</span><span style="color:#96b5b4;">globals</span><span>(), &#39;&#39;&#39;
 </span><span style="color:#a3be8c;">from bzrlib import (
-    errors,
-    osutils,
-    branch,
-    )
-import bzrlib.branch
-</span><span style="color:#c0c5ce;">&#39;&#39;&#39;)
+</span><span style="color:#a3be8c;">    errors,
+</span><span style="color:#a3be8c;">    osutils,
+</span><span style="color:#a3be8c;">    branch,
+</span><span style="color:#a3be8c;">    )
+</span><span style="color:#a3be8c;">import bzrlib.branch
+</span><span>&#39;&#39;&#39;)
 </span></code></pre>
 <p>Why don't I like this approach?  It tends to hide your imports from various analysis tools.  In the first example above, you can't even <em>grep</em> for your imports without knowing that lazyModule is being used.  I like the bzrlib approach much better, but I still worry that it hides the imports from tools like <a href="http://www.py2exe.org/">py2exe</a>, which tracks imports by crawling the compiled code looking for import-related opcodes.</p>
 <p>In the end I rolled my own solution, which is included in the latest release of <a href="http://pypi.python.org/pypi/esky/">esky</a>.  It's a simple decorator syntax that works as follows:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-python" data-lang="python"><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">esky.util </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">lazy_import
-
-@</span><span style="color:#bf616a;">lazy_import
-</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">socket</span><span style="color:#c0c5ce;">():
-    </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">socket
-    </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">socket
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">from </span><span>esky.util </span><span style="color:#b48ead;">import </span><span>lazy_import
+</span><span>
+</span><span>@</span><span style="color:#bf616a;">lazy_import
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">socket</span><span>():
+</span><span>    </span><span style="color:#b48ead;">import </span><span>socket
+</span><span>    </span><span style="color:#b48ead;">return </span><span>socket
 </span></code></pre>
 <p>For a simple example like that, this syntax is much more verbose than the alternatives shown above.  But here the imports live in actual code inside your module, so they won't be hidden from anything but the most simple-minded analysis tools.  And instead of trying to parse an import-related mini-language, I can use the full power of python to describe the lazy imports.  For example:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-python" data-lang="python"><span style="color:#c0c5ce;">@</span><span style="color:#bf616a;">lazy_import
-</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">pickle</span><span style="color:#c0c5ce;">():
-    </span><span style="color:#b48ead;">try</span><span style="color:#c0c5ce;">:    
-        </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">cPickle </span><span style="color:#b48ead;">as </span><span style="color:#c0c5ce;">pickle
-    </span><span style="color:#b48ead;">except </span><span style="color:#c0c5ce;">ImportError:
-        </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">pickle
-    </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">pickle
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span>@</span><span style="color:#bf616a;">lazy_import
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">pickle</span><span>():
+</span><span>    </span><span style="color:#b48ead;">try</span><span>:    
+</span><span>        </span><span style="color:#b48ead;">import </span><span>cPickle </span><span style="color:#b48ead;">as </span><span>pickle
+</span><span>    </span><span style="color:#b48ead;">except </span><span>ImportError:
+</span><span>        </span><span style="color:#b48ead;">import </span><span>pickle
+</span><span>    </span><span style="color:#b48ead;">return </span><span>pickle
 </span></code></pre>
 <p>It even supports lazily-evaluated conditional imports like this:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-python" data-lang="python"><span style="color:#c0c5ce;">@</span><span style="color:#bf616a;">lazy_import
-</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">fcntl</span><span style="color:#c0c5ce;">():
-    </span><span style="color:#b48ead;">try</span><span style="color:#c0c5ce;">:    
-        </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">fcntl
-    </span><span style="color:#b48ead;">except </span><span style="color:#c0c5ce;">ImportError:
-        fcntl = </span><span style="color:#d08770;">None
-    </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">fcntl
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span>@</span><span style="color:#bf616a;">lazy_import
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">fcntl</span><span>():
+</span><span>    </span><span style="color:#b48ead;">try</span><span>:    
+</span><span>        </span><span style="color:#b48ead;">import </span><span>fcntl
+</span><span>    </span><span style="color:#b48ead;">except </span><span>ImportError:
+</span><span>        fcntl = </span><span style="color:#d08770;">None
+</span><span>    </span><span style="color:#b48ead;">return </span><span>fcntl
 </span></code></pre>
 <p>I'm sure there are lots of corner-cases where this scheme breaks down, but as long as you keep your imports simple it will work fine.  Most importantly, I cut more than a second off my program's startup time with just a few <code>@lazy_import</code> decorators.</p>
 <h3 id="pre-processed-zip-files">Pre-processed Zip Files</h3>
@@ -121,13 +118,11 @@ import bzrlib.branch
 <p>If you peek into the internals of the <a href="http://docs.python.org/library/zipimport.html"><code>zipimport</code></a> module, you'll find a dictionary called <code>_zip_directory_cache</code> which is used to hold pre-processed information about the contents of each zipfile on <code>sys.path</code>.  So if we can somehow arrange for this dict to be populated with the correct information <em>before</em> trying to import anything from <code>library.zip</code>, we can avoid the cost of parsing the directory information out of the zipfile.</p>
 <p>Enter today's little project: <a href="http://pypi.python.org/pypi/zipimportx/"><code>zipimportx</code></a>.  This is a simple wrapper around the <code>zipimporter</code> class that first looks for an index file named, for example, <code>library.zip.win32.idx</code>.  If such a file is found, it's loaded using the <a href="http://docs.python.org/library/marshal.html"><code>marshal</code></a> module and the result is directly inserted into <code>_zip_directory_cache</code>.</p>
 <p>Create the index files like this:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-python" data-lang="python"><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">zipimportx </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">zipimporter
-</span><span style="color:#bf616a;">zipimporter</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">/path/to/library.zip</span><span style="color:#c0c5ce;">&quot;).</span><span style="color:#bf616a;">write_index</span><span style="color:#c0c5ce;">()
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">from </span><span>zipimportx </span><span style="color:#b48ead;">import </span><span>zipimporter
+</span><span style="color:#bf616a;">zipimporter</span><span>(&quot;</span><span style="color:#a3be8c;">/path/to/library.zip</span><span>&quot;).</span><span style="color:#bf616a;">write_index</span><span>()
 </span></code></pre>
 <p>And enable their use in your frozen app like this:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-python" data-lang="python"><span style="color:#c0c5ce;">zipimportx.zipimporter.</span><span style="color:#bf616a;">install</span><span style="color:#c0c5ce;">()
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span>zipimportx.zipimporter.</span><span style="color:#bf616a;">install</span><span>()
 </span></code></pre>
 <p>My tests show that the use of these pre-processed index files can speed up zipfile loading by about a factor of 3 on Linux, a factor of 5 on Windows, and a factor of <em>thousands</em> when running from a mapped SMB drive.  I'll let you draw your own conclusions about the I/O subsystems of each platform.</p>
 <p>(Edit: Actually, I've skipped a little bit here - you have to somehow arrange for the <code>zipimportx</code> module to live <em>outside</em> your <code>library.zip</code>, or you obviously can't use it to speed up the loading of that file!  I recommend using <code>inspect.getsource()</code> to embed the code from <code>zipimportx</code> directly in your application's startup script.)</p>

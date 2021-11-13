@@ -21,17 +21,19 @@
       <title>PyPy.js: Now faster than CPython</title>
     
     
-    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
-    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+    <link rel="stylesheet" href="https://www.rfk.id.au/main.css">
      
   </head>
   <body>
     
       <header>
         <a class="profile-icon" href="/">
-          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+          
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" alt="profile picture">
         </a>
         <nav>
             <a href="/about/">About</a>
@@ -51,16 +53,16 @@
       <div class="item-tags">
         [ 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+          <a href="https://www.rfk.id.au/tags/technology/">technology</a>
            | 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;mozilla&#x2F;">mozilla</a>
+          <a href="https://www.rfk.id.au/tags/mozilla/">mozilla</a>
            | 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+          <a href="https://www.rfk.id.au/tags/python/">python</a>
            | 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          <a href="https://www.rfk.id.au/tags/javascript/">javascript</a>
           
         
         ]
@@ -81,23 +83,22 @@
 <p>The result, while still rough in a lot of places, is nonetheless an exciting milestone: the full <a href="http://pypy.org/">PyPy</a> interpreter, compiled down to javascript and re-targeted to emit <a href="http://asmjs.org/">asmjs</a> from its JIT, running the pystone benchmark faster <em>in a browser</em> than the native CPython interpreter runs it on bare metal.</p>
 <span id="continue-reading"></span>
 <p>I encourage you to try the comparison on your own machine – do the following in a native python shell and in the <a href="http://pypyjs.org/demo/">PyPy.js demo shell</a> and see how they compare:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">&gt;&gt;&gt; from test import pystone
-&gt;&gt;&gt; 
-&gt;&gt;&gt; # An initial run, which will warm up the JIT for this function.
-&gt;&gt;&gt; pystone.main()
-Pystone(1.1) time for 50000 passes = 1.657
-This machine benchmarks at 30175 pystones/second
-&gt;&gt;&gt; 
-&gt;&gt;&gt; # Subsequent runs should be much faster under PyPy.
-&gt;&gt;&gt; pystone.main()
-Pystone(1.1) time for 50000 passes = 0.386
-This machine benchmarks at 129534 pystones/second
-&gt;&gt;&gt; 
-&gt;&gt;&gt; # Although Chrome users may need to run it a few times to prime both the PyPy and v8 JIT.
-&gt;&gt;&gt; pystone.main()
-Pystone(1.1) time for 50000 passes = 0.362
-This machine benchmarks at 138122 pystones/second
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>&gt;&gt;&gt; from test import pystone
+</span><span>&gt;&gt;&gt; 
+</span><span>&gt;&gt;&gt; # An initial run, which will warm up the JIT for this function.
+</span><span>&gt;&gt;&gt; pystone.main()
+</span><span>Pystone(1.1) time for 50000 passes = 1.657
+</span><span>This machine benchmarks at 30175 pystones/second
+</span><span>&gt;&gt;&gt; 
+</span><span>&gt;&gt;&gt; # Subsequent runs should be much faster under PyPy.
+</span><span>&gt;&gt;&gt; pystone.main()
+</span><span>Pystone(1.1) time for 50000 passes = 0.386
+</span><span>This machine benchmarks at 129534 pystones/second
+</span><span>&gt;&gt;&gt; 
+</span><span>&gt;&gt;&gt; # Although Chrome users may need to run it a few times to prime both the PyPy and v8 JIT.
+</span><span>&gt;&gt;&gt; pystone.main()
+</span><span>Pystone(1.1) time for 50000 passes = 0.362
+</span><span>This machine benchmarks at 138122 pystones/second
 </span></code></pre>
 <p>If all goes well then you should see the in-browser version benchmarking at more pystones/second than the standard python shell.  My machine produced the following results (larger numbers are better):</p>
 <table style="border: 1px solid; width: 50%; white-space: nowrap;">

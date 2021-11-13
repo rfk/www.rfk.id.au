@@ -21,17 +21,19 @@
       <title>PyPy.js: First Steps</title>
     
     
-    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
-    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+    <link rel="stylesheet" href="https://www.rfk.id.au/main.css">
      
   </head>
   <body>
     
       <header>
         <a class="profile-icon" href="/">
-          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+          
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" alt="profile picture">
         </a>
         <nav>
             <a href="/about/">About</a>
@@ -51,16 +53,16 @@
       <div class="item-tags">
         [ 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+          <a href="https://www.rfk.id.au/tags/technology/">technology</a>
            | 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;mozilla&#x2F;">mozilla</a>
+          <a href="https://www.rfk.id.au/tags/mozilla/">mozilla</a>
            | 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+          <a href="https://www.rfk.id.au/tags/python/">python</a>
            | 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          <a href="https://www.rfk.id.au/tags/javascript/">javascript</a>
           
         
         ]
@@ -91,41 +93,37 @@
 <p>Emscripten goes out of its way to act like a standard posix build chain, asking only that you replace the usual &quot;gcc&quot; invocation with &quot;emcc&quot;.  I did have to make a few tweaks to the simulated posix runtime environment, so you'll need to use my fork until these are merged with upstream:</p>
 <p>  <a href="https://github.com/rfk/emscripten">https://github.com/rfk/emscripten</a></p>
 <p>To compile RPython code into a normal executable, you invoke the <code>rpython</code> translator program on it.  Here's a simple hello-world example that can be run out-of-the-box from the PyPy source repo:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">$&gt; python ./rpython/bin/rpython ./rpython/translator/goal/targetnopstandalone.py
-[...lots and lots of compiler output...]
-$&gt;
-$&gt; ./targetnopstandalone-c 
-debug: hello world
-$&gt;
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>$&gt; python ./rpython/bin/rpython ./rpython/translator/goal/targetnopstandalone.py
+</span><span>[...lots and lots of compiler output...]
+</span><span>$&gt;
+</span><span>$&gt; ./targetnopstandalone-c 
+</span><span>debug: hello world
+</span><span>$&gt;
 </span></code></pre>
 <p>To instead compile the RPython code into JavaScript, you just need to specify the <code>--backend=js</code> option.  The resulting JavaScript file can be executed from the command-line using a JavaScript shell such as nodejs:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">$&gt; python ./rpython/bin/rpython --backend=js ./rpython/translator/goal/targetnopstandalone.py
-[...lots and lots of compiler output...]
-$&gt;
-$&gt; node ./targetnopstandalone-js
-debug: hello world
-$&gt;
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>$&gt; python ./rpython/bin/rpython --backend=js ./rpython/translator/goal/targetnopstandalone.py
+</span><span>[...lots and lots of compiler output...]
+</span><span>$&gt;
+</span><span>$&gt; node ./targetnopstandalone-js
+</span><span>debug: hello world
+</span><span>$&gt;
 </span></code></pre>
 <p>That is pretty much all there is to it.  If you've got a few spare hours, you can translate the entire PyPy interpreter into JavaScript by doing the following:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">$&gt; python ./rpython/bin/rpython --backend=js --opt=2 ./pypy/goal/targetpypystandalone.py
-[...seriously, this will take forever...]
-^C
-$&gt;
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>$&gt; python ./rpython/bin/rpython --backend=js --opt=2 ./pypy/goal/targetpypystandalone.py
+</span><span>[...seriously, this will take forever...]
+</span><span>^C
+</span><span>$&gt;
 </span></code></pre>
 <p>Or you can just grab the end result:  <a href="./pypy.js.gz">pypy.js</a>.</p>
 <p>Uncompressed, that's 139M of generated JavaScript.  It includes a full Python language interpreter, a couple of the more important builtin modules, and the bundled contents of all the <code>.py</code> files from the Python standard library.  If you've got a JavaScript shell handy, you can run Python commands with this thing by passing them on the command-line like so:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">$&gt; node pypy.js -c &#39;print &quot;HELLO WORLD&quot;&#39;
-debug: WARNING: Library path not found, using compiled-in sys.path.
-debug: WARNING: &#39;sys.prefix&#39; will not be set.
-debug: WARNING: Make sure the pypy binary is kept inside its tree of files.
-debug: WARNING: It is ok to create a symlink to it from somewhere else.
-&#39;import site&#39; failed
-HELLO WORLD
-$&gt;
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>$&gt; node pypy.js -c &#39;print &quot;HELLO WORLD&quot;&#39;
+</span><span>debug: WARNING: Library path not found, using compiled-in sys.path.
+</span><span>debug: WARNING: &#39;sys.prefix&#39; will not be set.
+</span><span>debug: WARNING: Make sure the pypy binary is kept inside its tree of files.
+</span><span>debug: WARNING: It is ok to create a symlink to it from somewhere else.
+</span><span>&#39;import site&#39; failed
+</span><span>HELLO WORLD
+</span><span>$&gt;
 </span></code></pre>
 <p>As you might expect, this first version comes with quite a list of caveats:</p>
 <ul>

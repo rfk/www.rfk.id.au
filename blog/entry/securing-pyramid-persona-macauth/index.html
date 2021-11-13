@@ -21,17 +21,19 @@
       <title>Securing Pyramid with Persona and MACAuth</title>
     
     
-    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
-    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+    <link rel="stylesheet" href="https://www.rfk.id.au/main.css">
      
   </head>
   <body>
     
       <header>
         <a class="profile-icon" href="/">
-          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+          
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" alt="profile picture">
         </a>
         <nav>
             <a href="/about/">About</a>
@@ -51,10 +53,10 @@
       <div class="item-tags">
         [ 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;technology&#x2F;">technology</a>
+          <a href="https://www.rfk.id.au/tags/technology/">technology</a>
            | 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+          <a href="https://www.rfk.id.au/tags/python/">python</a>
           
         
         ]
@@ -69,60 +71,59 @@
 <p>In this post I'll show you how easy it can be to combine the two, using <a href="http://pypi.python.org/pypi/pyramid_persona">pyramid_persona</a> and <a href="http://pypi.python.org/pypi/pyramid_macauth">pyramid_macauth</a> for the heavy lifting, and <a href="http://pypi.python.org/pypi/pyramid_multiauth">pyramid_multiauth</a> to tie them both together.</p>
 <span id="continue-reading"></span><h3 id="example-the-lucky-number-service">Example: The Lucky Number Service</h3>
 <p>To begin, let's take a very silly example service that you might build with pyramid.  It's authenticated using Mozilla Persona, and you can login to generate a lucky number.  Using <a href="http://pypi.python.org/pypi/pyramid_persona">pyramid_persona</a> makes this a breeze:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-python" data-lang="python"><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">random
-</span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">wsgiref.simple_server
-
-</span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">pyramid.config </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">Configurator
-</span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">pyramid.response </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">Response
-</span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">pyramid.security </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">authenticated_userid
-</span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">pyramid.exceptions </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">Forbidden
-
-
-</span><span style="color:#bf616a;">TEMPLATE </span><span style="color:#c0c5ce;">= &quot;&quot;&quot;
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">import </span><span>random
+</span><span style="color:#b48ead;">import </span><span>wsgiref.simple_server
+</span><span>
+</span><span style="color:#b48ead;">from </span><span>pyramid.config </span><span style="color:#b48ead;">import </span><span>Configurator
+</span><span style="color:#b48ead;">from </span><span>pyramid.response </span><span style="color:#b48ead;">import </span><span>Response
+</span><span style="color:#b48ead;">from </span><span>pyramid.security </span><span style="color:#b48ead;">import </span><span>authenticated_userid
+</span><span style="color:#b48ead;">from </span><span>pyramid.exceptions </span><span style="color:#b48ead;">import </span><span>Forbidden
+</span><span>
+</span><span>
+</span><span style="color:#bf616a;">TEMPLATE </span><span>= &quot;&quot;&quot;
 </span><span style="color:#a3be8c;">Hello </span><span style="color:#d08770;">{userid}</span><span style="color:#a3be8c;">!
-Your lucky number for today is </span><span style="color:#d08770;">{number}</span><span style="color:#a3be8c;">.
-</span><span style="color:#c0c5ce;">&quot;&quot;&quot;
-
-
-</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">lucky_number</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">request</span><span style="color:#c0c5ce;">):
-    </span><span style="color:#65737e;">&quot;&quot;&quot;Pyramid view to generate a lucky number.&quot;&quot;&quot;
-
-    # Check that the user is authenticated.
-    </span><span style="color:#c0c5ce;">userid = </span><span style="color:#bf616a;">authenticated_userid</span><span style="color:#c0c5ce;">(request)
-    </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">userid is </span><span style="color:#d08770;">None</span><span style="color:#c0c5ce;">:
-        </span><span style="color:#b48ead;">raise </span><span style="color:#bf616a;">Forbidden</span><span style="color:#c0c5ce;">()
-
-    </span><span style="color:#65737e;"># Generate and return the lucky number.
-    </span><span style="color:#c0c5ce;">number = random.</span><span style="color:#bf616a;">randint</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">,</span><span style="color:#d08770;">100</span><span style="color:#c0c5ce;">)
-    </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">Response</span><span style="color:#c0c5ce;">(TEMPLATE.</span><span style="color:#bf616a;">format</span><span style="color:#c0c5ce;">(**</span><span style="color:#96b5b4;">locals</span><span style="color:#c0c5ce;">()), </span><span style="color:#bf616a;">content_type</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">text/plain</span><span style="color:#c0c5ce;">&quot;)
-
-
-</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">main</span><span style="color:#c0c5ce;">():
-    </span><span style="color:#65737e;">&quot;&quot;&quot;Construct and return a WSGI app for the luckynumber service.&quot;&quot;&quot;
-
-    </span><span style="color:#c0c5ce;">settings = {
-      </span><span style="color:#65737e;"># The pyramid_persona plugin needs a master secret to use for
-      # signing login cookies, and the expected hostname of your website
-      # to prevent fradulent login attempts.
-      </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">persona.secret</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">TED KOPPEL IS A ROBOT</span><span style="color:#c0c5ce;">&quot;,
-      &quot;</span><span style="color:#a3be8c;">persona.audiences</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">localhost:8080</span><span style="color:#c0c5ce;">&quot;,
-    }
-
-    config = </span><span style="color:#bf616a;">Configurator</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">settings</span><span style="color:#c0c5ce;">=settings)
-    config.</span><span style="color:#bf616a;">add_route</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">number</span><span style="color:#c0c5ce;">&quot;, &quot;</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">&quot;)
-    config.</span><span style="color:#bf616a;">add_view</span><span style="color:#c0c5ce;">(lucky_number, </span><span style="color:#bf616a;">route_name</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">number</span><span style="color:#c0c5ce;">&quot;)
-
-    </span><span style="color:#65737e;"># Including pyramid_persona magically enables authentication.
-    </span><span style="color:#c0c5ce;">config.</span><span style="color:#bf616a;">include</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">pyramid_persona</span><span style="color:#c0c5ce;">&quot;)
-
-    </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">config.</span><span style="color:#bf616a;">make_wsgi_app</span><span style="color:#c0c5ce;">()
-
-
-</span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">__name__ == &quot;</span><span style="color:#a3be8c;">__main__</span><span style="color:#c0c5ce;">&quot;:
-    app = </span><span style="color:#bf616a;">main</span><span style="color:#c0c5ce;">()
-    server = wsgiref.simple_server.</span><span style="color:#bf616a;">make_server</span><span style="color:#c0c5ce;">(&quot;&quot;, </span><span style="color:#d08770;">8080</span><span style="color:#c0c5ce;">, app)
-    server.</span><span style="color:#bf616a;">serve_forever</span><span style="color:#c0c5ce;">()
+</span><span style="color:#a3be8c;">Your lucky number for today is </span><span style="color:#d08770;">{number}</span><span style="color:#a3be8c;">.
+</span><span>&quot;&quot;&quot;
+</span><span>
+</span><span>
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">lucky_number</span><span>(</span><span style="color:#bf616a;">request</span><span>):
+</span><span>    </span><span style="color:#65737e;">&quot;&quot;&quot;Pyramid view to generate a lucky number.&quot;&quot;&quot;
+</span><span>
+</span><span>    </span><span style="color:#65737e;"># Check that the user is authenticated.
+</span><span>    userid = </span><span style="color:#bf616a;">authenticated_userid</span><span>(request)
+</span><span>    </span><span style="color:#b48ead;">if </span><span>userid is </span><span style="color:#d08770;">None</span><span>:
+</span><span>        </span><span style="color:#b48ead;">raise </span><span style="color:#bf616a;">Forbidden</span><span>()
+</span><span>
+</span><span>    </span><span style="color:#65737e;"># Generate and return the lucky number.
+</span><span>    number = random.</span><span style="color:#bf616a;">randint</span><span>(</span><span style="color:#d08770;">1</span><span>,</span><span style="color:#d08770;">100</span><span>)
+</span><span>    </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">Response</span><span>(TEMPLATE.</span><span style="color:#bf616a;">format</span><span>(**</span><span style="color:#96b5b4;">locals</span><span>()), </span><span style="color:#bf616a;">content_type</span><span>=&quot;</span><span style="color:#a3be8c;">text/plain</span><span>&quot;)
+</span><span>
+</span><span>
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">main</span><span>():
+</span><span>    </span><span style="color:#65737e;">&quot;&quot;&quot;Construct and return a WSGI app for the luckynumber service.&quot;&quot;&quot;
+</span><span>
+</span><span>    settings = {
+</span><span>      </span><span style="color:#65737e;"># The pyramid_persona plugin needs a master secret to use for
+</span><span>      </span><span style="color:#65737e;"># signing login cookies, and the expected hostname of your website
+</span><span>      </span><span style="color:#65737e;"># to prevent fradulent login attempts.
+</span><span>      &quot;</span><span style="color:#a3be8c;">persona.secret</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">TED KOPPEL IS A ROBOT</span><span>&quot;,
+</span><span>      &quot;</span><span style="color:#a3be8c;">persona.audiences</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">localhost:8080</span><span>&quot;,
+</span><span>    }
+</span><span>
+</span><span>    config = </span><span style="color:#bf616a;">Configurator</span><span>(</span><span style="color:#bf616a;">settings</span><span>=settings)
+</span><span>    config.</span><span style="color:#bf616a;">add_route</span><span>(&quot;</span><span style="color:#a3be8c;">number</span><span>&quot;, &quot;</span><span style="color:#a3be8c;">/</span><span>&quot;)
+</span><span>    config.</span><span style="color:#bf616a;">add_view</span><span>(lucky_number, </span><span style="color:#bf616a;">route_name</span><span>=&quot;</span><span style="color:#a3be8c;">number</span><span>&quot;)
+</span><span>
+</span><span>    </span><span style="color:#65737e;"># Including pyramid_persona magically enables authentication.
+</span><span>    config.</span><span style="color:#bf616a;">include</span><span>(&quot;</span><span style="color:#a3be8c;">pyramid_persona</span><span>&quot;)
+</span><span>
+</span><span>    </span><span style="color:#b48ead;">return </span><span>config.</span><span style="color:#bf616a;">make_wsgi_app</span><span>()
+</span><span>
+</span><span>
+</span><span style="color:#b48ead;">if </span><span>__name__ == &quot;</span><span style="color:#a3be8c;">__main__</span><span>&quot;:
+</span><span>    app = </span><span style="color:#bf616a;">main</span><span>()
+</span><span>    server = wsgiref.simple_server.</span><span style="color:#bf616a;">make_server</span><span>(&quot;&quot;, </span><span style="color:#d08770;">8080</span><span>, app)
+</span><span>    server.</span><span style="color:#bf616a;">serve_forever</span><span>()
 </span></code></pre>
 <p>Full runnable source-code is here: <a href="./luckynum_server_orig.py">luckynum_server_orig.py</a>.  Run it as a script and you'll get a delightful little webpage that asks you to login with Persona:</p>
 <p><img src="./luckynum1.png" style="padding: 1em; align: center"></img></p>
@@ -133,108 +134,103 @@ Your lucky number for today is </span><span style="color:#d08770;">{number}</spa
 <p>Enter <a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac">MAC Access Authentication</a>.</p>
 <h3 id="macauth-on-the-server">MACAuth on the Server</h3>
 <p>MAC Access Auth is a simple request-signing scheme, originally designed as part of <a href="http://oauth.net/2/">OAuth 2</a> but eminently usable as a stand-alone specification.  Each client gets a unique id and secret key, which are roughly analogous to a username and password.  Authentication is performed by constructing a <a href="http://en.wikipedia.org/wiki/HMAC">HMAC signature</a> of the request using the secret key, and including it in the Authorization header like this:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">    GET /protected_resource HTTP/1.1
-    Host: example.com
-    Authorization: MAC id=&quot;h480djs93hd8&quot;,
-                       ts=&quot;1336363200&quot;,
-                       nonce=&quot;dj83hs9s&quot;,
-                       mac=&quot;bhCQXTVyfj5cmA9uKkPFx1zeOXM=&quot;
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>    GET /protected_resource HTTP/1.1
+</span><span>    Host: example.com
+</span><span>    Authorization: MAC id=&quot;h480djs93hd8&quot;,
+</span><span>                       ts=&quot;1336363200&quot;,
+</span><span>                       nonce=&quot;dj83hs9s&quot;,
+</span><span>                       mac=&quot;bhCQXTVyfj5cmA9uKkPFx1zeOXM=&quot;
 </span></code></pre>
 <p>Note that the secret key itself is not sent over the wire.  Instead, the server authenticates the request by looking up its own copy of the secret key for the given id, and checking that the &quot;mac&quot; signature from the request was correctly generated using that key.  From a security standpoint this is a <a href="http://benlog.com/articles/2009/12/22/its-a-wrap/">very</a> <a href="http://hueniverse.com/2010/09/oauth-bearer-tokens-are-a-terrible-idea/">good</a> <a href="http://benlog.com/articles/2010/09/07/defending-against-your-own-stupidity/">idea</a>.</p>
 <p>If you know about <a href="https://tools.ietf.org/html/rfc2617#section-3">HTTP Digest Auth</a> then this should look familiar, but is substantially more secure.  If you've ever had the misfortune of dealing with <a href="http://cakebaker.42dh.com/2011/01/10/2-legged-vs-3-legged-oauth/">Two-Legged OAuth</a>, MAC Access Auth will be a breath of fresh air.</p>
 <p>To add MACAuth support into our lucky-number service, we can use the <a href="http://pypi.python.org/pypi/pyramid_macauth">pyramid_macauth</a> library.</p>
 <p>The real trick, however, is providing both Persona <em>and</em> MACAuth support in a convenient manner.  The <a href="http://pypi.python.org/pypi/pyramid_multiauth">pyramid_multiauth</a> plugin makes this simple – it lets you configure multiple pyramid authentication policies, arranged in a stack, and delegate authentication duties to each of them in turn. </p>
 <p>Here's how it would look in code:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-python" data-lang="python"><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">main</span><span style="color:#c0c5ce;">():
-    </span><span style="color:#65737e;">&quot;&quot;&quot;Construct and return a WSGI app for the luckynumber service.&quot;&quot;&quot;
-
-    </span><span style="color:#c0c5ce;">settings = {
-      </span><span style="color:#65737e;"># The pyramid_persona plugin needs a master secret to use for
-      # signing login cookies, and the expected hostname of your website
-      # to prevent fradulent login attempts.
-      </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">persona.secret</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">TED KOPPEL IS A ROBOT</span><span style="color:#c0c5ce;">&quot;,
-      &quot;</span><span style="color:#a3be8c;">persona.audiences</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">localhost:8080</span><span style="color:#c0c5ce;">&quot;,
-
-      </span><span style="color:#65737e;"># The pyramid_macauth plugin needs a master secret to use for signing
-      # its access tokens.  We could use the same secret as above, but it&#39;s
-      # generally a good idea to use different secrets for different things.
-      </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">macauth.master_secret</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">V8 JUICE IS 1/8TH GASOLINE</span><span style="color:#c0c5ce;">&quot;,
-
-      </span><span style="color:#65737e;"># The pyramid_multiauth plugin needs to be told what sub-policies to
-      # load, and the order in which they should be tried.
-      </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">multiauth.policies</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">pyramid_persona pyramid_macauth</span><span style="color:#c0c5ce;">&quot;,
-    }
-
-    config = </span><span style="color:#bf616a;">Configurator</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">settings</span><span style="color:#c0c5ce;">=settings)
-    config.</span><span style="color:#bf616a;">add_route</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">number</span><span style="color:#c0c5ce;">&quot;, &quot;</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">&quot;)
-    config.</span><span style="color:#bf616a;">add_view</span><span style="color:#c0c5ce;">(lucky_number, </span><span style="color:#bf616a;">route_name</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">number</span><span style="color:#c0c5ce;">&quot;)
-
-    </span><span style="color:#65737e;"># Including pyramid_multiauth magically enables authentication, loading
-    # both of the policies we specified in the settings.
-    </span><span style="color:#c0c5ce;">config.</span><span style="color:#bf616a;">include</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">pyramid_multiauth</span><span style="color:#c0c5ce;">&quot;)
-
-    </span><span style="color:#65737e;"># Both of our chosen policies configure a &quot;forbidden view&quot; to handle
-    # unauthenticated access.  We have to resolve this conflict by explicitly
-    # picking which one we want to use.
-    </span><span style="color:#c0c5ce;">config.</span><span style="color:#bf616a;">add_forbidden_view</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">pyramid_persona.views.forbidden</span><span style="color:#c0c5ce;">&quot;)
-
-    </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">config.</span><span style="color:#bf616a;">make_wsgi_app</span><span style="color:#c0c5ce;">()
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">main</span><span>():
+</span><span>    </span><span style="color:#65737e;">&quot;&quot;&quot;Construct and return a WSGI app for the luckynumber service.&quot;&quot;&quot;
+</span><span>
+</span><span>    settings = {
+</span><span>      </span><span style="color:#65737e;"># The pyramid_persona plugin needs a master secret to use for
+</span><span>      </span><span style="color:#65737e;"># signing login cookies, and the expected hostname of your website
+</span><span>      </span><span style="color:#65737e;"># to prevent fradulent login attempts.
+</span><span>      &quot;</span><span style="color:#a3be8c;">persona.secret</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">TED KOPPEL IS A ROBOT</span><span>&quot;,
+</span><span>      &quot;</span><span style="color:#a3be8c;">persona.audiences</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">localhost:8080</span><span>&quot;,
+</span><span>
+</span><span>      </span><span style="color:#65737e;"># The pyramid_macauth plugin needs a master secret to use for signing
+</span><span>      </span><span style="color:#65737e;"># its access tokens.  We could use the same secret as above, but it&#39;s
+</span><span>      </span><span style="color:#65737e;"># generally a good idea to use different secrets for different things.
+</span><span>      &quot;</span><span style="color:#a3be8c;">macauth.master_secret</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">V8 JUICE IS 1/8TH GASOLINE</span><span>&quot;,
+</span><span>
+</span><span>      </span><span style="color:#65737e;"># The pyramid_multiauth plugin needs to be told what sub-policies to
+</span><span>      </span><span style="color:#65737e;"># load, and the order in which they should be tried.
+</span><span>      &quot;</span><span style="color:#a3be8c;">multiauth.policies</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">pyramid_persona pyramid_macauth</span><span>&quot;,
+</span><span>    }
+</span><span>
+</span><span>    config = </span><span style="color:#bf616a;">Configurator</span><span>(</span><span style="color:#bf616a;">settings</span><span>=settings)
+</span><span>    config.</span><span style="color:#bf616a;">add_route</span><span>(&quot;</span><span style="color:#a3be8c;">number</span><span>&quot;, &quot;</span><span style="color:#a3be8c;">/</span><span>&quot;)
+</span><span>    config.</span><span style="color:#bf616a;">add_view</span><span>(lucky_number, </span><span style="color:#bf616a;">route_name</span><span>=&quot;</span><span style="color:#a3be8c;">number</span><span>&quot;)
+</span><span>
+</span><span>    </span><span style="color:#65737e;"># Including pyramid_multiauth magically enables authentication, loading
+</span><span>    </span><span style="color:#65737e;"># both of the policies we specified in the settings.
+</span><span>    config.</span><span style="color:#bf616a;">include</span><span>(&quot;</span><span style="color:#a3be8c;">pyramid_multiauth</span><span>&quot;)
+</span><span>
+</span><span>    </span><span style="color:#65737e;"># Both of our chosen policies configure a &quot;forbidden view&quot; to handle
+</span><span>    </span><span style="color:#65737e;"># unauthenticated access.  We have to resolve this conflict by explicitly
+</span><span>    </span><span style="color:#65737e;"># picking which one we want to use.
+</span><span>    config.</span><span style="color:#bf616a;">add_forbidden_view</span><span>(&quot;</span><span style="color:#a3be8c;">pyramid_persona.views.forbidden</span><span>&quot;)
+</span><span>
+</span><span>    </span><span style="color:#b48ead;">return </span><span>config.</span><span style="color:#bf616a;">make_wsgi_app</span><span>()
 </span></code></pre>
 <p>This configures our pyramid app to accept authentication <em>either</em> interactively via the persona dialog, or automatically using a set of MACAuth credentials.  Note that there have been no changes to the application code itself, we have just tweaked the configuration and settings to enable the additional authentication mechanism.</p>
 <p>There's one final piece needed: how do we get a set of MACAuth credentials in the first place?  We will define another view for the application, where a user can login with Persona and generate a fresh set of credentials:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-python" data-lang="python"><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">pyramid.interfaces </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">IAuthenticationPolicy
-</span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">pyramid_macauth </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">MACAuthenticationPolicy
-
-</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">provision_creds</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">request</span><span style="color:#c0c5ce;">):
-    </span><span style="color:#65737e;">&quot;&quot;&quot;Pyramid view to provision MACAuth credentials.&quot;&quot;&quot;
-
-    # Check that the user is authenticated.
-    </span><span style="color:#c0c5ce;">userid = </span><span style="color:#bf616a;">authenticated_userid</span><span style="color:#c0c5ce;">(request)
-    </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">userid is </span><span style="color:#d08770;">None</span><span style="color:#c0c5ce;">:
-        </span><span style="color:#b48ead;">raise </span><span style="color:#bf616a;">Forbidden</span><span style="color:#c0c5ce;">()
-
-    </span><span style="color:#65737e;"># Get a reference to the MACAuthenticationPolicy plugin.
-    </span><span style="color:#c0c5ce;">policy = request.registry.</span><span style="color:#bf616a;">getUtility</span><span style="color:#c0c5ce;">(IAuthenticationPolicy)
-    policy = policy.</span><span style="color:#bf616a;">get_policy</span><span style="color:#c0c5ce;">(MACAuthenticationPolicy)
-
-    </span><span style="color:#65737e;"># Generate a new id and secret key for the current user.
-    </span><span style="color:#96b5b4;">id</span><span style="color:#c0c5ce;">, key = policy.</span><span style="color:#bf616a;">encode_mac_id</span><span style="color:#c0c5ce;">(request, userid)
-    </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">{&quot;</span><span style="color:#a3be8c;">id</span><span style="color:#c0c5ce;">&quot;: </span><span style="color:#96b5b4;">id</span><span style="color:#c0c5ce;">, &quot;</span><span style="color:#a3be8c;">key</span><span style="color:#c0c5ce;">&quot;: key}
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">from </span><span>pyramid.interfaces </span><span style="color:#b48ead;">import </span><span>IAuthenticationPolicy
+</span><span style="color:#b48ead;">from </span><span>pyramid_macauth </span><span style="color:#b48ead;">import </span><span>MACAuthenticationPolicy
+</span><span>
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">provision_creds</span><span>(</span><span style="color:#bf616a;">request</span><span>):
+</span><span>    </span><span style="color:#65737e;">&quot;&quot;&quot;Pyramid view to provision MACAuth credentials.&quot;&quot;&quot;
+</span><span>
+</span><span>    </span><span style="color:#65737e;"># Check that the user is authenticated.
+</span><span>    userid = </span><span style="color:#bf616a;">authenticated_userid</span><span>(request)
+</span><span>    </span><span style="color:#b48ead;">if </span><span>userid is </span><span style="color:#d08770;">None</span><span>:
+</span><span>        </span><span style="color:#b48ead;">raise </span><span style="color:#bf616a;">Forbidden</span><span>()
+</span><span>
+</span><span>    </span><span style="color:#65737e;"># Get a reference to the MACAuthenticationPolicy plugin.
+</span><span>    policy = request.registry.</span><span style="color:#bf616a;">getUtility</span><span>(IAuthenticationPolicy)
+</span><span>    policy = policy.</span><span style="color:#bf616a;">get_policy</span><span>(MACAuthenticationPolicy)
+</span><span>
+</span><span>    </span><span style="color:#65737e;"># Generate a new id and secret key for the current user.
+</span><span>    </span><span style="color:#96b5b4;">id</span><span>, key = policy.</span><span style="color:#bf616a;">encode_mac_id</span><span>(request, userid)
+</span><span>    </span><span style="color:#b48ead;">return </span><span>{&quot;</span><span style="color:#a3be8c;">id</span><span>&quot;: </span><span style="color:#96b5b4;">id</span><span>, &quot;</span><span style="color:#a3be8c;">key</span><span>&quot;: key}
 </span></code></pre>
 <p>And hook it up in the configurator like this:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-python" data-lang="python"><span style="color:#c0c5ce;">
-config.</span><span style="color:#bf616a;">add_route</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">provision</span><span style="color:#c0c5ce;">&quot;, &quot;</span><span style="color:#a3be8c;">/provision</span><span style="color:#c0c5ce;">&quot;)
-config.</span><span style="color:#bf616a;">add_view</span><span style="color:#c0c5ce;">(provision_creds, </span><span style="color:#bf616a;">route_name</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">provision</span><span style="color:#c0c5ce;">&quot;, </span><span style="color:#bf616a;">renderer</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">json</span><span style="color:#c0c5ce;">&quot;)
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span>
+</span><span>config.</span><span style="color:#bf616a;">add_route</span><span>(&quot;</span><span style="color:#a3be8c;">provision</span><span>&quot;, &quot;</span><span style="color:#a3be8c;">/provision</span><span>&quot;)
+</span><span>config.</span><span style="color:#bf616a;">add_view</span><span>(provision_creds, </span><span style="color:#bf616a;">route_name</span><span>=&quot;</span><span style="color:#a3be8c;">provision</span><span>&quot;, </span><span style="color:#bf616a;">renderer</span><span>=&quot;</span><span style="color:#a3be8c;">json</span><span>&quot;)
 </span></code></pre>
 <p>Full runnable source-code is here: <a href="./luckynum_server.py">luckynum_server.py</a>.  Run it as a script and, in addition to the lucky-number-generating page from before, you will be able to access &quot;/provision&quot; and obtain some MACAuth credentials for your account:</p>
 <p><img src="./luckynum3.png" style="padding: 1em; align: center"></img></p>
 <p>I think it speaks very highly of pyramid as a framework that these components can be plugged together so easily and flexibly, with minimal coupling between the different pieces.</p>
 <h3 id="macauth-on-the-client">MACAuth on the Client</h3>
 <p>We can now use the <a href="http://docs.python-requests.org/en/latest/">requests</a> library to script up an automated client for this service, using the <a href="http://pypi.python.org/pypi/macauthlib">macauthlib</a> package to generate the signatures.</p>
-<pre style="background-color:#2b303b;">
-<code class="language-python" data-lang="python"><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">requests
-</span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">macauthlib
-
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">import </span><span>requests
+</span><span style="color:#b48ead;">import </span><span>macauthlib
+</span><span>
 </span><span style="color:#65737e;"># A set of previously-provisioned MACAuth credentials.
-</span><span style="color:#bf616a;">CREDENTIALS </span><span style="color:#c0c5ce;">= {
-  &quot;</span><span style="color:#a3be8c;">id</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">eyJzYWx0IjogImNlMWM4YyIsICJleHBpcmVzIjogMTM0OTM5NDQ2My43OTIyOTUs</span><span style="color:#c0c5ce;">&quot;
-        &quot;</span><span style="color:#a3be8c;">ICJ1c2VyaWQiOiAicnlhbkByZmsuaWQuYXUifWyyOtRhUCI9D4I9Oz0Tho7f4-FK</span><span style="color:#c0c5ce;">&quot;,
-  &quot;</span><span style="color:#a3be8c;">key</span><span style="color:#c0c5ce;">&quot;: &quot;</span><span style="color:#a3be8c;">DqvXadiE3QRySMRLnkGT5EmSvPw=</span><span style="color:#c0c5ce;">&quot;
-}
-
+</span><span style="color:#bf616a;">CREDENTIALS </span><span>= {
+</span><span>  &quot;</span><span style="color:#a3be8c;">id</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">eyJzYWx0IjogImNlMWM4YyIsICJleHBpcmVzIjogMTM0OTM5NDQ2My43OTIyOTUs</span><span>&quot;
+</span><span>        &quot;</span><span style="color:#a3be8c;">ICJ1c2VyaWQiOiAicnlhbkByZmsuaWQuYXUifWyyOtRhUCI9D4I9Oz0Tho7f4-FK</span><span>&quot;,
+</span><span>  &quot;</span><span style="color:#a3be8c;">key</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">DqvXadiE3QRySMRLnkGT5EmSvPw=</span><span>&quot;
+</span><span>}
+</span><span>
 </span><span style="color:#65737e;"># Create a requests session with a hook to sign all outgoing requests.
-# The macauthlib package has native support for request&#39;s data types.
-</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">auth_hook</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">req</span><span style="color:#c0c5ce;">):
-    macauthlib.</span><span style="color:#bf616a;">sign_request</span><span style="color:#c0c5ce;">(req, **</span><span style="color:#bf616a;">CREDENTIALS</span><span style="color:#c0c5ce;">)
-    </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">req
-session = requests.</span><span style="color:#bf616a;">session</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">hooks</span><span style="color:#c0c5ce;">={&quot;</span><span style="color:#a3be8c;">pre_request</span><span style="color:#c0c5ce;">&quot;: auth_hook})
-
+</span><span style="color:#65737e;"># The macauthlib package has native support for request&#39;s data types.
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">auth_hook</span><span>(</span><span style="color:#bf616a;">req</span><span>):
+</span><span>    macauthlib.</span><span style="color:#bf616a;">sign_request</span><span>(req, **</span><span style="color:#bf616a;">CREDENTIALS</span><span>)
+</span><span>    </span><span style="color:#b48ead;">return </span><span>req
+</span><span>session = requests.</span><span style="color:#bf616a;">session</span><span>(</span><span style="color:#bf616a;">hooks</span><span>={&quot;</span><span style="color:#a3be8c;">pre_request</span><span>&quot;: auth_hook})
+</span><span>
 </span><span style="color:#65737e;"># Then we can easily script access to the service.
-</span><span style="color:#b48ead;">print </span><span style="color:#c0c5ce;">session.</span><span style="color:#bf616a;">get</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">http://localhost:8080/</span><span style="color:#c0c5ce;">&quot;).content
+</span><span style="color:#b48ead;">print </span><span>session.</span><span style="color:#bf616a;">get</span><span>(&quot;</span><span style="color:#a3be8c;">http://localhost:8080/</span><span>&quot;).content
 </span></code></pre>
 <p>Full runnable source-code is here: <a href="./luckynum_client.py">luckynum_client.py</a>.  If you fill in your own set of credentials and run it against your server, you should see something like this:</p>
 <p><img src="./luckynum4.png" style="padding: 1em; align: center"></img></p>

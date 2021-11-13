@@ -21,17 +21,19 @@
       <title>A GIL Adventure (with a happy ending)</title>
     
     
-    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
-    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+    <link rel="stylesheet" href="https://www.rfk.id.au/main.css">
      
   </head>
   <body>
     
       <header>
         <a class="profile-icon" href="/">
-          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+          
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" alt="profile picture">
         </a>
         <nav>
             <a href="/about/">About</a>
@@ -51,10 +53,10 @@
       <div class="item-tags">
         [ 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;software&#x2F;">software</a>
+          <a href="https://www.rfk.id.au/tags/software/">software</a>
            | 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+          <a href="https://www.rfk.id.au/tags/python/">python</a>
           
         
         ]
@@ -65,8 +67,7 @@
 
   <p>I just halved the running time of one of my test suites.</p>
 <p>The tests in question are multi-threaded, and while they perform a lot of IO they still push the CPU pretty hard.  For some time now, <a href="http://somethingaboutorange.com/mrl/projects/nose/">nose</a> has been reporting a happy little message along these lines:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">Ran 35 tests in 24.893s
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>Ran 35 tests in 24.893s
 </span></code></pre>
 <p>I wouldn't have though anything of it, but every so often this number would drop dramatically – often down to as little as 15 seconds.  After a lot of puzzling, I realised that the tests would run faster whenever I had another test suite running <em>at the same time</em>.  Making my computer work harder made these tests run almost twice as fast!</p>
 <span id="continue-reading"></span>
@@ -74,20 +75,17 @@
 <p>The typical response to this awful multi-core behaviour is &quot;just use <a href="http://docs.python.org/library/multiprocessing.html">multiprocessing</a>&quot;.  That's not an option here, not least because these tests are supposed to be checking the thread safety of my code!</p>
 <p>Not one to take such an indignity lying down, I've put together a set of extensions to Python's threading library that gives you more control over the behaviour of each thread.   In particular, it lets specify both a priority and a <a href="http://en.wikipedia.org/wiki/Processor_affinity">CPU affinity</a> for each thread.  Grab it from PyPI: <a href="http://pypi.python.org/pypi/threading2">threading2</a>.</p>
 <p>I shaved about 5 seconds off the execution time by using a special &quot;background thread&quot; class to execute some tasks at lower priority:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-python" data-lang="python"><span style="color:#b48ead;">class </span><span style="color:#ebcb8b;">BGThread</span><span style="color:#eff1f5;">(</span><span style="color:#a3be8c;">threading2.Thread</span><span style="color:#eff1f5;">):
-    </span><span style="color:#b48ead;">def </span><span style="color:#96b5b4;">__init__</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">,*</span><span style="color:#bf616a;">args</span><span style="color:#c0c5ce;">,**</span><span style="color:#bf616a;">kwds</span><span style="color:#c0c5ce;">):
-        </span><span style="color:#96b5b4;">super</span><span style="color:#c0c5ce;">(BGThread,</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">).</span><span style="color:#96b5b4;">__init__</span><span style="color:#c0c5ce;">(*args,**kwds)
-        </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.priority = </span><span style="color:#d08770;">0.2
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">class </span><span style="color:#ebcb8b;">BGThread</span><span style="color:#eff1f5;">(</span><span style="color:#a3be8c;">threading2.Thread</span><span style="color:#eff1f5;">):
+</span><span>    </span><span style="color:#b48ead;">def </span><span style="color:#96b5b4;">__init__</span><span>(</span><span style="color:#bf616a;">self</span><span>,*</span><span style="color:#bf616a;">args</span><span>,**</span><span style="color:#bf616a;">kwds</span><span>):
+</span><span>        </span><span style="color:#96b5b4;">super</span><span>(BGThread,</span><span style="color:#bf616a;">self</span><span>).</span><span style="color:#96b5b4;">__init__</span><span>(*args,**kwds)
+</span><span>        </span><span style="color:#bf616a;">self</span><span>.priority = </span><span style="color:#d08770;">0.2
 </span></code></pre>
 <p>The biggest improvement, however, came from the following two lines of code:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-python" data-lang="python"><span style="color:#c0c5ce;">cpu = random.</span><span style="color:#bf616a;">choice</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">list</span><span style="color:#c0c5ce;">(threading2.</span><span style="color:#bf616a;">system_affinity</span><span style="color:#c0c5ce;">()))
-threading2.</span><span style="color:#bf616a;">process_affinity</span><span style="color:#c0c5ce;">((cpu,))
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span>cpu = random.</span><span style="color:#bf616a;">choice</span><span>(</span><span style="color:#bf616a;">list</span><span>(threading2.</span><span style="color:#bf616a;">system_affinity</span><span>()))
+</span><span>threading2.</span><span style="color:#bf616a;">process_affinity</span><span>((cpu,))
 </span></code></pre>
 <p>The <code>system_affinity</code> function returns the set of all CPUs on the system, while the <code>process_affinity</code> function sets the CPU affinity for the entire Python process.  So what we're doing here is simply picking a random CPU, then forcing all threads in the program to run only on that CPU.  With this simple change, nose now reports an even <em>happier</em> little message for my tests:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">Ran 35 tests in 12.299s
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>Ran 35 tests in 12.299s
 </span></code></pre>
 <p>It's sad to have to resort this kind of hackery, but at least there's a straightforward workaround. If I get a chance I'll try this out on Python 3 and report back – it's got a <a href="http://mail.python.org/pipermail/python-dev/2009-October/093321.html">new GIL implementation</a> designed to avoid some of these pathological performance issues</p>
 <p>And finally, before anyone chimes in with &quot;why doesn't python set the process affinity automatically?!?!&quot; – there are plenty of cases where spreading your threads across several processors can be a useful, sensible and efficient thing to do in Python.  But given the known pathological behaviour of the GIL in some cases, it should be easy to disable multi-core execution for programs that can't make use of it.  Well, <a href="http://pypi.python.org/pypi/threading2">now you can</a>.</p>

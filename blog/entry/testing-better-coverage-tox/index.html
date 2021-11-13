@@ -21,17 +21,19 @@
       <title>Testing better with coverage and tox</title>
     
     
-    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
-    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+    <link rel="stylesheet" href="https://www.rfk.id.au/main.css">
      
   </head>
   <body>
     
       <header>
         <a class="profile-icon" href="/">
-          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+          
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" alt="profile picture">
         </a>
         <nav>
             <a href="/about/">About</a>
@@ -51,10 +53,10 @@
       <div class="item-tags">
         [ 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;software&#x2F;">software</a>
+          <a href="https://www.rfk.id.au/tags/software/">software</a>
            | 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+          <a href="https://www.rfk.id.au/tags/python/">python</a>
           
         
         ]
@@ -74,115 +76,110 @@
 <li><strong><a href="http://codespeak.net/tox/">tox</a></strong>.  To keep the discipline required to run tests against four different versions of python on three different platforms, the test process needs to be as automated and repeatable as possible.  Tox is precisely the tool for this job.</li>
 </ul>
 <p>My target for today was the <a href="http://github.com/rfk/dexml/">dexml</a> project.  It's a pretty small codebase and it already had a good suite of tests, so it seemed like a very non-threatening place to start.  Here's the testing status of the 0.4.1 release</p>
-<pre style="background-color:#2b303b;">
-<code class="language-console" data-lang="console"><span style="color:#c0c5ce;">$&gt; #  It contains around 1300 lines of code
-$&gt; sloccount dexml/ | grep -C1 SLOC-by-Language
- 
-SLOC	Directory	SLOC-by-Language (Sorted)
-1279    dexml           python=1279
-$&gt;
-$&gt; #  Almost a third of which are for the tests
-$&gt; sloccount dexml/test.py | grep -C1 SLOC-by-Language
-
-SLOC	Directory	SLOC-by-Language (Sorted)
-417     top_dir         python=417
-$&gt;
-$&gt; #  Of which there are 20, and they all pass
-$&gt; nosetests
-...................................
-----------------------------------------------------------------------
-Ran 20 tests in 0.265s
-
-OK
-$&gt;```
-
-I know that 20 tests probably doesn&#39;t sound like many, but this is a small library and each test covers a fair bit of ground.  Besides, there&#39;s almost half as much code for testing as there is code for the module itself, so it must be pretty well tested.  Right?  Let&#39;s find out...
-
-### Part 1: Coverage
-
-To see what sort of test coverage we&#39;ve actually got, let&#39;s run nose inside Ned Batchelder&#39;s [coverage](http://nedbatchelder.com/code/coverage/) tool:
-
-```console 
-$&gt; pip install coverage
-...
-... uninteresting output ...
-...
-$&gt; 
-$&gt; # coverage can only run python scripts, so we
-$&gt; # have to pass it the full path to nosetests
-$&gt; coverage run `which nosetests`
-....................
-----------------------------------------------------------------------
-Ran 20 tests in 0.061
-
-OK
-$&gt;
-$&gt; # we&#39;re only interested in coverage for the dexml module,
-$&gt; # and we don&#39;t care about coverage within the tests themselves
-$&gt; coverage report --include=&quot;*dexml*&quot; --omit=&quot;*test*&quot;
-Name             Stmts   Miss  Cover
-------------------------------------
-dexml/__init__     306     30    90%
-dexml/fields       497     60    88%
-------------------------------------
-TOTAL              803     90    89%
-
+<pre data-lang="console" style="background-color:#2b303b;color:#c0c5ce;" class="language-console "><code class="language-console" data-lang="console"><span>$&gt; #  It contains around 1300 lines of code
+</span><span>$&gt; sloccount dexml/ | grep -C1 SLOC-by-Language
+</span><span> 
+</span><span>SLOC	Directory	SLOC-by-Language (Sorted)
+</span><span>1279    dexml           python=1279
+</span><span>$&gt;
+</span><span>$&gt; #  Almost a third of which are for the tests
+</span><span>$&gt; sloccount dexml/test.py | grep -C1 SLOC-by-Language
+</span><span>
+</span><span>SLOC	Directory	SLOC-by-Language (Sorted)
+</span><span>417     top_dir         python=417
+</span><span>$&gt;
+</span><span>$&gt; #  Of which there are 20, and they all pass
+</span><span>$&gt; nosetests
+</span><span>...................................
+</span><span>----------------------------------------------------------------------
+</span><span>Ran 20 tests in 0.265s
+</span><span>
+</span><span>OK
+</span><span>$&gt;```
+</span><span>
+</span><span>I know that 20 tests probably doesn&#39;t sound like many, but this is a small library and each test covers a fair bit of ground.  Besides, there&#39;s almost half as much code for testing as there is code for the module itself, so it must be pretty well tested.  Right?  Let&#39;s find out...
+</span><span>
+</span><span>### Part 1: Coverage
+</span><span>
+</span><span>To see what sort of test coverage we&#39;ve actually got, let&#39;s run nose inside Ned Batchelder&#39;s [coverage](http://nedbatchelder.com/code/coverage/) tool:
+</span><span>
+</span><span>```console 
+</span><span>$&gt; pip install coverage
+</span><span>...
+</span><span>... uninteresting output ...
+</span><span>...
+</span><span>$&gt; 
+</span><span>$&gt; # coverage can only run python scripts, so we
+</span><span>$&gt; # have to pass it the full path to nosetests
+</span><span>$&gt; coverage run `which nosetests`
+</span><span>....................
+</span><span>----------------------------------------------------------------------
+</span><span>Ran 20 tests in 0.061
+</span><span>
+</span><span>OK
+</span><span>$&gt;
+</span><span>$&gt; # we&#39;re only interested in coverage for the dexml module,
+</span><span>$&gt; # and we don&#39;t care about coverage within the tests themselves
+</span><span>$&gt; coverage report --include=&quot;*dexml*&quot; --omit=&quot;*test*&quot;
+</span><span>Name             Stmts   Miss  Cover
+</span><span>------------------------------------
+</span><span>dexml/__init__     306     30    90%
+</span><span>dexml/fields       497     60    88%
+</span><span>------------------------------------
+</span><span>TOTAL              803     90    89%
+</span><span>
 </span></code></pre>
 <p>(By the way, I know that nose has a plugin for coverage support, but it appears to be missing support for some features in the latest version of coverage.)</p>
 <p>The last release of dexml had 89% test coverage.  Looked at as a percentage that sounds pretty high, but think of it this way:  over one-tenth of the code is <em>completely untested</em>.  I definitely need to do better.</p>
 <p>You can get coverage to spit out a list of the uncovered line numbers, but it's much easier to use the auto-generated HTML source listing.  Here's how you generate it:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-console" data-lang="console"><span style="color:#c0c5ce;"> $&gt; coverage html --include=&quot;*dexml*&quot; --omit=&quot;*test*&quot;
-$&gt;
-$&gt; # Output winds up in the &quot;htmlcov&quot; directory
-$&gt; ls htmlcov/
-coverage_html.js   dexml___init__.html  jquery-1.3.2.min.js        style.css
-dexml_fields.html  index.html           jquery.tablesorter.min.js
-$&gt;
+<pre data-lang="console" style="background-color:#2b303b;color:#c0c5ce;" class="language-console "><code class="language-console" data-lang="console"><span> $&gt; coverage html --include=&quot;*dexml*&quot; --omit=&quot;*test*&quot;
+</span><span>$&gt;
+</span><span>$&gt; # Output winds up in the &quot;htmlcov&quot; directory
+</span><span>$&gt; ls htmlcov/
+</span><span>coverage_html.js   dexml___init__.html  jquery-1.3.2.min.js        style.css
+</span><span>dexml_fields.html  index.html           jquery.tablesorter.min.js
+</span><span>$&gt;
 </span></code></pre>
 <p>And here's a screenshot of the resulting report:</p>
 <p><img src="coverage1.png"></img></p>
 <p>I love the simplicity of this view: code in red in untested and therefore bad.  And with it comes a simple and clear imperative:  kill the red lines.</p>
 <p>The <code>_make_xml_node</code> method shown above is a helper that takes many different kinds of input (bytestrings, unicode strings, file-like objects) and returns an XML DOM object.  All of my tests have been passing in short strings of valid XML, so the code handling other inputs types or error conditions is not getting tested.</p>
 <p>It was a simple matter to add another test that converts a variety of different objects to XML, resulting in a very pleasing bit of feedback:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-console" data-lang="console"><span style="color:#c0c5ce;">$&gt; coverage run `which nosetests`
-.....................
-----------------------------------------------------------------------
-Ran 21 tests in 0.069s
-
-OK
-$&gt;
-$&gt; coverage report --include=&quot;*dexml*&quot; --omit=&quot;*test*&quot;
-Name             Stmts   Miss  Cover
-------------------------------------
-dexml/__init__     306     22    93%
-dexml/fields       497     60    88%
-------------------------------------
-TOTAL              803     82    90%
+<pre data-lang="console" style="background-color:#2b303b;color:#c0c5ce;" class="language-console "><code class="language-console" data-lang="console"><span>$&gt; coverage run `which nosetests`
+</span><span>.....................
+</span><span>----------------------------------------------------------------------
+</span><span>Ran 21 tests in 0.069s
+</span><span>
+</span><span>OK
+</span><span>$&gt;
+</span><span>$&gt; coverage report --include=&quot;*dexml*&quot; --omit=&quot;*test*&quot;
+</span><span>Name             Stmts   Miss  Cover
+</span><span>------------------------------------
+</span><span>dexml/__init__     306     22    93%
+</span><span>dexml/fields       497     60    88%
+</span><span>------------------------------------
+</span><span>TOTAL              803     82    90%
 </span></code></pre>
 <p>One percent closer to full coverage!</p>
 <p>I spent a good few hours this morning rinsing and repeating the above, slowly working the coverage up to 100%.  The end result was so satisfying that I re-ran the tests at least ten times when I was finished, just to bask in my achievement:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-console" data-lang="console"><span style="color:#c0c5ce;">$&gt; coverage report --include=&quot;*dexml*&quot; --omit=&quot;*test*&quot;
-Name             Stmts   Miss  Cover
-------------------------------------
-dexml/__init__     329      0   100%
-dexml/fields       502      0   100%
-------------------------------------
-TOTAL              831      0   100%
+<pre data-lang="console" style="background-color:#2b303b;color:#c0c5ce;" class="language-console "><code class="language-console" data-lang="console"><span>$&gt; coverage report --include=&quot;*dexml*&quot; --omit=&quot;*test*&quot;
+</span><span>Name             Stmts   Miss  Cover
+</span><span>------------------------------------
+</span><span>dexml/__init__     329      0   100%
+</span><span>dexml/fields       502      0   100%
+</span><span>------------------------------------
+</span><span>TOTAL              831      0   100%
 </span></code></pre>
 <p>Taking another look at the linecounts, I now have around 1600 lines of code in total and 750 lines of tests – so the ratio of tests to functionality has gone from 1:2 up to almost 1:1.</p>
-<pre style="background-color:#2b303b;">
-<code class="language-console" data-lang="console"><span style="color:#c0c5ce;"> $&gt; sloccount dexml/ | grep -C1 SLOC-by-Language
-
-SLOC	Directory	SLOC-by-Language (Sorted)
-1650    dexml           python=1650
-$&gt;
-$&gt; sloccount dexml/test.py | grep -C1 SLOC-by-Language
-
-SLOC	Directory	SLOC-by-Language (Sorted)
-750     top_dir         python=750
+<pre data-lang="console" style="background-color:#2b303b;color:#c0c5ce;" class="language-console "><code class="language-console" data-lang="console"><span> $&gt; sloccount dexml/ | grep -C1 SLOC-by-Language
+</span><span>
+</span><span>SLOC	Directory	SLOC-by-Language (Sorted)
+</span><span>1650    dexml           python=1650
+</span><span>$&gt;
+</span><span>$&gt; sloccount dexml/test.py | grep -C1 SLOC-by-Language
+</span><span>
+</span><span>SLOC	Directory	SLOC-by-Language (Sorted)
+</span><span>750     top_dir         python=750
 </span></code></pre>
 <p>Was it worth it?  You bet.  I uncovered four corner-case bugs including one that could silently corrupt your data.  (Don't worry, dexml users, to trigger it you would have had to construct your models in a very strange way.  It won't have bitten you, but I'm sure you'll be pleased it's gone!)</p>
 <p>Bugs aside, I was very pleased to discover another side effect of striving for 100% test coverage.  It turns out the easiest way to increase your test coverage is to <em>delete code</em>.  Several old corners of the dexml parser were dealing with model configurations that just make no sense in practice.  The effort of trying to write a test case for them showed me just how silly such configurations would be, and gave me the confidence to rip out that code entirely.</p>
@@ -191,49 +188,46 @@ SLOC	Directory	SLOC-by-Language (Sorted)
 <p>Enter <a href="https://tox.readthedocs.io">tox</a>.</p>
 <p>Tox is a simple idea implemented extremely well.  You tell it how to run your test suite.  You tell it what versions of python you're targeting.  It then spins up an isolated <a href="http://www.virtualenv.org">virtualenv</a> for each target, installs your package into it, runs the tests and aggregates the results.  Genius.</p>
 <p>Tox is configured using a simple ini-style file.  Here is the configuration I came up with for dexml:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-ini" data-lang="ini"><span style="color:#b48ead;">
-[tox]
-</span><span style="color:#bf616a;">envlist </span><span style="color:#c0c5ce;">= py25,py26,py27,py32
-
+<pre data-lang="ini" style="background-color:#2b303b;color:#c0c5ce;" class="language-ini "><code class="language-ini" data-lang="ini"><span>
+</span><span style="color:#b48ead;">[tox]
+</span><span style="color:#bf616a;">envlist </span><span>= py25,py26,py27,py32
+</span><span>
 </span><span style="color:#b48ead;">[testenv]
-</span><span style="color:#bf616a;">deps</span><span style="color:#c0c5ce;">= nose
+</span><span style="color:#bf616a;">deps</span><span>= nose
 </span><span style="color:#b48ead;">      coverage
-</span><span style="color:#bf616a;">commands </span><span style="color:#c0c5ce;">= coverage erase
-           </span><span style="color:#bf616a;">coverage </span><span style="color:#c0c5ce;">run {envbindir}/nosetests
-           </span><span style="color:#bf616a;">coverage </span><span style="color:#c0c5ce;">report --include=*dexml* --omit=*test*
-
+</span><span style="color:#bf616a;">commands </span><span>= coverage erase
+</span><span>           </span><span style="color:#bf616a;">coverage </span><span>run {envbindir}/nosetests
+</span><span>           </span><span style="color:#bf616a;">coverage </span><span>report --include=*dexml* --omit=*test*
+</span><span>
 </span><span style="color:#b48ead;">[testenv:py32]
-</span><span style="color:#bf616a;">deps</span><span style="color:#c0c5ce;">=
-</span><span style="color:#bf616a;">commands </span><span style="color:#c0c5ce;">= python setup.py test
+</span><span style="color:#bf616a;">deps</span><span>=
+</span><span style="color:#bf616a;">commands </span><span>= python setup.py test
 </span></code></pre>
 <p>The main &quot;tox&quot; section just lists the python environments we want to target.  The &quot;testenv&quot; section describes the dependencies we need to install, and the commands to run to execute the test suite.  Finally, the &quot;testenv:py32&quot; section customizes the test procedure for python32 because I couldn't get nose to run correctly.</p>
 <p>Now all I have to do is type &quot;tox&quot;:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-console" data-lang="console"><span style="color:#c0c5ce;">$&gt; tox
-...
-... lots and lots of output as it
-... builds virtualenvs and runs your tests
-...
-________________________________ [tox summary] _________________________________
-[TOX] py25: commands succeeded
-[TOX] py26: commands succeeded
-[TOX] py27: commands succeeded
-[TOX] ERROR: py32: commands failed
-$&gt;
+<pre data-lang="console" style="background-color:#2b303b;color:#c0c5ce;" class="language-console "><code class="language-console" data-lang="console"><span>$&gt; tox
+</span><span>...
+</span><span>... lots and lots of output as it
+</span><span>... builds virtualenvs and runs your tests
+</span><span>...
+</span><span>________________________________ [tox summary] _________________________________
+</span><span>[TOX] py25: commands succeeded
+</span><span>[TOX] py26: commands succeeded
+</span><span>[TOX] py27: commands succeeded
+</span><span>[TOX] ERROR: py32: commands failed
+</span><span>$&gt;
 </span></code></pre>
 <p>Whoops.  While bringing things up to 100% code coverage I accidentally broke something on python3.  Fortunately it was a trivial unicode-handling fix and I now get:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-console" data-lang="console"><span style="color:#c0c5ce;">$&gt; tox
-...
-...
-________________________________ [tox summary] _________________________________
-[TOX] py25: commands succeeded
-[TOX] py26: commands succeeded
-[TOX] py27: commands succeeded
-[TOX] py32: commands succeeded
-[TOX] congratulations :)
-$&gt;
+<pre data-lang="console" style="background-color:#2b303b;color:#c0c5ce;" class="language-console "><code class="language-console" data-lang="console"><span>$&gt; tox
+</span><span>...
+</span><span>...
+</span><span>________________________________ [tox summary] _________________________________
+</span><span>[TOX] py25: commands succeeded
+</span><span>[TOX] py26: commands succeeded
+</span><span>[TOX] py27: commands succeeded
+</span><span>[TOX] py32: commands succeeded
+</span><span>[TOX] congratulations :)
+</span><span>$&gt;
 </span></code></pre>
 <p>Running the same command on my Windows and OSX boxes gives me a great deal of confidence that dexml will work as it's supposed to for just about any user.  (With a single caveat: tox doesn't yet support python3 on Windows.)</p>
 <h3 id="next-steps">Next Steps</h3>

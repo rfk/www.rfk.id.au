@@ -21,17 +21,19 @@
       <title>XML Namespace Selectors for jQuery</title>
     
     
-    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
-    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+    <link rel="stylesheet" href="https://www.rfk.id.au/main.css">
      
   </head>
   <body>
     
       <header>
         <a class="profile-icon" href="/">
-          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+          
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" alt="profile picture">
         </a>
         <nav>
             <a href="/about/">About</a>
@@ -51,10 +53,10 @@
       <div class="item-tags">
         [ 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;software&#x2F;">software</a>
+          <a href="https://www.rfk.id.au/tags/software/">software</a>
            | 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;javascript&#x2F;">javascript</a>
+          <a href="https://www.rfk.id.au/tags/javascript/">javascript</a>
           
         
         ]
@@ -70,8 +72,7 @@ jQuery doesn't support xml-namespace selectors.  Since I'm trying to parse <a hr
 <p>Oh sure, jQuery supports <em>prefix</em> selectors just fine.  If your
 document contains an element &lt;D:response&gt;, you can quite safely query
 for that element by name as long as you remember to backslash-escape the colon:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-javascript" data-lang="javascript"><span style="color:#8fa1b3;">$</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">doc</span><span style="color:#c0c5ce;">).</span><span style="color:#96b5b4;">find</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">D</span><span style="color:#96b5b4;">\\</span><span style="color:#a3be8c;">:response</span><span style="color:#c0c5ce;">&quot;)
+<pre data-lang="javascript" style="background-color:#2b303b;color:#c0c5ce;" class="language-javascript "><code class="language-javascript" data-lang="javascript"><span style="color:#8fa1b3;">$</span><span>(</span><span style="color:#bf616a;">doc</span><span>).</span><span style="color:#96b5b4;">find</span><span>(&quot;</span><span style="color:#a3be8c;">D</span><span style="color:#96b5b4;">\\</span><span style="color:#a3be8c;">:response</span><span>&quot;)
 </span></code></pre>
 <p>This works as long as you can guarantee that a single prefix is used for
 the target namespace, and that it's used uniformly throughout the document.  But
@@ -84,33 +85,28 @@ namespace is a semantic property that can be specified in several different
 ways.</p>
 </blockquote>
 <p>Fortunately, the <a href="http://www.w3.org/TR/css3-selectors/">CSS Level 3</a> standard provides a very clear syntax and semantics for namespace-aware queries.  After declaring 'D' to be the proper WebDAV namespace URI, the CSS-3 equivalent to the above prefix query would be:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-javascript" data-lang="javascript"><span style="color:#8fa1b3;">$</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">doc</span><span style="color:#c0c5ce;">).</span><span style="color:#96b5b4;">find</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">D|response</span><span style="color:#c0c5ce;">&quot;)
+<pre data-lang="javascript" style="background-color:#2b303b;color:#c0c5ce;" class="language-javascript "><code class="language-javascript" data-lang="javascript"><span style="color:#8fa1b3;">$</span><span>(</span><span style="color:#bf616a;">doc</span><span>).</span><span style="color:#96b5b4;">find</span><span>(&quot;</span><span style="color:#a3be8c;">D|response</span><span>&quot;)
 </span></code></pre>
 <p>Unfortunately, this syntax is largely still a pipe-dream.  Not only is it missing from jQuery, but I couldn't find another implementation to help get me off the ground.  The only thing for it was to implement it myself – so about six hours later, after studying the internals of the <a href="http://www.sizzlejs.com/">Sizzle selector engine</a> and adventuring from <code>getElementsByTagNameNS</code> through to XPath's <code>namespace-uri()</code> and <code>local-name()</code> functions, I have a solution that I'm happy to show to the world: <a href="/static/scratch/jquery.xmlns.js">jquery.xmlns.js</a>.</p>
 <p>This plugin extends the jQuery tag and attribute query functions to allow an optional namespace selector.  In the simplest case you declare a namespace prefix in the <em><code>$.xmlns</code></em> object, then just query for it as normal:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-javascript" data-lang="javascript"><span style="color:#bf616a;">$</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">xmlns</span><span style="color:#c0c5ce;">[&quot;</span><span style="color:#a3be8c;">D</span><span style="color:#c0c5ce;">&quot;] = &quot;</span><span style="color:#a3be8c;">DAV:</span><span style="color:#c0c5ce;">&quot;;
-</span><span style="color:#8fa1b3;">$</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">doc</span><span style="color:#c0c5ce;">).</span><span style="color:#96b5b4;">find</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">D|response</span><span style="color:#c0c5ce;">&quot;).</span><span style="color:#8fa1b3;">each</span><span style="color:#c0c5ce;">(...);
+<pre data-lang="javascript" style="background-color:#2b303b;color:#c0c5ce;" class="language-javascript "><code class="language-javascript" data-lang="javascript"><span style="color:#bf616a;">$</span><span>.</span><span style="color:#bf616a;">xmlns</span><span>[&quot;</span><span style="color:#a3be8c;">D</span><span>&quot;] = &quot;</span><span style="color:#a3be8c;">DAV:</span><span>&quot;;
+</span><span style="color:#8fa1b3;">$</span><span>(</span><span style="color:#bf616a;">doc</span><span>).</span><span style="color:#96b5b4;">find</span><span>(&quot;</span><span style="color:#a3be8c;">D|response</span><span>&quot;).</span><span style="color:#8fa1b3;">each</span><span>(...);
 </span></code></pre>
 <p>Sadly, the namespace declarations need to be global since the underlying jQuery/Sizzle selector machinery is stateless.  If you're anything like me, such globals will offend your delicate programming sensibilities.  To perform a namespace-based query and automatically clean up when you're done, you can use the <em>xmlns</em> query method as follows:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-javascript" data-lang="javascript"><span style="color:#8fa1b3;">$</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">doc</span><span style="color:#c0c5ce;">).</span><span style="color:#8fa1b3;">xmlns</span><span style="color:#c0c5ce;">({D:&quot;</span><span style="color:#a3be8c;">DAV:</span><span style="color:#c0c5ce;">&quot;},</span><span style="color:#b48ead;">function</span><span style="color:#c0c5ce;">() {
-  </span><span style="color:#65737e;">//  The &#39;D&#39; namespace is declared within this function
-  </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">this</span><span style="color:#c0c5ce;">.</span><span style="color:#96b5b4;">find</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">D|response</span><span style="color:#c0c5ce;">&quot;).</span><span style="color:#8fa1b3;">each</span><span style="color:#c0c5ce;">(...);
-  </span><span style="color:#65737e;">//  and removed again when the function exits
-</span><span style="color:#c0c5ce;">});
+<pre data-lang="javascript" style="background-color:#2b303b;color:#c0c5ce;" class="language-javascript "><code class="language-javascript" data-lang="javascript"><span style="color:#8fa1b3;">$</span><span>(</span><span style="color:#bf616a;">doc</span><span>).</span><span style="color:#8fa1b3;">xmlns</span><span>({D:&quot;</span><span style="color:#a3be8c;">DAV:</span><span>&quot;},</span><span style="color:#b48ead;">function</span><span>() {
+</span><span>  </span><span style="color:#65737e;">//  The &#39;D&#39; namespace is declared within this function
+</span><span>  </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">this</span><span>.</span><span style="color:#96b5b4;">find</span><span>(&quot;</span><span style="color:#a3be8c;">D|response</span><span>&quot;).</span><span style="color:#8fa1b3;">each</span><span>(...);
+</span><span>  </span><span style="color:#65737e;">//  and removed again when the function exits
+</span><span>});
 </span></code></pre>
 <p>It's also possible to specify a default namespace, which will be used when no explicit selector is given.  Just pass a string rather than a mapping object, like so:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-javascript" data-lang="javascript"><span style="color:#8fa1b3;">$</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">doc</span><span style="color:#c0c5ce;">).</span><span style="color:#8fa1b3;">xmlns</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">DAV:</span><span style="color:#c0c5ce;">&quot;,</span><span style="color:#b48ead;">function</span><span style="color:#c0c5ce;">() {
-  </span><span style="color:#65737e;">//  This only searches within the &#39;DAV:&#39; namespace
-  </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">this</span><span style="color:#c0c5ce;">.</span><span style="color:#96b5b4;">find</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">response</span><span style="color:#c0c5ce;">&quot;).</span><span style="color:#8fa1b3;">each</span><span style="color:#c0c5ce;">(...);
-});
+<pre data-lang="javascript" style="background-color:#2b303b;color:#c0c5ce;" class="language-javascript "><code class="language-javascript" data-lang="javascript"><span style="color:#8fa1b3;">$</span><span>(</span><span style="color:#bf616a;">doc</span><span>).</span><span style="color:#8fa1b3;">xmlns</span><span>(&quot;</span><span style="color:#a3be8c;">DAV:</span><span>&quot;,</span><span style="color:#b48ead;">function</span><span>() {
+</span><span>  </span><span style="color:#65737e;">//  This only searches within the &#39;DAV:&#39; namespace
+</span><span>  </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">this</span><span>.</span><span style="color:#96b5b4;">find</span><span>(&quot;</span><span style="color:#a3be8c;">response</span><span>&quot;).</span><span style="color:#8fa1b3;">each</span><span>(...);
+</span><span>});
 </span></code></pre>
 <p>Namespaced attribute selectors are also supported, although there are some restrictions as spelled out <a href="http://www.w3.org/TR/css3-selectors/#attrnmsp">here</a>.  The following would search for elements with a 'href' attribute in any namespace:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-javascript" data-lang="javascript"><span style="color:#8fa1b3;">$</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">doc</span><span style="color:#c0c5ce;">).</span><span style="color:#96b5b4;">find</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">[*|href]</span><span style="color:#c0c5ce;">&quot;);
+<pre data-lang="javascript" style="background-color:#2b303b;color:#c0c5ce;" class="language-javascript "><code class="language-javascript" data-lang="javascript"><span style="color:#8fa1b3;">$</span><span>(</span><span style="color:#bf616a;">doc</span><span>).</span><span style="color:#96b5b4;">find</span><span>(&quot;</span><span style="color:#a3be8c;">[*|href]</span><span>&quot;);
 </span></code></pre>
 <p>Of course, there are plenty of caveats here.  I've tested this on Firefox and IE7 and it meets my expectations, but I haven't explored any of the bizarre corner cases that I'm sure are lurking out there.  I also haven't done any performance testing, although I have tried hard not to slow down the common case where a namespace selector is not specified.  I'm far from an expert here –  any bug reports, success reports or general suggestions most welcome!</p>
 <p>Now, to actually get on with the job I was supposed to be doing yesterday...</p>

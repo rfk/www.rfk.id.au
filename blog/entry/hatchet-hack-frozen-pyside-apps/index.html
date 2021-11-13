@@ -21,17 +21,19 @@
       <title>Hatchet: hack frozen PySide apps down to size</title>
     
     
-    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
-    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+    <link rel="stylesheet" href="https://www.rfk.id.au/main.css">
      
   </head>
   <body>
     
       <header>
         <a class="profile-icon" href="/">
-          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+          
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" alt="profile picture">
         </a>
         <nav>
             <a href="/about/">About</a>
@@ -51,10 +53,10 @@
       <div class="item-tags">
         [ 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;software&#x2F;">software</a>
+          <a href="https://www.rfk.id.au/tags/software/">software</a>
            | 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+          <a href="https://www.rfk.id.au/tags/python/">python</a>
           
         
         ]
@@ -67,47 +69,42 @@
 <p>This post is part motivational, part example.  I'll show you a basic &quot;hello world&quot; app in PySide, take you through the process of freezing it into a stand-alone application, then show how to use Hatchet to shrink the distribution down to a manageable size.  If that seems a little too academic for you, consider this for real-world motivation: using the techniques shown in this post, I was able to chop over <em>40MB</em> off of the <a href="http://www.saltdrive.com/">SaltDrive</a> application bundle for Mac OSX.</p>
 <span id="continue-reading"></span>
 <p>Let's begin with the PySide version of &quot;hello world&quot;.  Here's the code:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-python" data-lang="python"><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">sys
-</span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">PySide </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">QtGui
-
-app = QtGui.</span><span style="color:#bf616a;">QApplication</span><span style="color:#c0c5ce;">(sys.argv)
-msg = QtGui.</span><span style="color:#bf616a;">QLabel</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">Hello  World!</span><span style="color:#c0c5ce;">&quot;)
-msg.</span><span style="color:#bf616a;">show</span><span style="color:#c0c5ce;">()
-app.</span><span style="color:#bf616a;">exec_</span><span style="color:#c0c5ce;">()
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">import </span><span>sys
+</span><span style="color:#b48ead;">from </span><span>PySide </span><span style="color:#b48ead;">import </span><span>QtGui
+</span><span>
+</span><span>app = QtGui.</span><span style="color:#bf616a;">QApplication</span><span>(sys.argv)
+</span><span>msg = QtGui.</span><span style="color:#bf616a;">QLabel</span><span>(&quot;</span><span style="color:#a3be8c;">Hello  World!</span><span>&quot;)
+</span><span>msg.</span><span style="color:#bf616a;">show</span><span>()
+</span><span>app.</span><span style="color:#bf616a;">exec_</span><span>()
 </span></code></pre>
 <p>To make this into a stand-alone application, we can freeze it using <a href="http://cx-freeze.sourceforge.net/">cxfreeze</a> (or <a href="https://pypi.org/project/bbfreeze/">bbfreeze</a>, or <a href="https://pypi.org/project/py2exe/">py2exe</a>, or <a href="https://py2app.readthedocs.io/en/latest/">pyp2app</a>, the results will all be similar).  Using just the packages installed into my system python, we get the following:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">$&gt; #  call cxfreeze to generate the frozen app
-$&gt; cxfreeze hello.py
-...
-...  lots of output from cxfreeze
-...
-$&gt; #  the &quot;dist&quot; directory then contains the frozen executable
-$&gt; ls dist/
-bz2.so              _codecs_kr.so  libpyside-py26.so.1.0    _multibytecodec.so
-_codecs_cn.so       _codecs_tw.so  libpython2.6.so.1.0      PySide.QtCore.so
-_codecs_hk.so       datetime.so    libQtCore.so.4           PySide.QtGui.so
-_codecs_iso2022.so  _heapq.so      libQtGui.so.4            readline.so
-_codecs_jp.so       hello          libshiboken-py26.so.1.0
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>$&gt; #  call cxfreeze to generate the frozen app
+</span><span>$&gt; cxfreeze hello.py
+</span><span>...
+</span><span>...  lots of output from cxfreeze
+</span><span>...
+</span><span>$&gt; #  the &quot;dist&quot; directory then contains the frozen executable
+</span><span>$&gt; ls dist/
+</span><span>bz2.so              _codecs_kr.so  libpyside-py26.so.1.0    _multibytecodec.so
+</span><span>_codecs_cn.so       _codecs_tw.so  libpython2.6.so.1.0      PySide.QtCore.so
+</span><span>_codecs_hk.so       datetime.so    libQtCore.so.4           PySide.QtGui.so
+</span><span>_codecs_iso2022.so  _heapq.so      libQtGui.so.4            readline.so
+</span><span>_codecs_jp.so       hello          libshiboken-py26.so.1.0
 </span></code></pre>
 <p>And here's the resulting application running in all its glory on my Ubuntu box:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-console" data-lang="console"><span style="color:#c0c5ce;">$&gt; ./dist/hello
+<pre data-lang="console" style="background-color:#2b303b;color:#c0c5ce;" class="language-console "><code class="language-console" data-lang="console"><span>$&gt; ./dist/hello
 </span></code></pre>
 <p><img src="/static/scratch/helloworld.png"></img></p>
 <p>Very nice.  Unfortunately, it's gigantic:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-console" data-lang="console"><span style="color:#c0c5ce;">$&gt; du -hs dist/
-33M	dist/
+<pre data-lang="console" style="background-color:#2b303b;color:#c0c5ce;" class="language-console "><code class="language-console" data-lang="console"><span>$&gt; du -hs dist/
+</span><span>33M	dist/
 </span></code></pre>
 <p>Yes, that's 33 megabytes for &quot;hello world&quot;!  We can definitely do better.  Of course there are no prizes for guessing what's taking up most of that space:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-console" data-lang="console"><span style="color:#c0c5ce;">$&gt; du -hs dist/* | grep Qt
-2.5M	dist/libQtCore.so.4
-11M	dist/libQtGui.so.4
-2.8M	dist/PySide.QtCore.so
-13M	dist/PySide.QtGui.so
+<pre data-lang="console" style="background-color:#2b303b;color:#c0c5ce;" class="language-console "><code class="language-console" data-lang="console"><span>$&gt; du -hs dist/* | grep Qt
+</span><span>2.5M	dist/libQtCore.so.4
+</span><span>11M	dist/libQtGui.so.4
+</span><span>2.8M	dist/PySide.QtCore.so
+</span><span>13M	dist/PySide.QtGui.so
 </span></code></pre>
 <p>That's 13.5M for the Qt libraries, plus another 15.8M for the PySide bindings, for over 29M out of a 33M distribution.  I repeat:  we can do better!</p>
 <p>First for the low-hanging fruit.  I made a custom build of Python, Qt and PySide using some well-known techniques for reducing code size:</p>
@@ -117,27 +114,25 @@ _codecs_jp.so       hello          libshiboken-py26.so.1.0
 <li>add <code>-fno-exceptions</code> to the build flags for Qt and PySide, to disable generation of C++ stack-unwinding code</li>
 </ul>
 <p>The results were actually far better than I expected:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-console" data-lang="console"><span style="color:#c0c5ce;">$&gt; rm -rf dist/
-$&gt; ~/smallpy/local/bin/cxfreeze hello.py
-...
-...
-$&gt;
-$&gt; du -hs dist/* | grep Qt
-1.8M	dist/libQtCore.so.4
-6.8M	dist/libQtGui.so.4
-1.8M	dist/PySide.QtCore.so
-7.0M	dist/PySide.QtGui.so
-$&gt;
-$&gt; du -hs dist/
-23M	dist/
+<pre data-lang="console" style="background-color:#2b303b;color:#c0c5ce;" class="language-console "><code class="language-console" data-lang="console"><span>$&gt; rm -rf dist/
+</span><span>$&gt; ~/smallpy/local/bin/cxfreeze hello.py
+</span><span>...
+</span><span>...
+</span><span>$&gt;
+</span><span>$&gt; du -hs dist/* | grep Qt
+</span><span>1.8M	dist/libQtCore.so.4
+</span><span>6.8M	dist/libQtGui.so.4
+</span><span>1.8M	dist/PySide.QtCore.so
+</span><span>7.0M	dist/PySide.QtGui.so
+</span><span>$&gt;
+</span><span>$&gt; du -hs dist/
+</span><span>23M	dist/
 </span></code></pre>
 <p>A nice improvement!  We've saved around 10M just by adjusting the compiler options.  But 23M for a &quot;hello world&quot; application is still somewhere in the vicinity of gigantic.  We should be able to do better.</p>
 <p>The biggest contributor to all this bloat is <em>dead code</em>.  This simple little application doesn't use Qt classes such as <a href="http://www.pyside.org/docs/pyside/PySide/QtGui/QClipboard.html">QClipboard</a>, <a href="http://www.pyside.org/docs/pyside/PySide/QtGui/QGestureRecognizer.html">QGestureRecognizer</a>, <a href="http://www.pyside.org/docs/pyside/PySide/QtGui/QGraphicsEllipseItem.html">QGraphicsEllipseItem</a> or many hundreds of others.  But it still bundles all the code for these classes in the Qt binaries, and bindings for them in the PySide binaries.</p>
 <p>If this were a C++ application, the solution would be straightforward.  We'd simply <a href="http://www.formortals.com/how-to-statically-link-qt-4/">statically link the Qt libraries</a> and only pull in code for the classes we actually use.  Unfortunately this isn't an option for PySide, since python extension modules must be compiled as dynamic libraries.</p>
 <p>There's only one thing for it:  we must eliminate unused code from within the PySide bindings themselves.  Enter the latest addition to my <a href="http://pypi.python.org/pypi/PySideKick/">PySideKick</a> utility module: <a href="https://github.com/rfk/pysidekick/blob/master/PySideKick/Hatchet.py">Hatchet</a>.  Hatchet lets you hack your PySide binaries down to size, by rebuilding them with just the classes and methods you need.  Grab it like so:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">$&gt; pip install PySideKick
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>$&gt; pip install PySideKick
 </span></code></pre>
 <p>Here's what Hatchet does to your frozen app in a nutshell:</p>
 <ul>
@@ -148,73 +143,69 @@ $&gt; du -hs dist/
 <li>Builds the hacked sources and inserts them into your frozen application.</li>
 </ul>
 <p>Let's take a look:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">$&gt; #  execute Hatchet as a script, giving the path to the frozen app
-$&gt; ~/smallpy/local/bin/python -m PySideKick.Hatchet ./dist/
-...
-... Lots of output from Hatchet.
-... The most important lines are:
-...
-PySideKick.Hatchet:   keeping 66 classes
-PySideKick.Hatchet:   rejecting 761 classes, 3881 methods
-...
-... Ryan grabs a coffee as it analyses the code
-... and rebuilds the PySide binaries.
-...
-$&gt;
-$&gt; du -hs dist/* | grep Qt
-1.8M	dist/libQtCore.so.4
-6.8M	dist/libQtGui.so.4
-508K	dist/PySide.QtCore.so
-512K	dist/PySide.QtGui.so
-$&gt;
-$&gt; du -hs dist
-16M	dist
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>$&gt; #  execute Hatchet as a script, giving the path to the frozen app
+</span><span>$&gt; ~/smallpy/local/bin/python -m PySideKick.Hatchet ./dist/
+</span><span>...
+</span><span>... Lots of output from Hatchet.
+</span><span>... The most important lines are:
+</span><span>...
+</span><span>PySideKick.Hatchet:   keeping 66 classes
+</span><span>PySideKick.Hatchet:   rejecting 761 classes, 3881 methods
+</span><span>...
+</span><span>... Ryan grabs a coffee as it analyses the code
+</span><span>... and rebuilds the PySide binaries.
+</span><span>...
+</span><span>$&gt;
+</span><span>$&gt; du -hs dist/* | grep Qt
+</span><span>1.8M	dist/libQtCore.so.4
+</span><span>6.8M	dist/libQtGui.so.4
+</span><span>508K	dist/PySide.QtCore.so
+</span><span>512K	dist/PySide.QtGui.so
+</span><span>$&gt;
+</span><span>$&gt; du -hs dist
+</span><span>16M	dist
 </span></code></pre>
 <p>You'll notice that the sizes of the PySide binaries are now reported in kilobytes rather than megabytes.  Very nice!  We've saved another 7M by hacking dead code out of the PySide bindings.  How much code?  Hatchet reports that it has kept the bindings for only 66 classes, entirely eliminating 761 classes from the Qt API.  And for the classes it kept, it suppressed the bindings for an additional 3881 methods.</p>
 <p>Why does it keep 66 classes when the code only uses QApplication and QLabel?  Part of the reason is that Hatchet will generate bindings for the argument types and return types of all kept methods, and the base classes of all kept classes.   But it's also due to <em>false positives</em> in the code analysis process – classes and methods that Hatchet thinks the code is using even though it isn't.</p>
 <p>To avoid some false positives, we can tell Hatchet to only examine the code in our hello.py script rather than looking at the entire frozen application:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-console" data-lang="console"><span style="color:#c0c5ce;">$&gt; #  tell Hatchet to only examine hello.py, and not follow any imports
-$&gt; ~/smallpy/local/bin/python -m PySideKick.Hatchet --no-follow-imports ./dist/ ./hello.py
-...
-... Lots of output from Hatchet.
-... The most important lines are:
-...
-PySideKick.Hatchet:   keeping 50 classes
-PySideKick.Hatchet:   rejecting 764 classes, 3622 methods
-...
-... Ryan goes to lunch as it analyses the code
-... and rebuilds the PySide binaries, again.
-...
-$&gt;
-$&gt; du -hs dist/* | grep Qt
-1.8M	dist/libQtCore.so.4
-6.8M	dist/libQtGui.so.4
-432K	dist/PySide.QtCore.so
-328K	dist/PySide.QtGui.so
-$&gt;
-$&gt; du -hs dist
-15M	dist
+<pre data-lang="console" style="background-color:#2b303b;color:#c0c5ce;" class="language-console "><code class="language-console" data-lang="console"><span>$&gt; #  tell Hatchet to only examine hello.py, and not follow any imports
+</span><span>$&gt; ~/smallpy/local/bin/python -m PySideKick.Hatchet --no-follow-imports ./dist/ ./hello.py
+</span><span>...
+</span><span>... Lots of output from Hatchet.
+</span><span>... The most important lines are:
+</span><span>...
+</span><span>PySideKick.Hatchet:   keeping 50 classes
+</span><span>PySideKick.Hatchet:   rejecting 764 classes, 3622 methods
+</span><span>...
+</span><span>... Ryan goes to lunch as it analyses the code
+</span><span>... and rebuilds the PySide binaries, again.
+</span><span>...
+</span><span>$&gt;
+</span><span>$&gt; du -hs dist/* | grep Qt
+</span><span>1.8M	dist/libQtCore.so.4
+</span><span>6.8M	dist/libQtGui.so.4
+</span><span>432K	dist/PySide.QtCore.so
+</span><span>328K	dist/PySide.QtGui.so
+</span><span>$&gt;
+</span><span>$&gt; du -hs dist
+</span><span>15M	dist
 </span></code></pre>
 <p>Another meg saved.  Not bad.</p>
 <p>And just to confirm, it still does everything that a hello-world app should do:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-console" data-lang="console"><span style="color:#c0c5ce;">$&gt; ./dist/hello
+<pre data-lang="console" style="background-color:#2b303b;color:#c0c5ce;" class="language-console "><code class="language-console" data-lang="console"><span>$&gt; ./dist/hello
 </span></code></pre>
 <p><img src="/static/scratch/helloworld.png"></img></p>
 <p>By tweaking the build options and eliminating dead code from within PySide, we have managed to <em>halve</em> the size of the distribution.  Now, 15M is still pretty big for a simple &quot;hello world&quot; application.  But a fair chunk of that size can be attributed to Python rather than to the GUI libraries.  For comparison, a text-only &quot;hello world&quot; in python freezes at around 4.5M on my machine:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-console" data-lang="console"><span style="color:#c0c5ce;">$&gt; cat hellotxt.py 
-
-print &quot;hello world&quot;
-
-$&gt;
-$&gt; cxfreeze hellotxt.py 
-...
-$&gt;
-$&gt; du -hs dist/
-4.5M	dist/
+<pre data-lang="console" style="background-color:#2b303b;color:#c0c5ce;" class="language-console "><code class="language-console" data-lang="console"><span>$&gt; cat hellotxt.py 
+</span><span>
+</span><span>print &quot;hello world&quot;
+</span><span>
+</span><span>$&gt;
+</span><span>$&gt; cxfreeze hellotxt.py 
+</span><span>...
+</span><span>$&gt;
+</span><span>$&gt; du -hs dist/
+</span><span>4.5M	dist/
 </span></code></pre>
 <p>Can we do better still?  To make any serious progress, we would need to start eliminating dead code from within the Qt libraries themselves.  There's an interesting possibility here – although we can't compile PySide itself as a static library, we <em>could</em> statically link Qt into the PySide libraries.  Since the hacked-down PySide bindings no longer reference large parts of the Qt API, this should provide a nice additional saving.  I've done some initial experiments but the results have been too buggy to be practical.  Watch this space for updates; I aim to get this hello-world application below 10M uncompressed.</p>
 <p>And of course there are always executable packers such as <a href="http://upx.sourceforge.net/">UPX</a> if you need to shave just that little bit more off the binaries.</p>

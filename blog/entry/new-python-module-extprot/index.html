@@ -21,17 +21,19 @@
       <title>New Python module: extprot</title>
     
     
-    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" />
+    
+    <link rel="icon" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Sans|Fira Mono">
-    <link rel="stylesheet" href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;main.css">
+    <link rel="stylesheet" href="https://www.rfk.id.au/main.css">
      
   </head>
   <body>
     
       <header>
         <a class="profile-icon" href="/">
-          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;866b5dbf416f778f00.png" alt="profile picture">
+          
+          <img src="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;processed_images&#x2F;92fe386560fb112700.png" alt="profile picture">
         </a>
         <nav>
             <a href="/about/">About</a>
@@ -51,10 +53,10 @@
       <div class="item-tags">
         [ 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;software&#x2F;">software</a>
+          <a href="https://www.rfk.id.au/tags/software/">software</a>
            | 
         
-          <a href="https:&#x2F;&#x2F;www.rfk.id.au&#x2F;tags&#x2F;python&#x2F;">python</a>
+          <a href="https://www.rfk.id.au/tags/python/">python</a>
           
         
         ]
@@ -84,34 +86,31 @@ a tuple, list or union.</p>
 <li>You don't need to compile your protocol definitions.</li>
 </ul>
 <p>That last point deserves a special mention.  Dammit, <em><strong>this is Python!</strong></em>  I don't want to introduce a compiler into my fantastically productive read-eval-print loop.  With extprot, you can point the module to your protocol definition file and dynamically compile it into an in-memory class structure.  Suppose I have the following protocol definition file:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">    message person = {
-        id:   int;
-        name: string;
-        emails: [ string ]
-    }
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>    message person = {
+</span><span>        id:   int;
+</span><span>        name: string;
+</span><span>        emails: [ string ]
+</span><span>    }
 </span></code></pre>
 <p>I can load and use it in python with this much work:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-python" data-lang="python"><span style="color:#c0c5ce;">&gt;&gt;&gt; </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">extprot
-&gt;&gt;&gt; extprot.</span><span style="color:#bf616a;">import_protocol</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">mydefs.proto</span><span style="color:#c0c5ce;">&quot;,</span><span style="color:#96b5b4;">globals</span><span style="color:#c0c5ce;">())
-&gt;&gt;&gt; </span><span style="color:#b48ead;">print </span><span style="color:#c0c5ce;">person
-&lt;</span><span style="background-color:#bf616a;color:#2b303b;">class</span><span style="color:#c0c5ce;"> &#39;</span><span style="color:#a3be8c;">&lt;extprot.dynamic&gt;.person</span><span style="color:#c0c5ce;">&#39;&gt;
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span>&gt;&gt;&gt; </span><span style="color:#b48ead;">import </span><span>extprot
+</span><span>&gt;&gt;&gt; extprot.</span><span style="color:#bf616a;">import_protocol</span><span>(&quot;</span><span style="color:#a3be8c;">mydefs.proto</span><span>&quot;,</span><span style="color:#96b5b4;">globals</span><span>())
+</span><span>&gt;&gt;&gt; </span><span style="color:#b48ead;">print </span><span>person
+</span><span>&lt;</span><span style="background-color:#bf616a;color:#2b303b;">class</span><span> &#39;</span><span style="color:#a3be8c;">&lt;extprot.dynamic&gt;.person</span><span>&#39;&gt;
 </span></code></pre>
 <p>And I can work with the resulting classes without any knowledge of extprot:</p>
-<pre style="background-color:#2b303b;">
-<code class="language-python" data-lang="python"><span style="color:#c0c5ce;">&gt;&gt;&gt; p1 = </span><span style="color:#bf616a;">person</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">,&quot;</span><span style="color:#a3be8c;">Guido</span><span style="color:#c0c5ce;">&quot;)    </span><span style="color:#65737e;"># kwd args would also work
-</span><span style="color:#c0c5ce;">&gt;&gt;&gt; </span><span style="color:#b48ead;">print </span><span style="color:#c0c5ce;">p1.emails    </span><span style="color:#65737e;"># fields use a sensible default if possible
-</span><span style="color:#c0c5ce;">[]
-&gt;&gt;&gt; p1.emails.</span><span style="color:#bf616a;">append</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">guido@python.org</span><span style="color:#c0c5ce;">&quot;)
-&gt;&gt;&gt; p1.emails.</span><span style="color:#bf616a;">append</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">7</span><span style="color:#c0c5ce;">)    </span><span style="color:#65737e;"># all fields are dynamically typechecked
-</span><span style="color:#bf616a;">Traceback </span><span style="color:#c0c5ce;">(mosts recent call last):
-    </span><span style="color:#d08770;">...
-</span><span style="color:#c0c5ce;">ValueError: not a valid String: </span><span style="color:#d08770;">7
-</span><span style="color:#c0c5ce;">&gt;&gt;&gt; </span><span style="color:#b48ead;">print </span><span style="color:#96b5b4;">repr</span><span style="color:#c0c5ce;">(p1.</span><span style="color:#bf616a;">to_string</span><span style="color:#c0c5ce;">())    </span><span style="color:#65737e;"># look at that compact binary string!
-</span><span style="color:#c0c5ce;">&#39;</span><span style="color:#96b5b4;">\x01\x1f\x03\x00\x02\x03\x05</span><span style="color:#a3be8c;">Guido</span><span style="color:#96b5b4;">\x05\x13\x01\x03\x10</span><span style="color:#a3be8c;">guido@python.org</span><span style="color:#c0c5ce;">&#39;
-&gt;&gt;&gt; </span><span style="color:#b48ead;">print </span><span style="color:#c0c5ce;">person.</span><span style="color:#bf616a;">from_string</span><span style="color:#c0c5ce;">(p1.</span><span style="color:#bf616a;">to_string</span><span style="color:#c0c5ce;">()).name
-&#39;</span><span style="color:#a3be8c;">Guido</span><span style="color:#c0c5ce;">&#39;
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span>&gt;&gt;&gt; p1 = </span><span style="color:#bf616a;">person</span><span>(</span><span style="color:#d08770;">1</span><span>,&quot;</span><span style="color:#a3be8c;">Guido</span><span>&quot;)    </span><span style="color:#65737e;"># kwd args would also work
+</span><span>&gt;&gt;&gt; </span><span style="color:#b48ead;">print </span><span>p1.emails    </span><span style="color:#65737e;"># fields use a sensible default if possible
+</span><span>[]
+</span><span>&gt;&gt;&gt; p1.emails.</span><span style="color:#bf616a;">append</span><span>(&quot;</span><span style="color:#a3be8c;">guido@python.org</span><span>&quot;)
+</span><span>&gt;&gt;&gt; p1.emails.</span><span style="color:#bf616a;">append</span><span>(</span><span style="color:#d08770;">7</span><span>)    </span><span style="color:#65737e;"># all fields are dynamically typechecked
+</span><span style="color:#bf616a;">Traceback </span><span>(mosts recent call last):
+</span><span>    </span><span style="color:#d08770;">...
+</span><span>ValueError: not a valid String: </span><span style="color:#d08770;">7
+</span><span>&gt;&gt;&gt; </span><span style="color:#b48ead;">print </span><span style="color:#96b5b4;">repr</span><span>(p1.</span><span style="color:#bf616a;">to_string</span><span>())    </span><span style="color:#65737e;"># look at that compact binary string!
+</span><span>&#39;</span><span style="color:#96b5b4;">\x01\x1f\x03\x00\x02\x03\x05</span><span style="color:#a3be8c;">Guido</span><span style="color:#96b5b4;">\x05\x13\x01\x03\x10</span><span style="color:#a3be8c;">guido@python.org</span><span>&#39;
+</span><span>&gt;&gt;&gt; </span><span style="color:#b48ead;">print </span><span>person.</span><span style="color:#bf616a;">from_string</span><span>(p1.</span><span style="color:#bf616a;">to_string</span><span>()).name
+</span><span>&#39;</span><span style="color:#a3be8c;">Guido</span><span>&#39;
 </span></code></pre>
 <p>Now it's time to fess up just a little: the size of the encodings produced by extprot are of the same order as those from protobuf, but they do have a few extra bytes of overhead due to their self-delimiting nature.  For my applications these extra bytes don't outweigh the advantages I've described above, but your mileage may vary.  I also suspect it would be trivial to remove these delimiters in a separate translation step if you really needed to squeeze them out.</p>
 <p>So, looking for a language-neutral serialisation or messaging scheme?  Take a look at <a href="http://eigenclass.org/R2/writings/extprot-extensible-protocols-intro">extprot</a>, its very powerful <a href="http://github.com/mfp/extprot/blob/38ef5d4d9c6d206943ef96abf1e36a01f5578176/doc/protocol-definition.md">type system</a> and the flexible <a href="http://eigenclass.org/R2/writings/protocol-extension-with-extprot">protocol extensions</a> that it permits.  In my opinion it's a serious contender, and I hope these Python bindings help push it along  just a little.</p>
