@@ -21,7 +21,6 @@ jobs:
           SHA=`git rev-parse HEAD`
           git remote set-branches --add origin built
           git fetch origin built
-          ls
           git checkout -t origin/built
           rm -rf ./*
           cp -aR /tmp/zola-build/* ./
