@@ -8,6 +8,11 @@ on:
     types:
       - completed
 
+env:
+  WEBDAV_BASE_URL: "https://webdav.fastmail.com/rfkelly.fastmail.fm/files/www.rfk.id.au/"
+  WEBDAV_USERNAME: ${{ secrets.WEBDAV_USERNAME }}
+  WEBDAV_PASSWORD: ${{ secrets.WEBDAV_PASSWORD }}
+
 jobs:
   publish:
     runs-on: ubuntu-latest

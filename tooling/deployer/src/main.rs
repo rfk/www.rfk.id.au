@@ -50,9 +50,9 @@ async fn main() -> Result<()> {
     let new_commit = repo.head()?;
 
     let client = dav::Client::new(
-        "https://webdav.fastmail.com/rfkelly.fastmail.fm/files/www.rfk.id.au/",
-        "rfkelly@fastmail.fm",
-        "2ra9vy5dc3b9dgyf",
+        std::env::var("WEBDAV_BASE_URL")?,
+        std::env::var("WEBDAV_USERNAME")?,
+        std::env::var("WEBDAV_PASSWORD")?,
     )?;
 
     // A pre-deploy locking dance with `CUR_COMMIT`.
