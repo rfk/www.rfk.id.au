@@ -4,11 +4,11 @@ aliases = ["/about/cv.html"]
 +++
 
 I am a software engineer and occasional consultant.  I live in the <a href="http://en.wikipedia.org/wiki/Inverloch,_Victoria">seaside town of Inverloch</a> near Melbourne, Australia,
-where I work remotely as a Senior Staff Software Engineer for <a href="https://www.mozilla.com/">Mozilla</a>.
+where I work remotely as a Senior Software Engineer at <a href="https://harrison.ai/">harrison.ai</a>.
 
 The best way to contact me is by email; use `ryan@` plus the domain of this website.
 
-Professionally, I have worked as a software engineer for over a decade. I have substantial experience with Python, JavaScript, and Rust, but will confidently dabble in just about any language.
+Professionally, I have worked as a software engineer for over a decade. I have substantial experience with Rust, Python, and JavaScript, but will confidently dabble in just about any language.
 I've worked at scale across the stack, from back-end services to webapps to native clients, and have even spent a few years in management. I've found that regardless of language or platform, nothing beats the satisfaction of working with good people to ship code that you're proud of, and watching it make a difference to your users.
 
 Academically, I hold a PhD in Computer Science from the Intelligent Agents Laboratory at the University of Melbourne. My undergraduate studies were a double bachelor's degree in Engineering and Computer Science, which I was awarded with first class honours.
@@ -28,13 +28,20 @@ More details are available in the sections below:
 
 ## <a name="employment"></a>Employment History
 
+### Software Engineer, harrison.ai
+<p class="item-meta">October 2021 to Present</p>
+
+I currently work as a Senior Software Engineer on the <a href="http://harrison.ai/">harrison.ai</a> Data Engineering team.
+
+**Keywords**: Rust, Python, AWS, Serverless.
+
 ### Software Engineer, Mozilla
-<p class="item-meta">September 2011 to Present</p>
+<p class="item-meta">September 2011 to August 2021</p>
 
-I currently work as a Senior Staff Software Engineer for <a href="http://www.mozilla.com/">Mozilla</a>, where I take broad responsibility for the <a href="https://accounts.firefox.com/">Firefox Accounts</a> identity system
-and the client and server components that power <a href="https://www.mozilla.org/en-US/firefox/sync/">Firefox Sync</a>.
+I spent almost a decade as a Software Engineer at <a href="http://www.mozilla.com/">Mozilla</a>, where I had broad responsibility for the <a href="https://accounts.firefox.com/">Firefox Accounts</a> identity system
+and the client and server components that powered <a href="https://www.mozilla.org/en-US/firefox/sync/">Firefox Sync</a>.
 
-Highlights from my work over the years have included:
+Highlights from my work over the years included:
 * Re-designing [the HTTP service API for Firefox Sync](https://mozilla-services.readthedocs.io/en/latest/storage/apis-1.5.html) so that multiple clients can sync concurrently without risking data corruption.
 * Working in a small team to launch [a new account system](https://blog.mozilla.org/blog/2014/02/07/introducing-mozilla-firefox-accounts/) and [simplified Sync setup experience](https://blog.mozilla.org/services/2014/02/07/a-better-firefox-sync/), then watching the service steadily grow to support millions of Firefox users across the globe.
 * Collaborating with security experts to help keep user data safe, from reviewing the [security properties of new account account features](https://github.com/mozilla/fxa/blob/main/packages/fxa-content-server/docs/pairing-architecture.md#intended-security-properties), to finding and fixing [security](/blog/entry/security-bugs-ssrf-via-request-splitting/) [bugs](/blog/entry/exploring-security-persona/), to mitigating [malicious service traffic](https://blog.mozilla.org/services/2016/04/09/stolen-passwords-used-to-break-into-firefox-accounts/).
