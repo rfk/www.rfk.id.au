@@ -38,7 +38,7 @@ I currently work as a Senior Software Engineer on the <a href="http://harrison.a
 ### Software Engineer, Mozilla
 <p class="item-meta">September 2011 to August 2021</p>
 
-I spent almost a decade as a Software Engineer at <a href="http://www.mozilla.com/">Mozilla</a>, where I had broad responsibility for the <a href="https://accounts.firefox.com/">Firefox Accounts</a> identity system
+I spent almost a decade as a Software Engineer at <a href="http://www.mozilla.com/">Mozilla</a>, reaching the level of "Senior Staff" and taking broad responsibility for the <a href="https://accounts.firefox.com/">Firefox Accounts</a> identity system
 and the client and server components that powered <a href="https://www.mozilla.org/en-US/firefox/sync/">Firefox Sync</a>.
 
 Highlights from my work over the years included:
