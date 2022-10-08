@@ -3,7 +3,7 @@ title = "Ryan F. Kelly"
 +++
 
 I am a software engineer and occasional consultant.  I live in the <a href="http://en.wikipedia.org/wiki/Inverloch,_Victoria">seaside town of Inverloch</a>, on <a href="https://www.bunuronglc.org/">Bunurong Country</a> near Melbourne, Australia.
-I currently work remotely as a Senior Software Engineer at <a href="https://harrison.ai/">harrison.ai</a>.
+I currently work remotely as Head of Software Engineering at <a href="https://harrison.ai/">harrison.ai</a>.
 
 The best way to contact me is by email; use `ryan@` plus the domain of this website.
 

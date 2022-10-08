@@ -28,10 +28,20 @@ More details are available in the sections below:
 
 ## <a name="employment"></a>Employment History
 
-### Software Engineer, harrison.ai
-<p class="item-meta">October 2021 to Present</p>
+### Head of Software Engineering, harrison.ai
+<p class="item-meta">September 2022 to Present</p>
 
-I currently work as a Senior Software Engineer on the <a href="http://harrison.ai/">harrison.ai</a> Data Engineering team.
+I currently work as Head of Software Engineering at <a href="http://harrison.ai/">harrison.ai</a>,
+a hybrid technical- and people-management role supporting the development of MLOps systems
+for healthcare ventures.
+
+**Keywords**: Rust, Python, AWS, Serverless.
+
+### Software Engineer, harrison.ai
+<p class="item-meta">October 2021 to September 2022</p>
+
+I joined the <a href="http://harrison.ai/">harrison.ai</a> Data Engineering team as a Senior Software Engineer,
+working to index and process de-identified medical data to make it available for AI model training.
 
 **Keywords**: Rust, Python, AWS, Serverless.
 
