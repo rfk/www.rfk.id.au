@@ -8,8 +8,9 @@ I currently work remotely as a Senior Software Engineer at <a href="https://harr
 
 The best way to contact me is by email; use `ryan@` plus the domain of this website.
 
-Professionally, I have worked as a software engineer for over a decade. I have substantial experience with Rust, Python, and JavaScript, but will confidently dabble in just about any language.
-I've worked at scale across the stack, from back-end services to webapps to native clients, and have even spent a few years in management. I've found that regardless of language or platform, nothing beats the satisfaction of working with good people to ship code that you're proud of, and watching it make a difference to your users.
+Professionally, I have worked in software engineering for over two decades. I have substantial experience with Python, JavaScript, and Rust, but will confidently dabble in just about any language.
+I've worked at scale across the stack, from back-end services to webapps to native clients, and I've ranged from Individual Contributor to Technical Lead to Head of Department.
+Regardless of language or platform or role, I've found that nothing beats the satisfaction of working with good people to ship code that you're proud of, and watching it make a difference to your users.
 
 Academically, I hold a PhD in Computer Science from the Intelligent Agents Laboratory at the University of Melbourne. My undergraduate studies were a double bachelor's degree in Engineering and Computer Science, which I was awarded with first class honours.
 
@@ -28,14 +29,30 @@ More details are available in the sections below:
 
 ## <a name="employment"></a>Employment History
 
+
+### Staff Software Engineer, Atticus
+<p class="item-meta">January 2026 to Present</p>
+
+I currently work as a Staff Software Engineer at <a href="http://atticus.tech/">Atticus</a>,
+a platform for document verification and trusted publishing of Documents that Matter.
+
+**Keywords**: JavaScript, AWS, Agentic AI.
+
+### Head of AI Infrastructure, harrison.ai
+<p class="item-meta">February 2025 to December 2025</p>
+
+Largely a reframing and refocusing of my previous role, I worked as Head of AI Infrastructure
+at <a href="http://harrison.ai/">harrison.ai</a>, a hybrid technical- and people-management role
+leading development of compute and data infrastructure to support AI model development.
+
 ### Head of Software Engineering, harrison.ai
 <p class="item-meta">September 2022 to Present</p>
 
-I currently work as Head of Software Engineering at <a href="http://harrison.ai/">harrison.ai</a>,
+I worked as Head of Software Engineering at <a href="http://harrison.ai/">harrison.ai</a>,
 a hybrid technical- and people-management role supporting the development of MLOps systems
 for healthcare ventures.
 
-**Keywords**: Rust, Python, AWS, Serverless.
+**Keywords**: Rust, Python, AWS, Serverless, Leadership.
 
 ### Software Engineer, harrison.ai
 <p class="item-meta">October 2021 to September 2022</p>
