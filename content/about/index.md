@@ -2,13 +2,14 @@
 title = "Ryan F. Kelly"
 +++
 
-I am a software engineer and occasional consultant.  I live in the <a href="http://en.wikipedia.org/wiki/Inverloch,_Victoria">seaside town of Inverloch</a>, on <a href="https://www.bunuronglc.org/">Bunurong Country</a> near Melbourne, Australia.
-I currently work remotely as Head of Software Engineering at <a href="https://harrison.ai/">harrison.ai</a>.
+I am a software engineer, engineering leader, and occasional consultant.  I live in the <a href="http://en.wikipedia.org/wiki/Inverloch,_Victoria">seaside town of Inverloch</a>, on <a href="https://www.bunuronglc.org/">Bunurong Country</a> near Melbourne, Australia.
+I currently work remotely as a Staff Software Engineer at <a href="https://atticus.tech/">Atticus</a>.
 
 The best way to contact me is by email; use `ryan@` plus the domain of this website.
 
-Professionally, I have worked as a software engineer for over a decade. I have substantial experience with Python, JavaScript, and Rust, but will confidently dabble in just about any language.
-I've worked at scale across the stack, from back-end services to webapps to native clients, and have even spent a few years in management. I sometimes write about those experiences on [my blog](/blog).
+Professionally, I have worked in software engineering for over two decades. I have substantial experience with Python, JavaScript, and Rust, but will confidently dabble in just about any language.
+I've worked at scale across the stack, from back-end services to webapps to native clients, and I've ranged from Individual Contributor to Technical Lead to Head of Department.
+Regardless of language or platform or role, I've found that nothing beats the satisfaction of working with good people to ship code that you're proud of, and watching it make a difference to your users.
 
 Academically, I hold a PhD in Computer Science from the Intelligent Agents Laboratory at the University of Melbourne. My undergraduate studies were a double bachelor's degree in Engineering and Computer Science, which I was awarded with first class honours.  If you're interested in logical approaches to reasoning about knowledge, action and change, you might enjoy a reading <a href="/ramblings/research/">more about my research</a>.
 
